@@ -139,7 +139,13 @@ const categoryMetadata: Record<string, { desc: string; id: string }> = {
   "Technology & Gadgets": { desc: "High-performance web applications, custom ecommerce stores, and complex system solutions.", id: "technology-gadgets" },
   "Home & Interior": { desc: "Modern architectural space layouting, luxury interior design, and bespoke styling.", id: "home-interior" },
   "Travel & Tourism": { desc: "High-engagement destination video campaigns and boutique hotel catalog promotions.", id: "travel-tourism" },
-  "Events & Entertainment": { desc: "Bespoke product runway events, celebrity media PR, and corporate brand experiences.", id: "events-entertainment" }
+  "Events & Entertainment": { desc: "Bespoke product runway events, celebrity media PR, and corporate brand experiences.", id: "events-entertainment" },
+  "Home & Electricals": { desc: "Expert home repair, wiring, switchboards, lighting installations, and trusted local electrical services.", id: "home-electricals" },
+  "Spa & Salons": { desc: "Relaxing massage therapies, premium hair salons, facials, pedicures, and professional wellness spa sessions.", id: "spa-salons" },
+  "Plumbing & Sanitary": { desc: "Professional leak repairs, pipe installations, tap fixes, drain cleaning, and sanitary fittings.", id: "plumbing-sanitary" },
+  "Cleaning & Pest Control": { desc: "Comprehensive home deep cleaning, kitchen sanitization, sofa cleaning, and safe pest control services.", id: "cleaning-pest-control" },
+  "Packers & Movers": { desc: "Stress-free home shifting, office relocation, safe packing, loading, and trusted logistics transfer.", id: "packers-movers" },
+  "Electronics & Appliance Repair": { desc: "Quick repair services for AC, refrigerator, washing machine, television, and home appliances.", id: "electronics-appliance-repair" }
 };
 
 export default async function ServicesDirectoryPage() {
