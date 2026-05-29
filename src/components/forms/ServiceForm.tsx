@@ -7,7 +7,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { createClient } from "@/lib/supabase/client";
-import { BusinessProfile } from "@/types/database";
+import { BusinessProfile, ProviderSubtype } from "@/types/database";
 import MediaUploader from "./MediaUploader";
 import { Upload } from "lucide-react";
 import { getInfluencerSlug } from "@/lib/utils/slug";
@@ -25,6 +25,25 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
+
+  const freelanceSlugs = [
+    'graphic-design',
+    'content-writing',
+    'web-app-development',
+    'video-editing',
+    'social-media-management',
+    'digital-marketing-seo',
+    'ui-ux-design',
+    'voiceover-audio',
+    'consulting-strategy',
+    'translation-languages',
+    'photography-videography'
+  ];
+
+  const filteredCategories = categories.filter(c => {
+    const isFreelance = freelanceSlugs.includes(c.slug);
+    return formData.provider_type === 'freelancer' ? isFreelance : !isFreelance;
+  });
 
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
@@ -148,7 +167,16 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "provider_type") {
+      setFormData(prev => ({
+        ...prev,
+        provider_type: value as ProviderSubtype,
+        category_id: "", // Reset category when switching provider type to avoid mismatch
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent, submitAction: 'draft' | 'pending_approval' | 'approved') => {
@@ -381,7 +409,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
                 <label className={styles.label}>Category *</label>
                 <select name="category_id" value={formData.category_id} onChange={handleChange} className={styles.select} required>
                    <option value="">Select Category...</option>
-                   {categories.map(c => (
+                   {filteredCategories.map(c => (
                      <option key={c.id} value={c.id}>{c.name}</option>
                    ))}
                 </select>
