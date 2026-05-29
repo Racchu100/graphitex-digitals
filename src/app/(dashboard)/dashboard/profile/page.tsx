@@ -416,16 +416,26 @@ function ProfileDashboardContent() {
               width: "var(--avatar-size, 72px)",
               height: "var(--avatar-size, 72px)",
               borderRadius: "50%",
-              background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))",
+              background: user?.avatar_url ? "none" : "linear-gradient(135deg, var(--color-primary), var(--color-secondary))",
               color: "#ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "var(--avatar-font-size, var(--text-3xl))",
               fontWeight: "var(--weight-bold)",
-              boxShadow: "0 4px 12px rgba(99, 102, 241, 0.2)"
+              boxShadow: "0 4px 12px rgba(99, 102, 241, 0.2)",
+              overflow: "hidden"
             }}>
-              {avatarInitials}
+              {user?.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img 
+                  src={user.avatar_url} 
+                  alt="Avatar" 
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                />
+              ) : (
+                avatarInitials
+              )}
             </div>
             <div>
               <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "4px" }}>{formData.name || "User Profile"}</h3>

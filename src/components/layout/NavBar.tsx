@@ -15,7 +15,6 @@ export default function NavBar() {
   const router = useRouter();
   const supabase = createClient();
   const { user, roles, loading } = useUser();
-  const isHomePage = pathname === "/";
   
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -303,7 +302,7 @@ export default function NavBar() {
 
           {loading ? (
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--color-border)", opacity: 0.5 }} />
-          ) : (user && !isHomePage) ? (
+          ) : user ? (
             <div className={styles.profileContainer} ref={dropdownRef}>
               <button 
                 className={styles.avatarBtn} 
@@ -311,7 +310,16 @@ export default function NavBar() {
                 aria-label="User Profile Options"
               >
                 <div className={styles.avatarCircle}>
-                  {initials}
+                  {user.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img 
+                      src={user.avatar_url} 
+                      alt="User Avatar" 
+                      style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} 
+                    />
+                  ) : (
+                    initials
+                  )}
                   {displayCount > 0 && (
                     <span className={styles.avatarBadge}>{displayCount}</span>
                   )}
@@ -322,7 +330,16 @@ export default function NavBar() {
                 <div className={styles.dropdownMenu}>
                   <div className={styles.dropdownHeader}>
                     <div className={styles.headerAvatarCircle}>
-                      {initials}
+                      {user.avatar_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img 
+                          src={user.avatar_url} 
+                          alt="User Avatar" 
+                          style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} 
+                        />
+                      ) : (
+                        initials
+                      )}
                     </div>
                     <div className={styles.headerInfo}>
                       <span className={styles.profileName}>{user.name}</span>
@@ -640,7 +657,16 @@ export default function NavBar() {
             <div className={styles.drawerProfileCard}>
               <div className={styles.drawerProfileInfo}>
                 <div className={styles.drawerAvatar}>
-                  {initials}
+                  {user.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img 
+                      src={user.avatar_url} 
+                      alt="User Avatar" 
+                      style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} 
+                    />
+                  ) : (
+                    initials
+                  )}
                 </div>
                 <div className={styles.drawerMeta}>
                   <span className={styles.drawerName}>{user.name}</span>

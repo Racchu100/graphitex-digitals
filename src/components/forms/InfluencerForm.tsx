@@ -419,8 +419,18 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
           .select()
           .single();
         console.log("[InfluencerForm] Profile insert completed. Inserted row:", inserted, "Error (if any):", insertError);
-        if (insertError) throw insertError;
         profileId = inserted.id;
+      }
+
+      // Sync avatar_url to the users table globally
+      if (formData.profile_picture_url) {
+        const { error: userUpdateError } = await supabase
+          .from('users')
+          .update({ avatar_url: formData.profile_picture_url })
+          .eq('id', user.id);
+        if (userUpdateError) {
+          console.warn("[InfluencerForm] Failed to sync avatar to users table:", userUpdateError);
+        }
       }
 
       // Handle socials logic with strict error checking to prevent silent DB fails
