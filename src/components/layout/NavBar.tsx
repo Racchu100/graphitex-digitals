@@ -188,7 +188,7 @@ export default function NavBar() {
         .eq("is_read", false);
 
       if (error) throw error;
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+      setNotifications([]);
       setUnreadCount(0);
     } catch (err) {
       console.error("Failed to mark all notifications as read:", err);
@@ -205,7 +205,7 @@ export default function NavBar() {
         .eq("id", notifId);
 
       if (error) throw error;
-      setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, is_read: true } : n));
+      setNotifications(prev => prev.filter(n => n.id !== notifId));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err) {
       console.error("Failed to mark notification as read:", err);
@@ -371,12 +371,12 @@ export default function NavBar() {
                   </div>
                   
                   <div className={styles.notifList}>
-                    {notifications.length === 0 ? (
+                    {notifications.filter(n => !n.is_read).length === 0 ? (
                       <div className={styles.emptyNotifs}>
                         No notifications yet ✨
                       </div>
                     ) : (
-                      notifications.slice(0, 4).map((notif) => (
+                      notifications.filter(n => !n.is_read).slice(0, 4).map((notif) => (
                         <div 
                           key={notif.id} 
                           onClick={(e) => {
@@ -687,12 +687,12 @@ export default function NavBar() {
               </div>
               
               <div className={styles.drawerNotifList}>
-                {notifications.length === 0 ? (
+                {notifications.filter(n => !n.is_read).length === 0 ? (
                   <div className={styles.emptyNotifs} style={{ padding: 'var(--space-2) var(--space-4)' }}>
                     No notifications yet ✨
                   </div>
                 ) : (
-                  notifications.slice(0, 3).map((notif) => (
+                  notifications.filter(n => !n.is_read).slice(0, 3).map((notif) => (
                     <div 
                       key={notif.id} 
                       onClick={(e) => {
