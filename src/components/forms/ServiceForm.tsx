@@ -400,9 +400,8 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
              <div className={styles.field}>
                 <label className={styles.label}>Provider Type *</label>
                 <select name="provider_type" value={formData.provider_type} onChange={handleChange} className={styles.select} required>
-                   <option value="business_owner">Business Owner</option>
                    <option value="freelancer">Freelancer</option>
-                   <option value="local_service">Local Service</option>
+                   <option value="local_service">Local Business</option>
                 </select>
              </div>
              <div className={styles.field}>

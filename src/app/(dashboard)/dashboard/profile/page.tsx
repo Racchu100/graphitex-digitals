@@ -441,10 +441,12 @@ function ProfileDashboardContent() {
               <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "4px" }}>{formData.name || "User Profile"}</h3>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                 {roles.map((r) => {
-                  const isBusinessOwner = r.role === "provider" && r.provider_subtype === "business_owner";
-                  const labelText = isBusinessOwner
-                    ? "Business Owner"
-                    : `${r.role.replace("_", " ")}${r.provider_subtype ? ` (${r.provider_subtype.replace("_", " ")})` : ""}`;
+                  let labelText = r.role.replace("_", " ");
+                  if (r.role === "provider") {
+                    if (r.provider_subtype === "local_service") labelText = "Local Business";
+                    else if (r.provider_subtype === "freelancer") labelText = "Freelancer";
+                    else if (r.provider_subtype === "business_owner") labelText = "Business Owner";
+                  }
 
                   return (
                     <span key={r.id} style={{

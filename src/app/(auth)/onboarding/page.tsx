@@ -234,18 +234,6 @@ export default function OnboardingPage() {
                <div className={styles.subtypeGroup} style={{ marginTop: "var(--space-4)" }}>
                   <label className={styles.label} style={{ marginBottom: "var(--space-1)" }}>Provider Type *</label>
                   <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", marginTop: "4px" }}>
-                    <label className={styles.roleCard} style={{ padding: "var(--space-3)", display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
-                      <input 
-                        type="radio" 
-                        name="provider_subtype" 
-                        checked={formData.provider_subtype === 'business_owner'}
-                        onChange={() => setFormData({ ...formData, provider_subtype: 'business_owner' })}
-                      />
-                      <div className={styles.roleTitle} style={{ fontSize: "var(--text-sm)", margin: 0, fontWeight: "var(--weight-semibold)" }}>
-                        Business Owner
-                      </div>
-                    </label>
-
                     <div 
                       className={styles.roleCard} 
                       style={{ 
@@ -259,7 +247,7 @@ export default function OnboardingPage() {
                         background: "rgba(202, 138, 4, 0.02)",
                         borderStyle: "dashed"
                       }}
-                      onClick={() => alert("Freelancer registration is currently unavailable. Please select Business Owner or Local Service.")}
+                      onClick={() => alert("Freelancer registration is currently unavailable. Please select Local Business.")}
                     >
                       <input 
                         type="radio" 
@@ -288,7 +276,7 @@ export default function OnboardingPage() {
                         onChange={() => setFormData({ ...formData, provider_subtype: 'local_service' })}
                       />
                       <div className={styles.roleTitle} style={{ fontSize: "var(--text-sm)", margin: 0, fontWeight: "var(--weight-semibold)" }}>
-                        Local Service
+                        Local Business
                       </div>
                     </label>
                   </div>

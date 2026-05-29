@@ -108,7 +108,7 @@ export default function ServiceProfileClient({
               <h1 className={styles.name}>{profile.business_name}</h1>
               <span className={styles.roleBadge}>
                 {profile.provider_type === "business_owner" ? "Business Owner" : 
-                 profile.provider_type === "freelancer" ? "Freelancer" : "Local Service"}
+                 profile.provider_type === "freelancer" ? "Freelancer" : "Local Business"}
               </span>
             </div>
             {profile.tagline && (
