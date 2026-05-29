@@ -196,6 +196,8 @@ export default function NavBar() {
   };
 
   const handleMarkSingleRead = async (notifId: number) => {
+    // Immediately dismiss the toast popup
+    setActiveToast(null);
     try {
       const { error } = await supabase
         .from("notifications")

@@ -728,8 +728,8 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
         </div>
 
         <div className={styles.section}>
-           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-             <h3>Social Accounts</h3>
+           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)', minWidth: 0, overflow: 'hidden' }}>
+             <h3 style={{ margin: 0 }}>Social Accounts</h3>
              <Button type="button" variant="outline" size="sm" onClick={addSocial}>+ Add Account</Button>
            </div>
            

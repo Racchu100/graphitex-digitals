@@ -2,6 +2,35 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User, UserRole } from "@/types/database";
 
+// Robust storage wrapper that handles localStorage privacy/SecurityError exceptions dynamically
+const getSafeStorage = () => {
+  if (typeof window === "undefined") return null;
+  return {
+    getItem: (key: string) => {
+      try {
+        return window.localStorage.getItem(key);
+      } catch (e) {
+        console.warn(`SafeStorage: read failed for key "${key}":`, e);
+        return null;
+      }
+    },
+    setItem: (key: string, value: string) => {
+      try {
+        window.localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn(`SafeStorage: write failed for key "${key}":`, e);
+      }
+    },
+    removeItem: (key: string) => {
+      try {
+        window.localStorage.removeItem(key);
+      } catch (e) {
+        console.warn(`SafeStorage: delete failed for key "${key}":`, e);
+      }
+    }
+  };
+};
+
 export function useUser() {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
@@ -12,12 +41,35 @@ export function useUser() {
   useEffect(() => {
     let active = true;
 
+    // 1. Immediately read from localStorage cache on client-side mount
+    // This resolves initial loading gray circles / screen freeze issues instantly on page refresh or navigation
+    const storage = getSafeStorage();
+    if (storage) {
+      const cached = storage.getItem("graphitex_cached_user");
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.user) {
+            setUser(parsed.user);
+            setRoles(parsed.roles || []);
+            setLoading(false);
+          }
+        } catch (e) {
+          console.warn("Failed to parse cached user on mount:", e);
+        }
+      }
+    }
+
     async function fetchUser(authUser: any) {
       if (!authUser) {
         if (active) {
           setUser(null);
           setRoles([]);
           setLoading(false);
+          const storage = getSafeStorage();
+          if (storage) {
+            storage.removeItem("graphitex_cached_user");
+          }
         }
         return;
       }
@@ -36,11 +88,22 @@ export function useUser() {
         if (active) {
           if (userData) {
             const { user_roles, ...rest } = userData as any;
-            setUser(rest as User);
-            setRoles(Array.isArray(user_roles) ? user_roles : []);
+            const updatedUser = rest as User;
+            const updatedRoles = Array.isArray(user_roles) ? user_roles : [];
+            setUser(updatedUser);
+            setRoles(updatedRoles);
+
+            // Dynamically cache values to survive tab switches/refreshes cleanly
+            const storage = getSafeStorage();
+            if (storage) {
+              storage.setItem(
+                "graphitex_cached_user",
+                JSON.stringify({ user: updatedUser, roles: updatedRoles })
+              );
+            }
           } else {
             // Fallback during onboarding or when profile not seeded
-            setUser({
+            const fallbackUser = {
               id: authUser.id,
               name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || "New User",
               email: authUser.email || null,
@@ -53,8 +116,18 @@ export function useUser() {
               status: "active",
               created_at: authUser.created_at,
               updated_at: authUser.created_at,
-            } as User);
+            } as User;
+            
+            setUser(fallbackUser);
             setRoles([]);
+
+            const storage = getSafeStorage();
+            if (storage) {
+              storage.setItem(
+                "graphitex_cached_user",
+                JSON.stringify({ user: fallbackUser, roles: [] })
+              );
+            }
           }
         }
       } catch (err: any) {
@@ -78,6 +151,10 @@ export function useUser() {
             setUser(null);
             setRoles([]);
             setLoading(false);
+            const storage = getSafeStorage();
+            if (storage) {
+              storage.removeItem("graphitex_cached_user");
+            }
           }
         }
       } catch (err: any) {
@@ -108,12 +185,21 @@ export function useUser() {
         if (!active) return;
         try {
           if (session?.user) {
-            setLoading(true);
+            // Only set loading to true if we don't have a cached session or user to avoid jarring screen blankouts
+            const storage = getSafeStorage();
+            const hasCached = storage ? !!storage.getItem("graphitex_cached_user") : false;
+            if (!hasCached) {
+              setLoading(true);
+            }
             await fetchUser(session.user);
           } else {
             setUser(null);
             setRoles([]);
             setLoading(false);
+            const storage = getSafeStorage();
+            if (storage) {
+              storage.removeItem("graphitex_cached_user");
+            }
           }
         } catch (err: any) {
           console.warn("Auth change fetch failed:", err);
@@ -136,7 +222,7 @@ export function useUser() {
       try {
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser && active) {
-          setLoading(true);
+          // Silent refresh inside dashboard so user sees instant updates without flickering page blocks
           await fetchUser(authUser);
         }
       } catch (err) {
@@ -144,8 +230,24 @@ export function useUser() {
       }
     };
 
+    // Recover from background browser tab sleeps silently on tab visibility changes
+    const handleVisibility = async () => {
+      if (document.visibilityState === "visible" && active) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user && active) {
+            // Quiet background update to keep user session fully dynamic without gray circles/spinners
+            await fetchUser(session.user);
+          }
+        } catch (err) {
+          console.warn("Failed to refresh user on tab visibility change:", err);
+        }
+      }
+    };
+
     if (typeof window !== "undefined") {
       window.addEventListener("user-profile-updated", handleProfileUpdate);
+      document.addEventListener("visibilitychange", handleVisibility);
     }
 
     return () => {
@@ -156,6 +258,7 @@ export function useUser() {
       }
       if (typeof window !== "undefined") {
         window.removeEventListener("user-profile-updated", handleProfileUpdate);
+        document.removeEventListener("visibilitychange", handleVisibility);
       }
     };
   }, [supabase]);
