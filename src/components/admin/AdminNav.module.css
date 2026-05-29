@@ -1,0 +1,74 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: hsl(220, 18%, 10%);
+  border-right: 1px solid hsl(220, 18%, 16%);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+}
+
+.logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid hsl(220, 18%, 16%);
+}
+
+.logo a {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  color: hsl(220, 90%, 70%);
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  flex: 1;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  color: hsl(220, 15%, 65%);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+}
+
+.link:hover {
+  background: hsl(220, 18%, 16%);
+  color: hsl(220, 15%, 90%);
+}
+
+.link.active {
+  background: hsl(220, 70%, 20%);
+  color: hsl(220, 90%, 70%);
+  border-left: 3px solid hsl(220, 70%, 50%);
+}
+
+.footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid hsl(220, 18%, 16%);
+}
+
+.backLink {
+  font-size: var(--text-xs);
+  color: hsl(220, 15%, 50%);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: hsl(220, 15%, 70%);
+}

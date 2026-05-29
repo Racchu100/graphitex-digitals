@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent tracking & scratch folders
+.agent/
+scratch/
+
+# root debugging & test scripts
+check-min-ids.js
+get-users-policies.js
+inspect-business-profiles.js
+inspect-triggers.js
+inspect.js
+inspect_applications.js
+inspect_notifications.js
+reset-user-passwords.js
+test-db.js
+test-insert-influencer.js
+test-policies.js

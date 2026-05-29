@@ -1,0 +1,145 @@
+.container {
+  position: relative;
+}
+
+.toast {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  background: hsl(145, 63%, 42%);
+  color: white;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  z-index: var(--z-toast);
+  animation: slide-in 0.2s ease-out;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-16);
+  color: hsl(220, 15%, 50%);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.card {
+  background: hsl(220, 18%, 12%);
+  border: 1px solid hsl(220, 18%, 18%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: hsl(220, 15%, 92%);
+  margin: 0 0 var(--space-1);
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: hsl(220, 15%, 60%);
+  margin: 0;
+}
+
+.date {
+  font-size: var(--text-xs);
+  color: hsl(220, 15%, 40%);
+  margin: var(--space-1) 0 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.approveBtn {
+  background: hsl(145, 63%, 38%) !important;
+  color: white !important;
+}
+
+.approveBtn:hover {
+  background: hsl(145, 63%, 30%) !important;
+}
+
+.mediaRow {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.thumb {
+  width: 96px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid hsl(220, 18%, 22%);
+  flex-shrink: 0;
+}
+
+.description {
+  font-size: var(--text-sm);
+  color: hsl(220, 15%, 60%);
+  line-height: var(--leading-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rejectPanel {
+  background: hsl(0, 30%, 10%);
+  border: 1px solid hsl(0, 40%, 25%);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rejectPanel label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: hsl(0, 70%, 70%);
+}
+
+.rejectPanel textarea {
+  width: 100%;
+  padding: var(--space-3);
+  background: hsl(0, 20%, 8%);
+  border: 1px solid hsl(0, 40%, 25%);
+  border-radius: var(--radius-sm);
+  color: hsl(0, 15%, 85%);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  resize: vertical;
+}
+
+.rejectActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}

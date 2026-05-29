@@ -1,0 +1,16 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: hsl(220, 15%, 97%);
+  background: hsl(220, 20%, 7%);
+}
+
+.content {
+  flex: 1;
+  overflow-x: hidden;
+}
+
+.main {
+  padding: var(--space-8);
+  max-width: 1400px;
+}

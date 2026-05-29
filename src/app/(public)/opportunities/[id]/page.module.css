@@ -1,0 +1,226 @@
+.page {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-16);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-8));
+}
+
+.card, .businessCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.postedBy {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.title {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-3xl));
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+}
+
+.purpose {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.expiryBadge {
+  font-size: var(--text-sm);
+  background: var(--color-surface-elevated);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.urgent {
+  background: hsl(30 80% 12%);
+  color: hsl(30 90% 60%);
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  background: var(--color-surface-elevated);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.statLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statValue {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.section h2 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  white-space: pre-line;
+}
+
+.timeline {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.timeline > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Business Card Sidebar */
+.businessCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.businessCard h3 {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.businessName {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.businessTagline {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  font-size: var(--text-xs);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-secondary);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  width: max-content;
+  margin-top: var(--space-1);
+}
+
+.websiteLink {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-top: var(--space-2);
+}
+
+.websiteLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: static;
+    order: -1;
+  }
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .topBar {
+    flex-direction: column;
+  }
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+}

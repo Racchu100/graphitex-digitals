@@ -1,0 +1,227 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-hover);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.brand {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--color-surface-overlay);
+}
+
+.brandInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandName {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.expiry {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-elevated);
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.urgent {
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.purpose {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  background: var(--color-surface-elevated);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statLabel {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.btnPrimary, .btnSecondary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.btnPrimary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btnPrimary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btnSecondary:hover {
+  background: var(--color-surface-overlay);
+  border-color: var(--color-border-hover);
+}
+
+.btnApplied {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+  background: hsl(140 50% 12%);
+  color: hsl(140 70% 55%);
+  border: 1px solid hsl(140 55% 20%);
+  cursor: pointer;
+}
+
+.btnApplied:hover {
+  background: hsl(140 50% 18%);
+  border-color: hsl(140 60% 30%);
+  color: hsl(140 80% 65%);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--space-2) !important;
+    gap: var(--space-1-5, 6px) !important;
+  }
+  .logo {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .brand {
+    gap: var(--space-1-5, 6px) !important;
+  }
+  .brandName {
+    font-size: 7.5px !important;
+    letter-spacing: 0.03em !important;
+  }
+  .title {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+  }
+  .expiry {
+    font-size: 7.5px !important;
+    padding: 2px 4px !important;
+  }
+  .purpose {
+    font-size: 8.5px !important;
+    line-height: 1.2 !important;
+  }
+  .stats {
+    padding: var(--space-1-5, 6px) !important;
+    gap: 4px !important;
+    border-radius: 4px !important;
+  }
+  .statLabel {
+    font-size: 7.5px !important;
+  }
+  .statValue {
+    font-size: 8.5px !important;
+    font-weight: 700 !important;
+  }
+  .btnPrimary, .btnSecondary, .btnApplied {
+    height: 24px !important;
+    font-size: 9px !important;
+    border-radius: 4px !important;
+  }
+}

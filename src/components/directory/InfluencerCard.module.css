@@ -1,0 +1,213 @@
+/* ── Card Shell ─────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-hover);
+}
+
+/* ── Full-width Banner Image ───────────────────────────────────── */
+.avatarBanner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center top;
+  background: var(--color-surface-overlay);
+}
+
+/* ── Body Content below image ─────────────────────────────────── */
+.content {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  margin: 0;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  flex-wrap: wrap;
+}
+
+.badge {
+  background: var(--color-surface-overlay);
+  color: var(--color-text-secondary);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-xs);
+}
+
+.location {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* ── Social Counts Row ────────────────────────────────────────── */
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-surface-elevated);
+  border-radius: var(--radius-md);
+}
+
+.engagementBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  background: hsla(45, 100%, 50%, 0.1);
+  border: 1px solid hsla(45, 100%, 50%, 0.25);
+  color: hsl(35, 95%, 35%);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-left: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.socialItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+}
+
+.count {
+  font-family: var(--font-mono);
+}
+
+/* ── Footer Actions ───────────────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.price {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary);
+}
+
+.priceHidden {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.viewBtn {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.viewBtn:hover {
+  background: var(--color-surface-overlay);
+  border-color: var(--color-border-hover);
+}
+
+/* ── Mobile overrides ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .avatarBanner {
+    aspect-ratio: 3 / 4;
+  }
+
+  .content {
+    padding: 4px;
+    gap: 3px;
+  }
+
+  .name {
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .meta {
+    font-size: 7px;
+    gap: 2px;
+  }
+
+  .badge {
+    font-size: 7px;
+    padding: 1px 3px;
+  }
+
+  .location {
+    font-size: 7px;
+  }
+
+  .socials {
+    padding: 3px;
+    gap: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  .socialItem {
+    font-size: 8px;
+  }
+
+  .footer {
+    padding: 3px var(--space-1);
+    flex-direction: column;
+    gap: 3px;
+    align-items: stretch;
+  }
+
+  .priceHidden {
+    font-size: 7px;
+  }
+
+  .viewBtn {
+    font-size: 8px;
+    padding: 3px 6px;
+    text-align: center;
+  }
+}

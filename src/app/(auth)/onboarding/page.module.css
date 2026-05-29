@@ -1,0 +1,186 @@
+.container {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.backgroundGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--color-primary-subtle) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  z-index: 1;
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-surface-overlay);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+.stepText {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+}
+
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepContent {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stepContent.active {
+  display: flex;
+  animation: slideIn var(--duration-base) var(--ease-out);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.nextBtn {
+  flex: 1;
+}
+
+.errorBanner {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.infoBox {
+  background: var(--color-surface-overlay);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+/* Role Cards */
+.roleCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface-elevated);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.roleCard:hover {
+  border-color: var(--color-border-hover);
+}
+
+.roleCard:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.roleCard input[type="checkbox"] {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.roleTitle {
+  font-weight: var(--weight-semibold);
+  margin-bottom: 2px;
+}
+
+.roleDesc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.subtypeGroup {
+  margin-top: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-elevated);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.select {
+  height: 48px;
+  padding: 0 var(--space-3);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  outline: none;
+}
+
+.select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
