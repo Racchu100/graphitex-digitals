@@ -201,8 +201,12 @@ export default function OnboardingPage() {
           {/* Step 3 */}
           <div className={`${styles.stepContent} ${step === 3 ? styles.active : ''}`}>
              <label className={styles.roleCard}>
-                <input type="checkbox" checked={formData.roles.influencer}
-                  onChange={(e) => setFormData({...formData, roles: {...formData.roles, influencer: e.target.checked}})} />
+                <input type="radio" name="role" checked={formData.roles.influencer}
+                  onChange={() => setFormData({
+                    ...formData,
+                    roles: { influencer: true, provider: false },
+                    provider_subtype: ""
+                  })} />
                 <div className={styles.roleInfo}>
                   <div className={styles.roleTitle}>Influencer</div>
                   <div className={styles.roleDesc}>I want to find opportunities and collaborate.</div>
@@ -210,8 +214,11 @@ export default function OnboardingPage() {
              </label>
 
              <label className={styles.roleCard}>
-                <input type="checkbox" checked={formData.roles.provider}
-                  onChange={(e) => setFormData({...formData, roles: {...formData.roles, provider: e.target.checked}})} />
+                <input type="radio" name="role" checked={formData.roles.provider}
+                  onChange={() => setFormData({
+                    ...formData,
+                    roles: { influencer: false, provider: true }
+                  })} />
                 <div className={styles.roleInfo}>
                   <div className={styles.roleTitle}>Service Provider</div>
                   <div className={styles.roleDesc}>I want to list my business and find influencers.</div>

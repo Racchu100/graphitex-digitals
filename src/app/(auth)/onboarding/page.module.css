@@ -136,7 +136,8 @@
   background: var(--color-primary-subtle);
 }
 
-.roleCard input[type="checkbox"] {
+.roleCard input[type="checkbox"],
+.roleCard input[type="radio"] {
   margin-top: 4px;
   width: 18px;
   height: 18px;
