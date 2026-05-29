@@ -29,6 +29,23 @@ export async function POST(req: NextRequest) {
 
     // 3. Upload file using Admin Client (bypasses RLS)
     const adminClient = createAdminClient();
+
+    // Auto-ensure bucket exists in Supabase storage
+    try {
+      const { data: buckets, error: listError } = await adminClient.storage.listBuckets();
+      if (!listError) {
+        const bucketExists = buckets?.some((b: any) => b.name === bucket);
+        if (!bucketExists) {
+          console.log(`[Upload API] Bucket "${bucket}" does not exist. Creating it as public...`);
+          await adminClient.storage.createBucket(bucket, {
+            public: true,
+          });
+        }
+      }
+    } catch (bucketErr) {
+      console.warn("[Upload API] Failed to auto-ensure bucket exists:", bucketErr);
+    }
+
     const fileExt = file.name.split('.').pop() || "png";
     
     let fileName = "";

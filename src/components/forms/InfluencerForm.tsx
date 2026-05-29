@@ -290,9 +290,13 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
     setError("");
     try {
       const file = await compressImageToWebP(rawFile);
+      const fileExt = file.type.startsWith("image/") ? "webp" : (file.name.split('.').pop() || "png");
+      const customPath = `${user?.id || 'temp'}/avatar-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+
       const uploadData = new FormData();
       uploadData.append("file", file);
       uploadData.append("bucket", "profile-pictures");
+      uploadData.append("path", customPath);
 
       const response = await fetch("/api/upload", {
         method: "POST",
