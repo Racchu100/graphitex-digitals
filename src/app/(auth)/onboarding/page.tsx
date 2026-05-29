@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { AlertTriangle } from "lucide-react";
+import { resolveStaleMobileUser } from "./actions";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -111,6 +112,11 @@ export default function OnboardingPage() {
       
       // Ensure the value does not exceed the VARCHAR(20) limit
       const cleanPhone = extractedPhone.slice(0, 20);
+
+      // Ensure any conflicting stale/orphaned user record is resolved first
+      if (cleanPhone) {
+        await resolveStaleMobileUser(user.id, cleanPhone);
+      }
 
       const { error: userError } = await supabase
         .from('users')
