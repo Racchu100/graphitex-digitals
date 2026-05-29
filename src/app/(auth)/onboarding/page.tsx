@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
+import { AlertTriangle } from "lucide-react";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -63,6 +64,10 @@ export default function OnboardingPage() {
     e.preventDefault();
     if (!formData.roles.influencer && !formData.roles.provider) {
       setError("Please select at least one role.");
+      return;
+    }
+    if (formData.roles.provider && !formData.provider_subtype) {
+      setError("Please select a provider type.");
       return;
     }
     setLoading(true);
@@ -226,15 +231,67 @@ export default function OnboardingPage() {
              </label>
 
              {formData.roles.provider && (
-               <div className={styles.subtypeGroup}>
-                  <label className={styles.label}>Provider Type</label>
-                  <select className={styles.select} value={formData.provider_subtype}
-                    onChange={(e) => setFormData({...formData, provider_subtype: e.target.value})} required>
-                    <option value="">Select type...</option>
-                    <option value="business_owner">Business Owner</option>
-                    <option value="freelancer">Freelancer</option>
-                    <option value="local_service">Local Service</option>
-                  </select>
+               <div className={styles.subtypeGroup} style={{ marginTop: "var(--space-4)" }}>
+                  <label className={styles.label} style={{ marginBottom: "var(--space-1)" }}>Provider Type *</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", marginTop: "4px" }}>
+                    <label className={styles.roleCard} style={{ padding: "var(--space-3)", display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+                      <input 
+                        type="radio" 
+                        name="provider_subtype" 
+                        checked={formData.provider_subtype === 'business_owner'}
+                        onChange={() => setFormData({ ...formData, provider_subtype: 'business_owner' })}
+                      />
+                      <div className={styles.roleTitle} style={{ fontSize: "var(--text-sm)", margin: 0, fontWeight: "var(--weight-semibold)" }}>
+                        Business Owner
+                      </div>
+                    </label>
+
+                    <div 
+                      className={styles.roleCard} 
+                      style={{ 
+                        padding: "var(--space-3)", 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "var(--space-3)", 
+                        opacity: 0.6,
+                        cursor: "not-allowed",
+                        borderColor: "rgba(202, 138, 4, 0.25)",
+                        background: "rgba(202, 138, 4, 0.02)",
+                        borderStyle: "dashed"
+                      }}
+                      onClick={() => alert("Freelancer registration is currently unavailable. Please select Business Owner or Local Service.")}
+                    >
+                      <input 
+                        type="radio" 
+                        name="provider_subtype" 
+                        disabled
+                        checked={false}
+                        onChange={() => {}}
+                        style={{ cursor: "not-allowed" }}
+                      />
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                        <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--color-text-secondary)" }}>
+                          Freelancer
+                        </span>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#ca8a04", fontWeight: "var(--weight-semibold)" }}>
+                          <AlertTriangle size={13} color="#ca8a04" />
+                          <span>Currently Unavailable</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label className={styles.roleCard} style={{ padding: "var(--space-3)", display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+                      <input 
+                        type="radio" 
+                        name="provider_subtype" 
+                        checked={formData.provider_subtype === 'local_service'}
+                        onChange={() => setFormData({ ...formData, provider_subtype: 'local_service' })}
+                      />
+                      <div className={styles.roleTitle} style={{ fontSize: "var(--text-sm)", margin: 0, fontWeight: "var(--weight-semibold)" }}>
+                        Local Service
+                      </div>
+                    </label>
+                  </div>
                </div>
              )}
           </div>
