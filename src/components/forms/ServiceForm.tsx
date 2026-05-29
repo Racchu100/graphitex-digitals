@@ -65,12 +65,21 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
             .select('country_id, state_id, city_id')
             .eq('id', user.id)
             .maybeSingle();
-          if (dbUser) {
+
+          const { data: dbRole } = await supabase
+            .from('user_roles')
+            .select('provider_subtype')
+            .eq('user_id', user.id)
+            .eq('role', 'provider')
+            .maybeSingle();
+
+          if (dbUser || dbRole) {
             setFormData(prev => ({
               ...prev,
-              country_id: dbUser.country_id ? String(dbUser.country_id) : prev.country_id,
-              state_id: dbUser.state_id ? String(dbUser.state_id) : prev.state_id,
-              city_id: dbUser.city_id ? String(dbUser.city_id) : prev.city_id,
+              country_id: dbUser?.country_id ? String(dbUser.country_id) : prev.country_id,
+              state_id: dbUser?.state_id ? String(dbUser.state_id) : prev.state_id,
+              city_id: dbUser?.city_id ? String(dbUser.city_id) : prev.city_id,
+              provider_type: dbRole?.provider_subtype ? dbRole.provider_subtype : prev.provider_type,
             }));
           }
         }
@@ -151,7 +160,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
       setError("");
       // 0. Comprehensive Client-Side Validations to prevent database check constraint crashes
       if (!formData.business_name?.trim()) {
-        throw new Error("Business Name is required.");
+        throw new Error(`${formData.provider_type === "freelancer" ? "Freelancer Name" : "Business Name"} is required.`);
       }
       if (!formData.category_id) {
         throw new Error("Category selection is required.");
@@ -325,7 +334,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
           </div>
 
           <Input
-            label="Business Name"
+            label={formData.provider_type === "freelancer" ? "Freelancer Name" : "Business Name"}
             name="business_name"
             value={formData.business_name}
             onChange={handleChange}
