@@ -543,7 +543,7 @@ function ProfileDashboardContent() {
                 >
                   <option value="">{statesLoading ? "Loading states..." : "Select state..."}</option>
                   {states.map((s) => (
-                    <option key={s.id} value={s.id}>
+                    <option key={s.id} value={String(s.id)}>
                       {s.name}
                     </option>
                   ))}
@@ -565,7 +565,7 @@ function ProfileDashboardContent() {
                     {!formData.state_id ? "Select state first" : citiesLoading ? "Loading cities..." : "Select city..."}
                   </option>
                   {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.id} value={String(c.id)}>
                       {c.name}
                     </option>
                   ))}

@@ -36,10 +36,19 @@ export default function OnboardingPage() {
     async function loadUserData() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        // Fetch existing database user record if any
+        const { data: dbUser } = await supabase
+          .from("users")
+          .select("name, email, state_id, city_id")
+          .eq("id", user.id)
+          .maybeSingle();
+
         setFormData(prev => ({
           ...prev,
-          name: prev.name || user.user_metadata?.full_name || user.user_metadata?.name || "",
-          email: prev.email || (user.email && !user.email.toLowerCase().endsWith("@graphitex.app") ? user.email : ""),
+          name: prev.name || dbUser?.name || user.user_metadata?.full_name || user.user_metadata?.name || "",
+          email: prev.email || dbUser?.email || (user.email && !user.email.toLowerCase().endsWith("@graphitex.app") ? user.email : ""),
+          state_id: prev.state_id || (dbUser?.state_id ? String(dbUser.state_id) : ""),
+          city_id: prev.city_id || (dbUser?.city_id ? String(dbUser.city_id) : ""),
         }));
       }
     }
@@ -105,7 +114,7 @@ export default function OnboardingPage() {
 
       const { error: userError } = await supabase
         .from('users')
-        .insert({
+        .upsert({
           id: user.id,
           name: formData.name,
           email: formData.email || null,
@@ -115,9 +124,9 @@ export default function OnboardingPage() {
           state_id: parseInt(formData.state_id),
           city_id: parseInt(formData.city_id),
           status: 'active'
-        });
+        }, { onConflict: 'id' });
 
-      if (userError && userError.code !== '23505') throw userError;
+      if (userError) throw userError;
 
       if (formData.roles.influencer) {
         await supabase.from('user_roles').insert({ user_id: user.id, role: 'influencer' });
@@ -198,7 +207,7 @@ export default function OnboardingPage() {
                 onChange={(e) => setFormData({ ...formData, state_id: e.target.value, city_id: "" })}
                 disabled={statesLoading}>
                 <option value="">{statesLoading ? "Loading states..." : "Select state..."}</option>
-                {states.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                {states.map(s => <option key={s.id} value={String(s.id)}>{s.name}</option>)}
               </select>
             </div>
 
@@ -212,7 +221,7 @@ export default function OnboardingPage() {
                 <option value="">
                   {!formData.state_id ? "Select state first" : citiesLoading ? "Loading cities..." : "Select city..."}
                 </option>
-                {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {cities.map(c => <option key={c.id} value={String(c.id)}>{c.name}</option>)}
               </select>
             </div>
           </div>
