@@ -39,7 +39,7 @@ export default function OnboardingPage() {
         setFormData(prev => ({
           ...prev,
           name: prev.name || user.user_metadata?.full_name || user.user_metadata?.name || "",
-          email: prev.email || user.email || "",
+          email: prev.email || (user.email && !user.email.toLowerCase().endsWith("@graphitex.app") ? user.email : ""),
         }));
       }
     }
@@ -93,7 +93,7 @@ export default function OnboardingPage() {
 
       let extractedPhone = user.phone || user.user_metadata?.phone || "";
       if (!extractedPhone && user.email) {
-        if (user.email.endsWith("@graphitex.app")) {
+        if (user.email.toLowerCase().endsWith("@graphitex.app")) {
           extractedPhone = user.email.split("@")[0];
         } else {
           extractedPhone = user.email;

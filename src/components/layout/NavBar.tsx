@@ -220,7 +220,7 @@ export default function NavBar() {
   const initials = user?.name ? user.name.charAt(0).toUpperCase() : "U";
 
   // Filter out system auto-generated emails (e.g. +91XXXXXXXXXX@graphitex.app)
-  const isRealEmail = user?.email && !user.email.endsWith("@graphitex.app");
+  const isRealEmail = user?.email && !user.email.toLowerCase().endsWith("@graphitex.app");
 
   // Determine user location string from joined states and cities fetched by our hook
   const locationText = 

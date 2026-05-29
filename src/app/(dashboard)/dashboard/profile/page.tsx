@@ -122,7 +122,7 @@ function ProfileDashboardContent() {
       if (user) {
         setFormData({
           name: user.name || "",
-          email: user.email || "",
+          email: user.email && !user.email.toLowerCase().endsWith("@graphitex.app") ? user.email : "",
           mobile_number: user.mobile_number || "",
           state_id: user.state_id ? String(user.state_id) : "",
           city_id: user.city_id ? String(user.city_id) : "",

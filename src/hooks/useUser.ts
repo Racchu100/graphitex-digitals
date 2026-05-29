@@ -106,7 +106,7 @@ export function useUser() {
             const fallbackUser = {
               id: authUser.id,
               name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || "New User",
-              email: authUser.email || null,
+              email: authUser.email && !authUser.email.toLowerCase().endsWith("@graphitex.app") ? authUser.email : null,
               mobile_number: authUser.phone || authUser.user_metadata?.phone || "",
               mobile_verified: !!authUser.phone_confirmed_at,
               country_id: 0,
