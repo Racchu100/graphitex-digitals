@@ -168,7 +168,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
       if (!formData.description?.trim()) {
         throw new Error("Description is required.");
       }
-      if (!formData.address_line?.trim()) {
+      if (formData.provider_type !== 'freelancer' && !formData.address_line?.trim()) {
         throw new Error("Shop Location (Exact Address) is required.");
       }
 
@@ -202,17 +202,14 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
         whatsapp_number: formData.whatsapp_number || null,
         contact_number: formData.contact_number || null,
         website_url: formData.website_url || null,
-        address_line: formData.address_line || null,
+        address_line: formData.provider_type === 'freelancer' ? null : (formData.address_line || null),
         country_id: dbUser?.country_id || parseInt(formData.country_id as string) || 1,
         state_id: dbUser?.state_id || parseInt(formData.state_id as string) || 1,
         city_id: dbUser?.city_id || parseInt(formData.city_id as string) || 1,
         status: initialData?.status === 'approved' ? 'approved' : submitAction,
         is_public: initialData?.status === 'approved' ? (initialData.is_public ?? true) : false,
+        map_embed_url: (formData.provider_type !== 'freelancer' && formData.map_embed_url?.trim()) ? formData.map_embed_url.trim() : null,
       };
-
-      if (formData.map_embed_url?.trim()) {
-        payload.map_embed_url = formData.map_embed_url.trim();
-      }
 
       let profileId = initialData?.id;
 
@@ -360,14 +357,16 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
              />
           </div>
 
-          <Input
-            label="Shop Location (Exact Address) *"
-            name="address_line"
-            value={formData.address_line}
-            onChange={handleChange}
-            placeholder="Enter the exact shop address (e.g. Shop No. 12, MG Road)"
-            required
-          />
+          {formData.provider_type !== 'freelancer' && (
+            <Input
+              label="Shop Location (Exact Address) *"
+              name="address_line"
+              value={formData.address_line}
+              onChange={handleChange}
+              placeholder="Enter the exact shop address (e.g. Shop No. 12, MG Road)"
+              required
+            />
+          )}
 
           <div className={styles.row}>
              <div className={styles.field}>
@@ -426,13 +425,15 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
               onChange={handleChange}
               type="url"
             />
-            <Input
-              label="Google Map Embed Code or URL (Optional)"
-              name="map_embed_url"
-              value={formData.map_embed_url}
-              onChange={handleChange}
-              placeholder="e.g. https://maps.google.com/maps?q=... or full iframe tag"
-            />
+            {formData.provider_type !== 'freelancer' && (
+              <Input
+                label="Google Map Embed Code or URL (Optional)"
+                name="map_embed_url"
+                value={formData.map_embed_url}
+                onChange={handleChange}
+                placeholder="e.g. https://maps.google.com/maps?q=... or full iframe tag"
+              />
+            )}
         </div>
 
         {isEdit && initialData?.id && (

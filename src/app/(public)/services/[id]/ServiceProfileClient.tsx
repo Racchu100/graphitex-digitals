@@ -279,6 +279,7 @@ export default function ServiceProfileClient({
                   📍 {profile.address_line ? `${profile.address_line}, ` : ""}{profile.cities?.name}, {profile.states?.name}, {profile.countries?.name}
                 </span>
                 {(() => {
+                  if (profile.provider_type === 'freelancer') return null;
                   const getMapSrc = (embedInput: string) => {
                     if (!embedInput) return "";
                     if (embedInput.includes("<iframe")) {
