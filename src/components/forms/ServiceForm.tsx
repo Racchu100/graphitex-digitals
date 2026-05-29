@@ -26,25 +26,6 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
   const [error, setError] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
 
-  const freelanceSlugs = [
-    'graphic-design',
-    'content-writing',
-    'web-app-development',
-    'video-editing',
-    'social-media-management',
-    'digital-marketing-seo',
-    'ui-ux-design',
-    'voiceover-audio',
-    'consulting-strategy',
-    'translation-languages',
-    'photography-videography'
-  ];
-
-  const filteredCategories = categories.filter(c => {
-    const isFreelance = freelanceSlugs.includes(c.slug);
-    return formData.provider_type === 'freelancer' ? isFreelance : !isFreelance;
-  });
-
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
@@ -63,6 +44,25 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
     country_id: initialData?.country_id || "1", // Hardcoded default for scaffolding
     state_id: initialData?.state_id || "1",
     city_id: initialData?.city_id || "1",
+  });
+
+  const freelanceSlugs = [
+    'graphic-design',
+    'content-writing',
+    'web-app-development',
+    'video-editing',
+    'social-media-management',
+    'digital-marketing-seo',
+    'ui-ux-design',
+    'voiceover-audio',
+    'consulting-strategy',
+    'translation-languages',
+    'photography-videography'
+  ];
+
+  const filteredCategories = categories.filter(c => {
+    const isFreelance = freelanceSlugs.includes(c.slug);
+    return formData.provider_type === 'freelancer' ? isFreelance : !isFreelance;
   });
 
   useEffect(() => {
