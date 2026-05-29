@@ -33,6 +33,20 @@ export default function OnboardingPage() {
   const [citiesLoading, setCitiesLoading] = useState(false);
 
   useEffect(() => {
+    async function loadUserData() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setFormData(prev => ({
+          ...prev,
+          name: prev.name || user.user_metadata?.full_name || user.user_metadata?.name || "",
+          email: prev.email || user.email || "",
+        }));
+      }
+    }
+    loadUserData();
+  }, [supabase]);
+
+  useEffect(() => {
     setStatesLoading(true);
     fetch("/api/locations/states?country_id=1")
       .then(r => r.json())
