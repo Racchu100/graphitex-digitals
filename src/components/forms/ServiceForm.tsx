@@ -147,8 +147,30 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
     if (loading) return; // Prevent double submissions
     console.log("ServiceForm handleSubmit debug - isEdit:", isEdit, "profileId:", initialData?.id, "initialData:", initialData);
     setLoading(true);
-    setError("");
     try {
+      setError("");
+      // 0. Comprehensive Client-Side Validations to prevent database check constraint crashes
+      if (!formData.business_name?.trim()) {
+        throw new Error("Business Name is required.");
+      }
+      if (!formData.category_id) {
+        throw new Error("Category selection is required.");
+      }
+      if (!formData.description?.trim()) {
+        throw new Error("Description is required.");
+      }
+      if (!formData.address_line?.trim()) {
+        throw new Error("Shop Location (Exact Address) is required.");
+      }
+
+      // Check contact criteria to satisfy PostgreSQL CHECK constraint (business_profiles_check)
+      if (formData.contact_type === 'whatsapp' && !formData.whatsapp_number?.trim()) {
+        throw new Error("WhatsApp Number is required to publish this profile.");
+      }
+      if (formData.contact_type === 'phone' && !formData.contact_number?.trim()) {
+        throw new Error("Phone Number is required to publish this profile.");
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user) throw new Error("Authentication required. Please log in again.");
