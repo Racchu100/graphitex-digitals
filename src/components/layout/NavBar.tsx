@@ -79,23 +79,13 @@ export default function NavBar() {
         
         let fetchedNotifs = data || [];
 
-        // Check if user has an approved profile to inject the collaboration suggestion
+        // Check if user has an approved business profile to inject the collaboration suggestion (Only for Local Businesses / Providers)
         const isProviderUser = roles?.some(r => r?.role === 'provider');
-        const isInfluencerUser = roles?.some(r => r?.role === 'influencer');
         let isApproved = false;
 
         if (isProviderUser) {
           const { data: profile } = await supabase
             .from('business_profiles')
-            .select('status')
-            .eq('user_id', user!.id)
-            .maybeSingle();
-          if (profile && profile.status === 'approved') {
-            isApproved = true;
-          }
-        } else if (isInfluencerUser) {
-          const { data: profile } = await supabase
-            .from('influencer_profiles')
             .select('status')
             .eq('user_id', user!.id)
             .maybeSingle();
@@ -108,10 +98,8 @@ export default function NavBar() {
         if (isApproved && isDismissed !== "true") {
           const collabVirtualNotif = {
             id: "virtual-collab-alert",
-            title: isInfluencerUser ? "🌟 Collaborate with Brands!" : "🚀 Find Creative Creators!",
-            body: isInfluencerUser
-              ? "Your profile is approved! Click to browse campaigns and apply to opportunities."
-              : "Your profile is approved! Click to post campaigns and collaborate with influencers.",
+            title: "🚀 Find Creative Creators!",
+            body: "Your profile is approved! Click to post campaigns and collaborate with influencers.",
             created_at: new Date().toISOString(),
             is_read: false,
             type: "collab_suggestion"
@@ -313,9 +301,7 @@ export default function NavBar() {
       sessionStorage.setItem("collab_alert_dismissed", "true");
       setNotifications(prev => prev.filter(n => n.id !== "virtual-collab-alert"));
       setUnreadCount(prev => Math.max(0, prev - 1));
-      
-      const targetUrl = roles?.some(r => r?.role === 'influencer') ? "/opportunities" : "/dashboard/opportunities";
-      router.push(targetUrl);
+      router.push("/dashboard/opportunities");
       return;
     }
 
