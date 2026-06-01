@@ -172,6 +172,10 @@ p {
   }
 }
 
+span {
+  font-size: 1.05em;
+}
+
 a {
   color: var(--color-primary);
   text-decoration: none;
