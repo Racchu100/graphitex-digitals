@@ -341,6 +341,17 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
       console.log("[InfluencerForm] Utilizing reactive user resolved from hook:", user);
       if (!user) throw new Error("Authentication required. Please log in again.");
 
+      // Basic Profile Information Validation (Popup notify on empty Display Name or Bio)
+      if (!formData.display_name?.trim() || !formData.bio?.trim()) {
+        const missingFields = [];
+        if (!formData.display_name?.trim()) missingFields.push("Display Name");
+        if (!formData.bio?.trim()) missingFields.push("Bio");
+        
+        const alertMsg = `⚠️ Please fill out your basic profile info:\n\n${missingFields.map(f => `• ${f} is required.`).join("\n")}`;
+        alert(alertMsg);
+        throw new Error(`Basic profile info not filled: ${missingFields.join(", ")}`);
+      }
+
       // 1. Fetch user's actual location values from users table to prevent foreign key errors
       console.log("[InfluencerForm] Fetching location details from users table for user ID:", user.id);
       const { data: dbUser, error: dbUserError } = await supabase
