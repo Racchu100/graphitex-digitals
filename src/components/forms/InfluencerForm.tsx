@@ -92,6 +92,13 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
       return next;
     });
 
+    // Only auto-fetch if the follower count is empty, 0, or not yet entered
+    const currentFollowerCount = Number(social.follower_count || 0);
+    if (currentFollowerCount > 0) {
+      console.log("[InfluencerForm] Skipping auto-fetch to preserve user's custom follower count:", currentFollowerCount);
+      return;
+    }
+
     // 2. Trigger auto-fetch for follower count
     setFetchingStats(prev => ({ ...prev, [index]: true }));
     try {
@@ -110,7 +117,13 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
         if (data.follower_count !== undefined) {
           setSocials(prev => {
             const next = [...prev];
-            next[index].follower_count = data.follower_count;
+            const freshCount = Number(next[index].follower_count || 0);
+            
+            // Only overwrite if it is a real scraped count (not fallback),
+            // OR if the user's current entered count is 0 or empty.
+            if (!data.is_fallback || freshCount === 0) {
+              next[index].follower_count = data.follower_count;
+            }
             return next;
           });
         }
