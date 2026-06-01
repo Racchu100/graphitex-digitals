@@ -121,7 +121,8 @@ export default function NavBar() {
           n.type === "application_accepted" || 
           n.type === "application_rejected" || 
           n.type === "new_application" || 
-          n.type === "opportunity_removed"
+          n.type === "opportunity_removed" ||
+          n.type === "collab_suggestion"
         );
 
         if (criticalNotif) {
@@ -638,6 +639,33 @@ export default function NavBar() {
                     onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                   >
                     📂 View My Applications
+                  </Link>
+                </div>
+              )}
+              {activeToast.type === 'collab_suggestion' && (
+                <div style={{ marginTop: 'var(--space-2)' }}>
+                  <Link
+                    href="/dashboard/profile?tab=opportunities"
+                    onClick={() => handleMarkSingleRead(activeToast.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      background: 'var(--color-primary, hsl(262, 70%, 45%))',
+                      color: '#ffffff',
+                      borderRadius: 'var(--radius-md)',
+                      fontSize: '11px',
+                      fontWeight: 'var(--weight-bold)',
+                      textDecoration: 'none',
+                      boxShadow: 'var(--shadow-sm)',
+                      transition: 'opacity 0.15s ease',
+                      width: 'fit-content'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    🚀 Post a Campaign
                   </Link>
                 </div>
               )}
