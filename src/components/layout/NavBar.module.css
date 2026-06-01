@@ -375,7 +375,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: linear-gradient(135deg, var(--color-primary), #ff007f);
+  background: linear-gradient(135deg, #ff3b30, #ff5e3a);
   color: #ffffff;
   font-size: 10px;
   font-weight: var(--weight-bold);
@@ -387,9 +387,15 @@
   justify-content: center;
   padding: 0 4px;
   border: 2px solid #ffffff;
-  box-shadow: 0 2px 5px rgba(255, 0, 127, 0.35);
+  box-shadow: 0 2px 5px rgba(255, 59, 48, 0.35);
   animation: badgePulse 2.5s infinite;
   z-index: 10;
+}
+
+.redCount {
+  color: #ff3b30;
+  font-weight: var(--weight-bold);
+  margin-left: 2px;
 }
 
 @keyframes badgePulse {
@@ -692,14 +698,22 @@
 
 .hamburgerBadge {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 8px;
-  height: 8px;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #ff3b30, #ff5e3a);
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: #ff007f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
   border: 1.5px solid #ffffff;
-  box-shadow: 0 0 6px rgba(255, 0, 127, 0.4);
+  box-shadow: 0 1px 4px rgba(255, 59, 48, 0.3);
+  z-index: 10;
 }
 
 /* Drawer Overlay Backdrop */
@@ -1084,7 +1098,7 @@
     position: absolute;
     top: -2px;
     right: -2px;
-    background: #ff007f;
+    background: linear-gradient(135deg, #ff3b30, #ff5e3a);
     color: #ffffff;
     font-size: 8px;
     font-weight: 700;
@@ -1096,7 +1110,7 @@
     justify-content: center;
     padding: 0 3px;
     border: 1.5px solid #ffffff;
-    box-shadow: 0 1px 4px rgba(255, 0, 127, 0.3);
+    box-shadow: 0 1px 4px rgba(255, 59, 48, 0.3);
   }
 
   .mobileLoaderCircle {
@@ -1151,6 +1165,97 @@
     width: 1px;
     height: 12px;
     background: var(--color-border);
+  }
+}
+
+/* ── Gallery Empty Alert Toast ── */
+.galleryAlertContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  max-width: 380px;
+  width: calc(100vw - 48px);
+  animation: slideUp var(--duration-normal) var(--ease-out);
+}
+
+.galleryAlertCard {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  backdrop-filter: blur(10px);
+  border-left: 4px solid var(--color-primary);
+}
+
+.galleryAlertCloseBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.galleryAlertCloseBtn:hover {
+  color: var(--color-primary);
+}
+
+.galleryAlertTitle {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.galleryAlertBody {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.galleryAlertActionBtn {
+  margin-top: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .galleryAlertContainer {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+  }
+  .galleryAlertCard {
+    padding: var(--space-4);
   }
 }
 

@@ -4,13 +4,34 @@
   overflow: hidden;
 }
 
-.error {
+.errorDesktop {
   background: var(--color-error-bg);
   color: var(--color-error);
   padding: var(--space-4);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-6);
   font-size: var(--text-sm);
+}
+
+.errorMobile {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 1024px) {
+  .errorDesktop {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .errorMobile {
+    display: none !important;
+  }
 }
 
 .form {

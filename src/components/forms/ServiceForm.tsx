@@ -302,7 +302,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
 
   return (
     <Card padding="lg" className={styles.container}>
-      {error && <div className={styles.error}>{error}</div>}
+      {error && <div className={styles.errorDesktop}>{error}</div>}
       
       <form className={styles.form}>
         <div className={styles.section}>
@@ -470,6 +470,8 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
             <MediaUploader profileId={initialData.id} businessName={initialData.business_name} />
           </div>
         )}
+
+        {error && <div className={styles.errorMobile}>{error}</div>}
 
         <div className={styles.actions}>
           {initialData?.status === 'approved' ? (

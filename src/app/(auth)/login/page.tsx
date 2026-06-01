@@ -371,6 +371,7 @@ export default function LoginPage() {
               <Input
                 label="New Password"
                 type="password"
+                showPasswordToggle
                 value={newPassword}
                 onChange={(e) => { setNewPassword(e.target.value); setError(""); }}
                 placeholder="Min. 6 characters"
@@ -381,6 +382,7 @@ export default function LoginPage() {
               <Input
                 label="Confirm New Password"
                 type="password"
+                showPasswordToggle
                 value={confirmPassword}
                 onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                 placeholder="Re-enter password"
@@ -426,6 +428,7 @@ export default function LoginPage() {
               <Input
                 label="Password"
                 type="password"
+                showPasswordToggle
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(""); }}
                 placeholder="Min. 6 characters"

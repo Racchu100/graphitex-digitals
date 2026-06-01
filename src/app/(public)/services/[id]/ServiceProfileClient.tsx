@@ -290,7 +290,7 @@ export default function ServiceProfileClient({
                   };
 
                   const customMapSrc = getMapSrc(profile.map_embed_url || "");
-                  const mapSrc = customMapSrc || (fullAddress ? `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&t=&z=14&ie=UTF8&iwloc=&output=embed` : "");
+                  const mapSrc = customMapSrc;
 
                   if (!mapSrc) return null;
 

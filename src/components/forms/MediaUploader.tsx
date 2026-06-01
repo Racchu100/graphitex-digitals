@@ -151,6 +151,10 @@ export default function MediaUploader({ profileId, businessName }: MediaUploader
     }
   };
 
+  // The first image is treated as the service thumbnail/profile image and should not be shown in the media gallery
+  const thumbnailItem = media.find(m => m.media_type === "image");
+  const galleryMedia = media.filter(m => m.id !== thumbnailItem?.id);
+
   return (
     <div className={styles.container}>
       {error && <div className={styles.error}>{error}</div>}
@@ -172,9 +176,9 @@ export default function MediaUploader({ profileId, businessName }: MediaUploader
         </label>
       </div>
 
-      {media.length > 0 && (
+      {galleryMedia.length > 0 && (
         <div className={styles.grid}>
-          {media.map((item) => (
+          {galleryMedia.map((item) => (
             <div key={item.id} className={styles.mediaCard}>
               <div className={styles.dragHandle}>
                 <GripVertical size={16} />

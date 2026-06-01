@@ -52,9 +52,10 @@ export default function NavBar() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [activeToast, setActiveToast] = useState<any | null>(null);
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
+  const [showGalleryAlert, setShowGalleryAlert] = useState(false);
 
   const isProvider = Array.isArray(roles) && roles.some(r => r?.role === 'provider');
-  const displayCount = isProvider ? pendingApplicationsCount : unreadCount;
+  const displayCount = isProvider ? (unreadCount + pendingApplicationsCount) : unreadCount;
 
   useEffect(() => {
     if (!user) {
@@ -75,9 +76,52 @@ export default function NavBar() {
           .order("created_at", { ascending: false });
 
         if (error) throw error;
-        setNotifications(data || []);
         
-        const unread = data?.filter((n: any) => !n.is_read) || [];
+        let fetchedNotifs = data || [];
+
+        // Check if user has an approved profile to inject the collaboration suggestion
+        const isProviderUser = roles?.some(r => r?.role === 'provider');
+        const isInfluencerUser = roles?.some(r => r?.role === 'influencer');
+        let isApproved = false;
+
+        if (isProviderUser) {
+          const { data: profile } = await supabase
+            .from('business_profiles')
+            .select('status')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+          if (profile && profile.status === 'approved') {
+            isApproved = true;
+          }
+        } else if (isInfluencerUser) {
+          const { data: profile } = await supabase
+            .from('influencer_profiles')
+            .select('status')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+          if (profile && profile.status === 'approved') {
+            isApproved = true;
+          }
+        }
+
+        const isDismissed = sessionStorage.getItem("collab_alert_dismissed");
+        if (isApproved && isDismissed !== "true") {
+          const collabVirtualNotif = {
+            id: "virtual-collab-alert",
+            title: isInfluencerUser ? "🌟 Collaborate with Brands!" : "🚀 Find Creative Creators!",
+            body: isInfluencerUser
+              ? "Your profile is approved! Click to browse campaigns and apply to opportunities."
+              : "Your profile is approved! Click to post campaigns and collaborate with influencers.",
+            created_at: new Date().toISOString(),
+            is_read: false,
+            type: "collab_suggestion"
+          };
+          fetchedNotifs = [collabVirtualNotif, ...fetchedNotifs];
+        }
+
+        setNotifications(fetchedNotifs);
+        
+        const unread = fetchedNotifs.filter((n: any) => !n.is_read) || [];
         setUnreadCount(unread.length);
 
         // Find if there is any unread approved/rejected critical notification
@@ -177,6 +221,73 @@ export default function NavBar() {
     };
   }, [user, roles, isProvider, supabase]);
 
+  useEffect(() => {
+    if (!user) {
+      setShowGalleryAlert(false);
+      return;
+    }
+
+    // Check if dismissed in this session
+    const isDismissed = sessionStorage.getItem("gallery_alert_dismissed");
+    if (isDismissed === "true") return;
+
+    async function checkGalleryMedia() {
+      try {
+        const isProviderUser = roles?.some(r => r?.role === 'provider');
+        const isInfluencerUser = roles?.some(r => r?.role === 'influencer');
+
+        if (isProviderUser) {
+          // Fetch business profile
+          const { data: profile } = await supabase
+            .from('business_profiles')
+            .select('id')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+
+          if (profile) {
+            // Count media items (excluding the thumbnail at sort_order 0 or first image)
+            const { data: mediaItems } = await supabase
+              .from('business_media')
+              .select('id')
+              .eq('business_profile_id', profile.id);
+
+            // If there's 1 or less image (e.g. only the thumbnail is present, but no gallery items), show alert!
+            if (!mediaItems || mediaItems.length <= 1) {
+              setShowGalleryAlert(true);
+            }
+          }
+        } else if (isInfluencerUser) {
+          // Fetch influencer profile
+          const { data: profile } = await supabase
+            .from('influencer_profiles')
+            .select('id')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+
+          if (profile) {
+            const { data: mediaItems } = await supabase
+              .from('influencer_media')
+              .select('id')
+              .eq('influencer_profile_id', profile.id);
+
+            if (!mediaItems || mediaItems.length === 0) {
+              setShowGalleryAlert(true);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to check gallery media:", err);
+      }
+    }
+
+    // Wait until roles are loaded to check
+    if (!loading && roles && roles.length > 0) {
+      checkGalleryMedia();
+    }
+  }, [user, roles, loading, supabase]);
+
+
+
   const handleMarkAllRead = async () => {
     if (!user || unreadCount === 0) return;
     try {
@@ -194,14 +305,25 @@ export default function NavBar() {
     }
   };
 
-  const handleMarkSingleRead = async (notifId: number) => {
+  const handleMarkSingleRead = async (notifId: number | string) => {
     // Immediately dismiss the toast popup
     setActiveToast(null);
+
+    if (notifId === "virtual-collab-alert") {
+      sessionStorage.setItem("collab_alert_dismissed", "true");
+      setNotifications(prev => prev.filter(n => n.id !== "virtual-collab-alert"));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      
+      const targetUrl = roles?.some(r => r?.role === 'influencer') ? "/opportunities" : "/dashboard/opportunities";
+      router.push(targetUrl);
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from("notifications")
         .update({ is_read: true })
-        .eq("id", notifId);
+        .eq("id", notifId as number);
 
       if (error) throw error;
       setNotifications(prev => prev.filter(n => n.id !== notifId));
@@ -373,7 +495,9 @@ export default function NavBar() {
 
                   {/* Interactive Notifications List Section */}
                   <div className={styles.notifHeaderRow}>
-                    <span className={styles.notifTitle}>Notifications ({unreadCount})</span>
+                    <span className={styles.notifTitle}>
+                      Notifications <span className={styles.redCount}>({unreadCount})</span>
+                    </span>
                     {unreadCount > 0 && (
                       <button 
                         onClick={(e) => {
@@ -461,7 +585,9 @@ export default function NavBar() {
             ) : (
               <>
                 <Menu size={22} />
-                {displayCount > 0 && <span className={styles.hamburgerBadge} />}
+                {displayCount > 0 && (
+                  <span className={styles.hamburgerBadge}>{displayCount}</span>
+                )}
               </>
             )}
           </button>
@@ -697,7 +823,9 @@ export default function NavBar() {
             {/* Expandable/Scrollable Notifications Section in Drawer */}
             <div className={styles.drawerNotifSection}>
               <div className={styles.drawerNotifHeader}>
-                <span className={styles.drawerNotifTitle}>Notifications ({unreadCount})</span>
+                <span className={styles.drawerNotifTitle}>
+                  Notifications <span className={styles.redCount}>({unreadCount})</span>
+                </span>
                 {unreadCount > 0 && (
                   <button 
                     onClick={(e) => {
@@ -794,6 +922,41 @@ export default function NavBar() {
         )}
       </div>
     </div>
+      {showGalleryAlert && (
+        <div className={styles.galleryAlertContainer}>
+          <div className={styles.galleryAlertCard}>
+            <button 
+              className={styles.galleryAlertCloseBtn}
+              onClick={() => {
+                sessionStorage.setItem("gallery_alert_dismissed", "true");
+                setShowGalleryAlert(false);
+              }}
+              aria-label="Dismiss alert"
+            >
+              ✕
+            </button>
+            <h4 className={styles.galleryAlertTitle}>
+              📸 Add Gallery Media
+            </h4>
+            <p className={styles.galleryAlertBody}>
+              Your profile is active, but you haven&apos;t uploaded any showcase photos or videos to your media gallery yet. Add some media to attract more customers!
+            </p>
+            <Link 
+              href="/dashboard/profile"
+              onClick={() => {
+                sessionStorage.setItem("gallery_alert_dismissed", "true");
+                setShowGalleryAlert(false);
+              }}
+            >
+              <Button size="sm" className={styles.galleryAlertActionBtn} fullWidth>
+                Go to Profile Settings
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 }
