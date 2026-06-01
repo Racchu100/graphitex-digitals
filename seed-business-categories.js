@@ -36,7 +36,7 @@ if (!supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const newBusinessCategories = [
-  { name: 'Home & Electricals', slug: 'home-electricals' },
+  { name: 'Home & Electrical Services', slug: 'home-electrical-services' },
   { name: 'Spa & Salons', slug: 'spa-salons' },
   { name: 'Plumbing & Sanitary', slug: 'plumbing-sanitary' },
   { name: 'Cleaning & Pest Control', slug: 'cleaning-pest-control' },

@@ -141,6 +141,7 @@ const categoryMetadata: Record<string, { desc: string; id: string }> = {
   "Travel & Tourism": { desc: "High-engagement destination video campaigns and boutique hotel catalog promotions.", id: "travel-tourism" },
   "Events & Entertainment": { desc: "Bespoke product runway events, celebrity media PR, and corporate brand experiences.", id: "events-entertainment" },
   "Home & Electricals": { desc: "Expert home repair, wiring, switchboards, lighting installations, and trusted local electrical services.", id: "home-electricals" },
+  "Home & Electrical Services": { desc: "Expert inverter service, home wiring, UPS installation, board repairs, and trusted local electrical services.", id: "home-electrical-services" },
   "Spa & Salons": { desc: "Relaxing massage therapies, premium hair salons, facials, pedicures, and professional wellness spa sessions.", id: "spa-salons" },
   "Plumbing & Sanitary": { desc: "Professional leak repairs, pipe installations, tap fixes, drain cleaning, and sanitary fittings.", id: "plumbing-sanitary" },
   "Cleaning & Pest Control": { desc: "Comprehensive home deep cleaning, kitchen sanitization, sofa cleaning, and safe pest control services.", id: "cleaning-pest-control" },
