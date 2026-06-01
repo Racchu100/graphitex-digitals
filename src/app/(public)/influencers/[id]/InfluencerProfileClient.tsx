@@ -267,7 +267,7 @@ export default function InfluencerProfileClient({
   }, [activeMediaIndex]);
 
   // Exact engagement rate calculations matching the directory and social handle metrics
-  const totalFollowers = socials.reduce((sum, sa) => sum + (sa.follower_count || 0), 0) || 15000;
+  const totalFollowers = socials.reduce((sum, sa) => sum + Number(sa.follower_count || 0), 0);
   
   const isViralBhayani = totalFollowers >= 15000000 && totalFollowers <= 16000000;
   
@@ -285,9 +285,13 @@ export default function InfluencerProfileClient({
     likesRatio = 0.970;
   }
   
-  const avgLikes = isViralBhayani ? 53000 : Math.max(1, Math.round(totalEngagements * likesRatio));
-  const avgComments = isViralBhayani ? 340 : Math.max(1, totalEngagements - avgLikes);
-  const exactER = ((avgLikes + avgComments) / totalFollowers) * 100;
+  const avgLikes = totalFollowers > 0
+    ? (isViralBhayani ? 53000 : Math.max(1, Math.round(totalEngagements * likesRatio)))
+    : 0;
+  const avgComments = totalFollowers > 0
+    ? (isViralBhayani ? 340 : Math.max(1, totalEngagements - avgLikes))
+    : 0;
+  const exactER = totalFollowers > 0 ? ((avgLikes + avgComments) / totalFollowers) * 100 : 0;
 
   const formatStatNumber = (num: number) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, "") + 'M';
@@ -527,7 +531,7 @@ export default function InfluencerProfileClient({
                     </div>
                     <div className={styles.socialRight} style={{ gap: "var(--space-2)" }}>
                       <span className={styles.followerCount}>
-                        👥 {sa.follower_count.toLocaleString("en-US")}
+                        👥 {Number(sa.follower_count || 0).toLocaleString("en-US")}
                       </span>
 
                       {sa.is_verified && (

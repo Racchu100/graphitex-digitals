@@ -22,9 +22,10 @@ interface InfluencerCardProps {
 }
 
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, "") + 'M';
-  if (num >= 10000) return (num / 1000).toFixed(1).replace(/\.0$/, "") + 'K';
-  return num.toLocaleString("en-US");
+  const n = Number(num || 0);
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, "") + 'M';
+  if (n >= 10000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + 'K';
+  return n.toLocaleString("en-US");
 };
 
 export function getEngagementRate(profileId: string, followerCount: number = 15000, platform?: string) {
@@ -72,9 +73,9 @@ export function getEngagementRate(profileId: string, followerCount: number = 150
 export default function InfluencerCard({ profile, isProvider }: InfluencerCardProps) {
   const influencerSlug = getInfluencerSlug(profile.display_name) || profile.id;
   const totalFollowers = profile.influencer_social_accounts?.reduce(
-    (sum, acc) => sum + (acc.follower_count || 0),
+    (sum, acc) => sum + Number(acc.follower_count || 0),
     0
-  ) || 15000;
+  ) || 0;
 
   const [displayViews, setDisplayViews] = React.useState<number>(() => {
     // Return database value to prevent initial hydration mismatch

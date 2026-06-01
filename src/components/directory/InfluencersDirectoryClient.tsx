@@ -244,9 +244,9 @@ export default function InfluencersDirectoryClient({
     // D. Followers count eligibility tier filter
     if (followerTier !== "all") {
       const followers = profile.influencer_social_accounts?.reduce(
-        (sum: number, sa: any) => sum + (sa.follower_count || 0),
+        (sum: number, sa: any) => sum + Number(sa.follower_count || 0),
         0
-      ) || 15000;
+      ) || 0;
       if (followerTier === "nano" && followers > 10000) return false;
       if (followerTier === "micro" && followers > 50000) return false;
       if (followerTier === "macro" && followers > 100000) return false;
@@ -259,8 +259,8 @@ export default function InfluencersDirectoryClient({
   // 2. Sort the filtered profiles based on selected sorting priority
   const sortedProfiles = [...filteredProfiles].sort((a, b) => {
     if (prioritySort === "followers") {
-      const followersA = a.influencer_social_accounts?.reduce((sum: number, sa: any) => sum + (sa.follower_count || 0), 0) || 15000;
-      const followersB = b.influencer_social_accounts?.reduce((sum: number, sa: any) => sum + (sa.follower_count || 0), 0) || 15000;
+      const followersA = a.influencer_social_accounts?.reduce((sum: number, sa: any) => sum + Number(sa.follower_count || 0), 0) || 0;
+      const followersB = b.influencer_social_accounts?.reduce((sum: number, sa: any) => sum + Number(sa.follower_count || 0), 0) || 0;
       return followersB - followersA; // Descending
     }
     if (prioritySort === "views") {
@@ -303,7 +303,7 @@ export default function InfluencersDirectoryClient({
 
     // Follower calculations
     const totalFollowers = profile.influencer_social_accounts?.reduce(
-      (sum: number, acc: any) => sum + (acc.follower_count || 0), 
+      (sum: number, acc: any) => sum + Number(acc.follower_count || 0), 
       0
     ) || 0;
 
