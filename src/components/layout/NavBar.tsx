@@ -81,6 +81,7 @@ export default function NavBar() {
 
         // Check if user has an approved business profile to inject the collaboration suggestion (Only for Local Businesses / Providers)
         const isProviderUser = roles?.some(r => r?.role === 'provider');
+        const isInfluencerUser = roles?.some(r => r?.role === 'influencer');
         let isApproved = false;
 
         if (isProviderUser) {
@@ -91,6 +92,50 @@ export default function NavBar() {
             .maybeSingle();
           if (profile && profile.status === 'approved') {
             isApproved = true;
+          }
+        }
+
+        // Check if profile basic details are filled (Display Name & Bio / Description)
+        let isProfileIncomplete = false;
+        let incompleteFields: string[] = [];
+
+        if (isInfluencerUser) {
+          const { data: infProfile } = await supabase
+            .from('influencer_profiles')
+            .select('display_name, bio')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+
+          let hasBio = false;
+          if (infProfile?.bio) {
+            try {
+              if (infProfile.bio.trim().startsWith("{")) {
+                const parsed = JSON.parse(infProfile.bio);
+                if (parsed?.bio?.trim()) {
+                  hasBio = true;
+                }
+              } else if (infProfile.bio.trim()) {
+                hasBio = true;
+              }
+            } catch (e) {}
+          }
+
+          if (!infProfile || !infProfile.display_name?.trim() || !hasBio) {
+            isProfileIncomplete = true;
+            if (!infProfile?.display_name?.trim()) incompleteFields.push("Display Name");
+            if (!hasBio) incompleteFields.push("Bio");
+          }
+        } else if (isProviderUser) {
+          const { data: bizProfile } = await supabase
+            .from('business_profiles')
+            .select('business_name, description')
+            .eq('user_id', user!.id)
+            .maybeSingle();
+
+          if (!bizProfile || !bizProfile.business_name?.trim() || !bizProfile.description?.trim()) {
+            isProfileIncomplete = true;
+            if (!bizProfile?.business_name?.trim()) incompleteFields.push("Business Name");
+            if (!bizProfile?.description?.trim()) incompleteFields.push("Description");
           }
         }
 
@@ -105,6 +150,19 @@ export default function NavBar() {
             type: "collab_suggestion"
           };
           fetchedNotifs = [collabVirtualNotif, ...fetchedNotifs];
+        }
+
+        const isIncompleteDismissed = sessionStorage.getItem("incomplete_profile_alert_dismissed");
+        if (isProfileIncomplete && isIncompleteDismissed !== "true") {
+          const incompleteVirtualNotif = {
+            id: "virtual-incomplete-profile-alert",
+            title: "📝 Complete Your Profile!",
+            body: `Your basic info (${incompleteFields.join(", ")}) is not filled. Click here to complete your profile.`,
+            created_at: new Date().toISOString(),
+            is_read: false,
+            type: "profile_incomplete"
+          };
+          fetchedNotifs = [incompleteVirtualNotif, ...fetchedNotifs];
         }
 
         setNotifications(fetchedNotifs);
@@ -122,7 +180,8 @@ export default function NavBar() {
           n.type === "application_rejected" || 
           n.type === "new_application" || 
           n.type === "opportunity_removed" ||
-          n.type === "collab_suggestion"
+          n.type === "collab_suggestion" ||
+          n.type === "profile_incomplete"
         );
 
         if (criticalNotif) {
@@ -303,6 +362,14 @@ export default function NavBar() {
       setNotifications(prev => prev.filter(n => n.id !== "virtual-collab-alert"));
       setUnreadCount(prev => Math.max(0, prev - 1));
       router.push("/dashboard/opportunities");
+      return;
+    }
+
+    if (notifId === "virtual-incomplete-profile-alert") {
+      sessionStorage.setItem("incomplete_profile_alert_dismissed", "true");
+      setNotifications(prev => prev.filter(n => n.id !== "virtual-incomplete-profile-alert"));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      router.push("/dashboard/profile");
       return;
     }
 
@@ -666,6 +733,33 @@ export default function NavBar() {
                     onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                   >
                     🚀 Post a Campaign
+                  </Link>
+                </div>
+              )}
+              {activeToast.type === 'profile_incomplete' && (
+                <div style={{ marginTop: 'var(--space-2)' }}>
+                  <Link
+                    href="/dashboard/profile"
+                    onClick={() => handleMarkSingleRead(activeToast.id)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      background: 'var(--color-primary, hsl(262, 70%, 45%))',
+                      color: '#ffffff',
+                      borderRadius: 'var(--radius-md)',
+                      fontSize: '11px',
+                      fontWeight: 'var(--weight-bold)',
+                      textDecoration: 'none',
+                      boxShadow: 'var(--shadow-sm)',
+                      transition: 'opacity 0.15s ease',
+                      width: 'fit-content'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    📝 Fill Profile Info
                   </Link>
                 </div>
               )}
