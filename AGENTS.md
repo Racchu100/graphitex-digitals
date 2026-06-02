@@ -8,6 +8,9 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
 - **Homepage Mobile Padding Adjustment (June 2026)**:
   - Decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to 4px to tighten up the visual layout and decrease spacing between the landscape carousel section and the hero badge.
 
+- **Popular Categories Removal (June 2026)**:
+  - Removed the popular searches category pills block underneath the homepage search bar to clean up the visual layout of the hero area.
+
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).
   - Integrated the new high-resolution official brand logo (`public/logo.png`) across the entire platform. Upgraded the `Logo.tsx` component to dynamically render the high-quality logo asset with responsive aspect ratio styling and built custom CSS masking to crop and show only the phone icon for `showText={false}` requirements.
