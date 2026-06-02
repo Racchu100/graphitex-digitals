@@ -229,6 +229,16 @@
   .carouselArrow {
     display: none; /* Hide arrows on touch viewports for cleaner aesthetics */
   }
+  .heroSection {
+    padding: var(--space-2) 0 var(--space-6);
+  }
+  .heroInner {
+    gap: var(--space-3);
+  }
+  .section {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════ */
