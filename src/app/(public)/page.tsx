@@ -125,7 +125,14 @@ const categories = [
 
 
 
-
+// ── POPULAR CATEGORIES ───────────────────────────────────────────────────────────
+const popularCategories = [
+  "Fashion & Clothing",
+  "Jewellery & Accessories",
+  "Food & Restaurants",
+  "Technology & Gadgets",
+  "Photography & Video"
+];
 
 // ── HERO CAROUSEL SLIDES ───────────────────────────────────────────────────────
 const heroCarouselSlides = [
@@ -382,7 +389,21 @@ export default function HomePage() {
             </div>
           </form>
 
-
+          {/* Popular Search Pills */}
+          <div className={styles.popularRow}>
+            <span className={styles.popularLabel}>Popular:</span>
+            {popularCategories.map((cat) => (
+              <button
+                key={cat}
+                className={styles.popularPill}
+                onClick={() => {
+                  router.push(`/services?category=${encodeURIComponent(cat)}`);
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
 
           {/* Quick Action Cards */}
           <div className={styles.heroActions}>

@@ -7,9 +7,7 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
 
 - **Homepage Mobile Padding Adjustment (June 2026)**:
   - Decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to 4px to tighten up the visual layout and decrease spacing between the landscape carousel section and the hero badge.
-
-- **Popular Categories Removal (June 2026)**:
-  - Removed the popular searches category pills block underneath the homepage search bar to clean up the visual layout of the hero area.
+  - Filtered the homepage popular search tags to display only 5 core niches (Fashion & Clothing, Jewellery & Accessories, Food & Restaurants, Technology & Gadgets, and Photography & Video) and removed the rest of the secondary niches to improve layout cleaniness.
 
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).
