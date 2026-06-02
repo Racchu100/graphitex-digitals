@@ -391,9 +391,21 @@ export default function NavBar() {
     const confirmLogout = window.confirm("do you want to log out");
     if (!confirmLogout) return;
 
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn("Failed to log out from server cleanly:", err);
+    } finally {
+      // Defensively clear local and session cache storage
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("graphitex_cached_user");
+          window.sessionStorage.clear();
+        }
+      } catch (e) {}
+      router.push("/");
+      router.refresh();
+    }
   };
 
   const initials = user?.name ? user.name.charAt(0).toUpperCase() : "U";

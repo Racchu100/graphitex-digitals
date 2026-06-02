@@ -25,9 +25,17 @@ export default function DashboardNav() {
 
     try {
       await supabase.auth.signOut();
-      window.location.href = "/login";
     } catch (err) {
       console.warn("Failed to log out cleanly:", err);
+    } finally {
+      // Defensively clear local and session cache storage
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("graphitex_cached_user");
+          window.sessionStorage.clear();
+        }
+      } catch (e) {}
+      window.location.href = "/login";
     }
   };
 
