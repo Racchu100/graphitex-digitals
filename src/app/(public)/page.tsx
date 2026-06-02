@@ -107,11 +107,6 @@ const categories = [
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&q=80"
   },
   {
-    label: "Baby & Kids",
-    slug: "Baby & Kids",
-    image: "https://images.unsplash.com/photo-1519689680058-324335c77ebe?auto=format&fit=crop&w=400&q=80"
-  },
-  {
     label: "Pet Care",
     slug: "Pet Care",
     image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=400&q=80"
