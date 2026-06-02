@@ -150,7 +150,7 @@ const heroCarouselSlides = [
     title: "Graphitex Digitals Creative Agency Services",
     subtitle: "Graphic Design • Website Development • Ad Shoots • Instagram Page Handling • Digital Marketing",
     desc: "Scale your business organic traffic, creative reach, and conversions with our comprehensive, premium digital solutions.",
-    image: "/hero-agency-services.png",
+    image: "/agency_services_banner.png",
     ctaText: "Explore Agency Services 🚀",
     actionType: "scroll",
     target: "services-agency"
@@ -159,7 +159,7 @@ const heroCarouselSlides = [
     title: "Local Business & Services Directory",
     subtitle: "Hyper-Local Search • Mangalore Focus • Verified Listings",
     desc: "Search, filter, and discover trusted local agencies, professionals, and freelancers nearby. Connect directly via WhatsApp with zero middlemen.",
-    image: "/hero-business-directory.png",
+    image: "/business_directory_banner.png",
     ctaText: "Search Business Directory 🔍",
     actionType: "link",
     target: "/services"
@@ -168,7 +168,7 @@ const heroCarouselSlides = [
     title: "Direct Business & Creator Collaborations",
     subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
     desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
-    image: "/hero-influencer-collab.png",
+    image: "/influencer_collaboration_banner.png",
     ctaText: "Find Creators & Influencers 📣",
     actionType: "link",
     target: "/influencers"
@@ -277,33 +277,21 @@ export default function HomePage() {
                   className={`${styles.carouselSlide} ${isActive ? styles.carouselSlideActive : ""}`}
                   aria-hidden={!isActive}
                 >
-                  <div className={styles.slideContent}>
-                    <span className={styles.slideBadge}>FEATURED HIGHLIGHT</span>
-                    <h2 className={styles.slideTitle}>{slide.title}</h2>
-                    <div className={styles.slideSubtitle}>{slide.subtitle}</div>
-                    <p className={slide.desc ? styles.slideDesc : ""}>{slide.desc}</p>
-                    
-                    <div className={styles.slideCtaRow}>
-                      {slide.actionType === "scroll" ? (
-                        <button
-                          onClick={() => {
-                            document.getElementById(slide.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                          }}
-                          className={styles.slideCtaBtn}
-                        >
-                          {slide.ctaText}
-                        </button>
-                      ) : (
-                        <Link href={slide.target} className={styles.slideCtaBtn}>
-                          {slide.ctaText}
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className={styles.slideImageWrapper}>
-                    <img src={slide.image} alt={slide.title} className={styles.slideImage} />
-                  </div>
+                  {slide.actionType === "scroll" ? (
+                    <button
+                      onClick={() => {
+                        document.getElementById(slide.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className={styles.slideBannerLink}
+                      aria-label={slide.title}
+                    >
+                      <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                    </button>
+                  ) : (
+                    <Link href={slide.target} className={styles.slideBannerLink} aria-label={slide.title}>
+                      <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                    </Link>
+                  )}
                 </div>
               );
             })}
