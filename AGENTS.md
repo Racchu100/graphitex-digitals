@@ -6,7 +6,7 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
 <!-- END:nextjs-agent-rules -->
 
 - **Homepage Mobile Padding Adjustment (June 2026)**:
-  - Slightly decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to tighten up the visual layout and decrease spacing between the landscape carousel section and the hero badge.
+  - Decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to 4px to tighten up the visual layout and decrease spacing between the landscape carousel section and the hero badge.
 
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).

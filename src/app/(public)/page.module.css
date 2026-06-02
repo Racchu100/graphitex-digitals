@@ -1655,7 +1655,7 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    padding: calc(var(--header-height) + -58px) 0 var(--space-8);
+    padding: calc(var(--header-height) + -64px) 0 var(--space-8);
   }
 
   .heroInner {
@@ -1928,7 +1928,7 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    padding: calc(var(--header-height) + -58px) 0 var(--space-4);
+    padding: calc(var(--header-height) + -64px) 0 var(--space-4);
   }
 
   .heroTitle {
