@@ -75,7 +75,7 @@
 .carouselContainer {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 5.2; /* Tighter 16:9 crop style on desktop to preserve a neat landscape bar layout */
+  aspect-ratio: 16 / 9; /* Perfect 16:9 scale fit to display the entire graphic banner without any top/bottom crop */
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(246, 245, 255, 0.5) 100%);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(136, 36, 238, 0.12);
@@ -203,9 +203,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-  .carouselContainer {
-    aspect-ratio: 16 / 5.8;
-  }
+  /* Inherits 16 / 9 from default for correct laptop/tablet banner scaling */
 }
 
 @media (max-width: 768px) {
