@@ -5,6 +5,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-folders AGENTS.md are for main agent AI instructions and modular AI agent instructions respectively. Modular AI Agents instructions are optional but highly recommended for better AI agent performance. Keep it concise and well-structured.
 <!-- END:nextjs-agent-rules -->
 
+- **Homepage Mobile Padding Adjustment (June 2026)**:
+  - Slightly decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to tighten up the visual layout and decrease spacing between the landscape carousel section and the hero badge.
+
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).
   - Integrated the new high-resolution official brand logo (`public/logo.png`) across the entire platform. Upgraded the `Logo.tsx` component to dynamically render the high-quality logo asset with responsive aspect ratio styling and built custom CSS masking to crop and show only the phone icon for `showText={false}` requirements.
