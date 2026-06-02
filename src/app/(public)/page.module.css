@@ -74,7 +74,7 @@
 
 .carouselContainer {
   position: relative;
-  height: 320px;
+  height: 280px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(246, 245, 255, 0.5) 100%);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(136, 36, 238, 0.12);
@@ -108,7 +108,7 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: var(--space-3);
+  gap: var(--space-2);
   animation: slideFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -126,7 +126,7 @@
 
 .slideTitle {
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
   font-weight: var(--weight-extrabold);
   line-height: 1.2;
   color: var(--color-text-primary);
@@ -142,7 +142,7 @@
 
 .slideDesc {
   font-size: var(--text-sm);
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--color-text-secondary);
   max-width: 90%;
   margin: 0;
@@ -277,7 +277,7 @@
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .carouselContainer {
-    height: 290px;
+    height: 250px;
   }
   .slideContent {
     width: 60%;
@@ -290,13 +290,13 @@
 @media (max-width: 768px) {
   .carouselContainer {
     height: auto;
-    min-height: 290px;
+    min-height: 250px;
   }
   .carouselSlide {
     flex-direction: column;
-    padding: var(--space-4) var(--space-6) var(--space-8);
+    padding: var(--space-2) var(--space-4) var(--space-6);
     justify-content: center;
-    gap: var(--space-4);
+    gap: var(--space-2);
   }
   .slideContent {
     width: 100%;
