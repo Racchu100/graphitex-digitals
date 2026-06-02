@@ -11,6 +11,7 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
   - Downscaled the mobile hero title font-size (to 1.25rem on <=768px and 1.05rem on <=480px) and tightened horizontal/vertical margins to present the header content cleanly in a single line without wrapping.
   - Removed the "Baby & Kids" category card from the homepage categories list due to a broken image asset.
   - Added a 12px top margin to the hero quick action cards container on mobile viewports to provide clear visual separation from the wrapping popular search pills.
+  - Adjusted the mobile hero carousel height aspect-ratio to 16/10.8 and shifted the bottom dots down to 8px to prevent overlapping with the text contents inside the custom slide images.
 
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).

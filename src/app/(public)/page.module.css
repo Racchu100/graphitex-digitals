@@ -218,10 +218,13 @@
     padding-right: 0 !important;
   }
   .carouselContainer {
-    aspect-ratio: 16 / 9.6; /* Slightly taller aspect-ratio on mobile */
+    aspect-ratio: 16 / 10.8; /* Taller aspect-ratio on mobile to prevent content overlapping */
     border-radius: 0;
     border-left: none;
     border-right: none;
+  }
+  .carouselDots {
+    bottom: 8px;
   }
   .carouselSlide {
     padding: 0;
