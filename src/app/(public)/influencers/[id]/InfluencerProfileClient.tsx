@@ -145,10 +145,6 @@ function getEngagementRate(profileId: string, followerCount: number = 15000, pla
 export function getProfileViews(profileId: string, dbViews?: number) {
   const hasDbViews = typeof dbViews === "number";
   if (hasDbViews) {
-    if (typeof window !== "undefined") {
-      const localViews = parseInt(localStorage.getItem(`inf_views_${profileId}`) || "0", 10);
-      return dbViews + localViews;
-    }
     return dbViews;
   }
 
@@ -156,12 +152,7 @@ export function getProfileViews(profileId: string, dbViews?: number) {
   for (let i = 0; i < profileId.length; i++) {
     hash = profileId.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const baseViews = Math.abs(hash) % 4800 + 200;
-  if (typeof window !== "undefined") {
-    const localViews = parseInt(localStorage.getItem(`inf_views_${profileId}`) || "0", 10);
-    return baseViews + localViews;
-  }
-  return baseViews;
+  return Math.abs(hash) % 4800 + 200;
 }
 
 export default function InfluencerProfileClient({
@@ -191,35 +182,24 @@ export default function InfluencerProfileClient({
 
   // Trigger view increment on direct profile visit
   React.useEffect(() => {
-    let localViews = 0;
-    if (typeof window !== "undefined") {
-      const viewsKey = `inf_views_${profile.id}`;
-      const currentViews = parseInt(localStorage.getItem(viewsKey) || "0", 10);
-      const newViews = currentViews + 1;
-      localStorage.setItem(viewsKey, newViews.toString());
-      localViews = newViews;
+    // 1. Instantly increment in UI on mount to show +1 to the user
+    setDisplayViews(prev => prev + 1);
 
-      // Send to DB
-      fetch("/api/influencers/increment-view", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profileId: profile.id }),
-      }).catch((e) => console.warn("Failed to increment views on DB:", e));
-    }
-
-    const dbViews = profile.views_count;
-    const hasDbViews = typeof dbViews === "number";
-    if (hasDbViews) {
-      setDisplayViews(dbViews + localViews);
-    } else {
-      let hash = 0;
-      for (let i = 0; i < profile.id.length; i++) {
-        hash = profile.id.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      const baseViews = Math.abs(hash) % 4800 + 200;
-      setDisplayViews(baseViews + localViews);
-    }
-  }, [profile.id, profile.views_count]);
+    // 2. Fetch the increment API
+    fetch("/api/influencers/increment-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId: profile.id }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && typeof data.views_count === "number") {
+          // 3. Sync with exact database value
+          setDisplayViews(data.views_count);
+        }
+      })
+      .catch((e) => console.warn("Failed to increment views on DB:", e));
+  }, [profile.id]);
 
   const images = mediaList.filter(m => m.type === "image").slice(0, 3);
   const videos = mediaList.filter(m => m.type === "video").slice(0, 2);
@@ -343,7 +323,7 @@ export default function InfluencerProfileClient({
             <div className={styles.avatarContainer}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={profile.profile_picture_url || "/placeholder-avatar.png"}
+                src={profile.profile_picture_url || "/placeholder-avatar.svg"}
                 alt={profile.display_name}
                 className={styles.avatar}
               />

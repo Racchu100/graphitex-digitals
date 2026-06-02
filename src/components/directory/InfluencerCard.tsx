@@ -92,28 +92,18 @@ export default function InfluencerCard({ profile, isProvider }: InfluencerCardPr
   });
 
   React.useEffect(() => {
-    // After mounting, read local views from localStorage to update the count dynamically
     const dbViews = (profile as any).views_count;
     const hasDbViews = typeof dbViews === "number";
     
-    let localViews = 0;
-    try {
-      if (typeof window !== "undefined" && window.localStorage) {
-        localViews = parseInt(window.localStorage.getItem(`inf_views_${profile.id}`) || "0", 10);
-      }
-    } catch (e) {
-      console.warn("Failed to read views from localStorage:", e);
-    }
-
     if (hasDbViews) {
-      setDisplayViews(dbViews + localViews);
+      setDisplayViews(dbViews);
     } else {
       let hash = 0;
       for (let i = 0; i < profile.id.length; i++) {
         hash = profile.id.charCodeAt(i) + ((hash << 5) - hash);
       }
       const baseViews = Math.abs(hash) % 4800 + 200;
-      setDisplayViews(baseViews + localViews);
+      setDisplayViews(baseViews);
     }
   }, [profile.id, (profile as any).views_count]);
 
@@ -122,7 +112,7 @@ export default function InfluencerCard({ profile, isProvider }: InfluencerCardPr
       {/* Full-width profile banner image */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={profile.profile_picture_url || "/placeholder-avatar.png"}
+        src={profile.profile_picture_url || "/placeholder-avatar.svg"}
         alt={profile.display_name}
         className={styles.avatarBanner}
         loading="lazy"
@@ -170,20 +160,6 @@ export default function InfluencerCard({ profile, isProvider }: InfluencerCardPr
         <Link 
           href={`/influencers/${influencerSlug}`} 
           className={styles.viewBtn}
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              const viewsKey = `inf_views_${profile.id}`;
-              const currentViews = parseInt(localStorage.getItem(viewsKey) || "0", 10);
-              localStorage.setItem(viewsKey, (currentViews + 1).toString());
-              
-              // Increment in database asynchronously
-              fetch("/api/influencers/increment-view", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ profileId: profile.id }),
-              }).catch((e) => console.warn("[InfluencerCard] DB views increment error:", e));
-            }
-          }}
         >
           View Profile
         </Link>

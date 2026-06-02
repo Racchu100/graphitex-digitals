@@ -9,7 +9,7 @@ import Card from "@/components/ui/Card";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/useUser";
 import { InfluencerProfile, InfluencerSocialAccount } from "@/types/database";
-import { Upload } from "lucide-react";
+import { Upload, User } from "lucide-react";
 import { compressImageToWebP } from "@/lib/utils/imageCompressor";
 
 interface InfluencerFormProps {
@@ -254,9 +254,10 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
     setInfluencerMedia(influencerMedia.filter((_, i) => i !== index));
   };
 
-  const [socials, setSocials] = useState<Partial<InfluencerSocialAccount>[]>(
-    initialData?.influencer_social_accounts || []
-  );
+  const [socials, setSocials] = useState<Partial<InfluencerSocialAccount>[]>(() => {
+    const rawSocials = initialData?.influencer_social_accounts || [];
+    return rawSocials.slice(0, 1);
+  });
 
   useEffect(() => {
     async function fetchCategories() {
@@ -288,7 +289,8 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
   };
 
   const addSocial = () => {
-    setSocials([...socials, { platform: 'instagram', profile_url: '', handle: '', follower_count: 0 }]);
+    if (socials.length >= 1) return;
+    setSocials([{ platform: 'instagram', profile_url: '', handle: '', follower_count: 0 }]);
   };
 
   const removeSocial = (index: number) => {
@@ -552,15 +554,37 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
       
       <form className={styles.form}>
         <div className={styles.section} style={{ alignItems: 'center' }}>
-          <label style={{ cursor: 'pointer', position: 'relative' }}>
+          <label style={{ cursor: 'pointer', position: 'relative', display: 'block' }}>
             <input type="file" accept="image/*" onChange={handleAvatarUpload} style={{ display: 'none' }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={formData.profile_picture_url || "/placeholder-avatar.png"} 
-              alt="Avatar" 
-              style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
-            />
-            <div style={{ position: 'absolute', bottom: 0, right: 0, background: 'var(--color-primary)', padding: 8, borderRadius: '50%', color: 'white' }}>
+            {formData.profile_picture_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img 
+                src={formData.profile_picture_url} 
+                alt="Avatar" 
+                style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
+              />
+            ) : (
+              <div style={{
+                width: 120,
+                height: 120,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--color-primary, hsl(262, 70%, 45%)), var(--color-secondary, hsl(192, 95%, 48%)))',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '36px',
+                fontWeight: 'bold',
+                border: '2px solid var(--color-border)'
+              }}>
+                {formData.display_name?.trim() ? (
+                  formData.display_name.trim().charAt(0).toUpperCase()
+                ) : (
+                  <User size={48} />
+                )}
+              </div>
+            )}
+            <div style={{ position: 'absolute', bottom: 0, right: 0, background: 'var(--color-primary)', padding: 8, borderRadius: '50%', color: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Upload size={16} />
             </div>
           </label>
@@ -766,12 +790,23 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
         </div>
 
         <div className={styles.section}>
-           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)', minWidth: 0, overflow: 'hidden' }}>
-             <h3 style={{ margin: 0 }}>Social Accounts</h3>
-             <Button type="button" variant="outline" size="sm" onClick={addSocial}>+ Add Account</Button>
-           </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)', minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h3 style={{ margin: 0 }}>Social Accounts</h3>
+                <span style={{ fontSize: '11px', color: 'var(--color-text-secondary)', fontWeight: 'var(--weight-semibold)' }}>
+                  (Max 1 account)
+                </span>
+              </div>
+              {socials.length < 1 ? (
+                <Button type="button" variant="outline" size="sm" onClick={addSocial}>+ Add Account</Button>
+              ) : (
+                <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 'var(--weight-bold)', display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(16, 185, 129, 0.08)', padding: '4px 10px', borderRadius: '100px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                  ✓ Instagram Account Connected
+                </span>
+              )}
+            </div>
            
-           {socials.map((social, idx) => (
+           {socials.slice(0, 1).map((social, idx) => (
              <div key={idx} style={{ padding: 'var(--space-4)', background: 'var(--color-surface-elevated)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', border: '1px solid var(--color-border)', transition: 'all 0.2s ease' }}>
                 <div className={styles.row}>
                   <div className={styles.field}>
@@ -787,8 +822,6 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
                       className={styles.select}
                     >
                       <option value="instagram">Instagram</option>
-                      <option value="youtube">YouTube</option>
-                      <option value="facebook">Facebook</option>
                     </select>
                   </div>
                   <Input 

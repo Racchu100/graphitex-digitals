@@ -54,7 +54,7 @@ const dummyOpps = [
     price_max: 80000,
     currency: "Rs.",
     min_followers: 100000,
-    platform_preference: "youtube",
+    platform_preference: "instagram",
     created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     business_profiles: {
       business_name: "Apex Electronics",

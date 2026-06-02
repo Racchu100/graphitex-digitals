@@ -62,18 +62,18 @@ const categories = [
     image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=400&q=80"
   },
   {
-    label: "Food & Beverage",
-    slug: "Food & Beverage",
+    label: "Food & Restaurants",
+    slug: "Food & Restaurants",
     image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
   },
   {
-    label: "Health & Fitness",
-    slug: "Health & Fitness",
+    label: "Fitness & Gym",
+    slug: "Fitness & Gym",
     image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80"
   },
   {
-    label: "Education",
-    slug: "Education",
+    label: "Education & Coaching",
+    slug: "Education & Coaching",
     image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&q=80"
   },
   {
@@ -86,19 +86,62 @@ const categories = [
     slug: "Jewellery & Accessories",
     image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=400&q=80"
   },
+  {
+    label: "Beauty & Wellness",
+    slug: "Beauty & Wellness",
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Real Estate",
+    slug: "Real Estate",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Events & Entertainment",
+    slug: "Events & Entertainment",
+    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Finance & Insurance",
+    slug: "Finance & Insurance",
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Baby & Kids",
+    slug: "Baby & Kids",
+    image: "https://images.unsplash.com/photo-1519689680058-324335c77ebe?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Pet Care",
+    slug: "Pet Care",
+    image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    label: "Agriculture & Farming",
+    slug: "Agriculture & Farming",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=400&q=80"
+  }
 ];
 
 
 
-// ── POPULAR SEARCHES ───────────────────────────────────────────────────────────
-const popularSearches = [
-  "Fashion Influencer",
-  "Photography Studio",
-  "Digital Marketing",
-  "Food Blogger",
-  "Tech Reviewer",
-  "Wedding Photographer",
-  "Fitness Coach",
+// ── POPULAR CATEGORIES ───────────────────────────────────────────────────────────
+const popularCategories = [
+  "Fashion & Clothing",
+  "Jewellery & Accessories",
+  "Food & Restaurants",
+  "Technology & Gadgets",
+  "Photography & Video",
+  "Travel & Tourism",
+  "Beauty & Wellness",
+  "Fitness & Gym",
+  "Real Estate",
+  "Events & Entertainment",
+  "Automotive",
+  "Finance & Insurance",
+  "Baby & Kids",
+  "Pet Care",
+  "Agriculture & Farming"
 ];
 
 // ── HERO HEADLINE ROTATIONS ────────────────────────────────────────────────────
@@ -237,7 +280,7 @@ export default function HomePage() {
                 <input
                   id="search-keyword"
                   type="text"
-                  placeholder="Search businesses, creators, services..."
+                  placeholder="Search businesses, services..."
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   className={styles.searchInput}
@@ -255,16 +298,15 @@ export default function HomePage() {
           {/* Popular Search Pills */}
           <div className={styles.popularRow}>
             <span className={styles.popularLabel}>Popular:</span>
-            {popularSearches.map((term) => (
+            {popularCategories.map((cat) => (
               <button
-                key={term}
+                key={cat}
                 className={styles.popularPill}
                 onClick={() => {
-                  setSearchKeyword(term);
-                  router.push(`/services?q=${encodeURIComponent(term)}`);
+                  router.push(`/services?category=${encodeURIComponent(cat)}`);
                 }}
               >
-                {term}
+                {cat}
               </button>
             ))}
           </div>

@@ -73,7 +73,7 @@ export default async function ApplicationsPage({ params }: ApplicationsPageProps
                 <div className={styles.cardLeft}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={influencer?.profile_picture_url || "/placeholder-avatar.png"}
+                    src={influencer?.profile_picture_url || "/placeholder-avatar.svg"}
                     alt={influencer?.display_name}
                     className={styles.avatar}
                   />

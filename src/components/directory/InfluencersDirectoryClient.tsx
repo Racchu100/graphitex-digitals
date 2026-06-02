@@ -31,10 +31,6 @@ interface ReelItem {
 export function getProfileViews(profileId: string, dbViews?: number) {
   const hasDbViews = typeof dbViews === "number";
   if (hasDbViews) {
-    if (typeof window !== "undefined") {
-      const localViews = parseInt(localStorage.getItem(`inf_views_${profileId}`) || "0", 10);
-      return dbViews + localViews;
-    }
     return dbViews;
   }
 
@@ -42,13 +38,7 @@ export function getProfileViews(profileId: string, dbViews?: number) {
   for (let i = 0; i < profileId.length; i++) {
     hash = profileId.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const baseViews = Math.abs(hash) % 4800 + 200; // deterministic between 200 and 5000 views
-  
-  if (typeof window !== "undefined") {
-    const localViews = parseInt(localStorage.getItem(`inf_views_${profileId}`) || "0", 10);
-    return baseViews + localViews;
-  }
-  return baseViews;
+  return Math.abs(hash) % 4800 + 200; // deterministic between 200 and 5000 views
 }
 
 export function getSafeSocialUrl(platform: string, urlOrHandle: string): string {
@@ -322,7 +312,7 @@ export default function InfluencersDirectoryClient({
       reelsList.push({
         influencerId: profile.id,
         displayName: profile.display_name,
-        avatarUrl: profile.profile_picture_url || "/placeholder-avatar.png",
+        avatarUrl: profile.profile_picture_url || "/placeholder-avatar.svg",
         type: item.type,
         url: item.url,
         followersText: followersText + " Followers",

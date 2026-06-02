@@ -16,6 +16,30 @@ export default function ServiceProfileClient({
   media,
 }: ServiceProfileClientProps) {
   const [activeMediaIndex, setActiveMediaIndex] = useState<number | null>(null);
+  const [displayViews, setDisplayViews] = useState<number>(() => {
+    return profile.views_count || 0;
+  });
+
+  // Trigger views increment on visit
+  useEffect(() => {
+    // 1. Instantly increment in UI on mount to show +1 to the user
+    setDisplayViews(prev => prev + 1);
+
+    // 2. Fetch the increment API
+    fetch("/api/services/increment-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId: profile.id }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && typeof data.views_count === "number") {
+          // 3. Sync with exact database value
+          setDisplayViews(data.views_count);
+        }
+      })
+      .catch((e) => console.warn("Failed to increment views on DB:", e));
+  }, [profile.id]);
 
   const sortedMedia = [...media].sort((a, b) => a.sort_order - b.sort_order);
   const images = sortedMedia.filter(m => m.media_type === "image");
@@ -123,6 +147,9 @@ export default function ServiceProfileClient({
               {profile.cities && (
                 <span className={styles.location}>📍 {profile.cities.name}, {profile.states?.name}</span>
               )}
+              <span style={{ fontSize: "var(--text-sm)", fontWeight: "600", color: "var(--color-text-secondary)", background: "var(--color-surface-elevated)", border: "1px solid var(--color-border)", padding: "2px 8px", borderRadius: "50px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                👁️ {displayViews.toLocaleString("en-US")} Views
+              </span>
             </div>
           </div>
         </div>

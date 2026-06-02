@@ -152,8 +152,6 @@ export default function NewOpportunityPage() {
                 >
                    <option value="any">Any</option>
                    <option value="instagram">Instagram</option>
-                   <option value="youtube">YouTube</option>
-                   <option value="facebook">Facebook</option>
                 </select>
              </div>
            </div>

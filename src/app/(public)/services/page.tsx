@@ -129,6 +129,210 @@ const dummyServices = [
     business_media: [
       { url: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=600&auto=format&fit=crop", media_type: "image" }
     ]
+  },
+
+  // Food & Restaurants
+  {
+    id: "dummy-serv-10",
+    business_name: "The Coastal Kitchen",
+    tagline: "Authentic Mangalorean seafood, fresh local catch, and premium family dining spaces.",
+    contact_type: "whatsapp",
+    whatsapp_number: "919900990099",
+    contact_number: "+91 99009 90099",
+    categories: { name: "Food & Restaurants" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+  {
+    id: "dummy-serv-11",
+    business_name: "Urban Bean Café",
+    tagline: "Aesthetic specialty coffee house, organic breakfast platters, and custom workspace hubs.",
+    contact_type: "whatsapp",
+    whatsapp_number: "918800880088",
+    contact_number: "+91 88008 80088",
+    categories: { name: "Food & Restaurants" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Beauty & Wellness
+  {
+    id: "dummy-serv-12",
+    business_name: "Zene Luxury Spa & Salon",
+    tagline: "Relaxing deep tissue massages, organic bridal makeovers, and premium skincare therapies.",
+    contact_type: "whatsapp",
+    whatsapp_number: "917700770077",
+    contact_number: "+91 77007 77007",
+    categories: { name: "Beauty & Wellness" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+  {
+    id: "dummy-serv-13",
+    business_name: "Aura Nails & Hair Studio",
+    tagline: "Custom extensions, trending hair styling, color balayage, and aesthetic pedicures.",
+    contact_type: "whatsapp",
+    whatsapp_number: "916600660066",
+    contact_number: "+91 66006 60066",
+    categories: { name: "Beauty & Wellness" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Fitness & Gym
+  {
+    id: "dummy-serv-14",
+    business_name: "Iron Peak Gym",
+    tagline: "Modern high-end strength training center, customized nutrition coaching, and certified trainers.",
+    contact_type: "whatsapp",
+    whatsapp_number: "915500550055",
+    contact_number: "+91 55005 50055",
+    categories: { name: "Fitness & Gym" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+  {
+    id: "dummy-serv-15",
+    business_name: "Prana Yoga Studio",
+    tagline: "Aesthetic traditional yoga layouts, morning mindfulness courses, and spiritual wellness.",
+    contact_type: "whatsapp",
+    whatsapp_number: "914400440044",
+    contact_number: "+91 44004 40044",
+    categories: { name: "Fitness & Gym" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Real Estate
+  {
+    id: "dummy-serv-16",
+    business_name: "Vertex Realty Group",
+    tagline: "Premium seaside residential apartments, commercial workspaces, and villa brokerage.",
+    contact_type: "whatsapp",
+    whatsapp_number: "913300330033",
+    contact_number: "+91 33003 30033",
+    categories: { name: "Real Estate" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Events & Entertainment
+  {
+    id: "dummy-serv-17",
+    business_name: "Signature Weddings & Shows",
+    tagline: "Stunning themed wedding styling, sound & lighting hire, and VIP artist management.",
+    contact_type: "whatsapp",
+    whatsapp_number: "912200220022",
+    contact_number: "+91 22002 20022",
+    categories: { name: "Events & Entertainment" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Automotive
+  {
+    id: "dummy-serv-18",
+    business_name: "Apex Auto Detailing",
+    tagline: "Ultra-glossy ceramic coating, paint correction, premium wraps, and luxury wash cycles.",
+    contact_type: "whatsapp",
+    whatsapp_number: "911100110011",
+    contact_number: "+91 11001 10011",
+    categories: { name: "Automotive" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Finance & Insurance
+  {
+    id: "dummy-serv-19",
+    business_name: "GrowWealth Advisory",
+    tagline: "Strategic tax planning, mutual fund wealth allocation, and reliable insurance plans.",
+    contact_type: "whatsapp",
+    whatsapp_number: "910099009900",
+    contact_number: "+91 00990 09900",
+    categories: { name: "Finance & Insurance" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Baby & Kids
+  {
+    id: "dummy-serv-20",
+    business_name: "Tiny Tots Boutique & Play",
+    tagline: "Premium organic children wear, imported educational toys, and safe indoor playgrounds.",
+    contact_type: "whatsapp",
+    whatsapp_number: "910088008800",
+    contact_number: "+91 00880 08800",
+    categories: { name: "Baby & Kids" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1519689680058-324335c77ebe?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Pet Care
+  {
+    id: "dummy-serv-21",
+    business_name: "Paws & Whiskers Spa",
+    tagline: "Professional pet styling, customized breed grooming, and trusted dog day-care suites.",
+    contact_type: "whatsapp",
+    whatsapp_number: "910077007700",
+    contact_number: "+91 00770 07700",
+    categories: { name: "Pet Care" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Agriculture & Farming
+  {
+    id: "dummy-serv-22",
+    business_name: "GreenEarth Plant Nursery",
+    tagline: "High-grade organic plant seeds, vermicompost, exotic flower pots, and nursery advice.",
+    contact_type: "whatsapp",
+    whatsapp_number: "910066006600",
+    contact_number: "+91 00660 06600",
+    categories: { name: "Agriculture & Farming" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
+  },
+
+  // Jewellery & Accessories
+  {
+    id: "dummy-serv-23",
+    business_name: "Ornate Heritage Jewellers",
+    tagline: "Exquisite handcrafted traditional gold, antique silver sets, and modern diamond rings.",
+    contact_type: "whatsapp",
+    whatsapp_number: "910055005500",
+    contact_number: "+91 00550 05500",
+    categories: { name: "Jewellery & Accessories" },
+    cities: { name: "Mangalore" },
+    business_media: [
+      { url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop", media_type: "image" }
+    ]
   }
 ];
 
@@ -146,7 +350,21 @@ const categoryMetadata: Record<string, { desc: string; id: string }> = {
   "Plumbing & Sanitary": { desc: "Professional leak repairs, pipe installations, tap fixes, drain cleaning, and sanitary fittings.", id: "plumbing-sanitary" },
   "Cleaning & Pest Control": { desc: "Comprehensive home deep cleaning, kitchen sanitization, sofa cleaning, and safe pest control services.", id: "cleaning-pest-control" },
   "Packers & Movers": { desc: "Stress-free home shifting, office relocation, safe packing, loading, and trusted logistics transfer.", id: "packers-movers" },
-  "Electronics & Appliance Repair": { desc: "Quick repair services for AC, refrigerator, washing machine, television, and home appliances.", id: "electronics-appliance-repair" }
+  "Electronics & Appliance Repair": { desc: "Quick repair services for AC, refrigerator, washing machine, television, and home appliances.", id: "electronics-appliance-repair" },
+  "Food & Restaurants": { desc: "Delicious dining options, local restaurants, cafés, catering, and gourmet culinary experiences.", id: "food-restaurants" },
+  "Beauty & Wellness": { desc: "Premium beauty treatments, rejuvenating spas, skincare therapies, and local wellness hubs.", id: "beauty-wellness" },
+  "Fitness & Gym": { desc: "High-performance fitness centers, personal training, yoga studios, and active lifestyle hubs.", id: "fitness-gym" },
+  "Real Estate": { desc: "Trusted property consultants, premium residential listings, commercial spaces, and rental agencies.", id: "real-estate" },
+  "Automotive": { desc: "Expert vehicle diagnostics, premium detailing, local car care services, and trusted garages.", id: "automotive" },
+  "Finance & Insurance": { desc: "Comprehensive financial planning, wealth advisory, tax consultation, and secure insurance coverage.", id: "finance-insurance" },
+  "Baby & Kids": { desc: "Premium children apparel, local playzones, educational toy stores, and baby care services.", id: "baby-kids" },
+  "Pet Care": { desc: "Comprehensive pet grooming, experienced veterinary clinics, organic food supplies, and local pet boarding.", id: "pet-care" },
+  "Agriculture & Farming": { desc: "High-quality organic farming supplies, premium seeds, modern agricultural tools, and local nursery guidance.", id: "agriculture-farming" },
+  "Jewellery & Accessories": { desc: "Exquisite handcrafted gold and diamond jewellery, premium fashion accessories, and luxury collections.", id: "jewellery-accessories" },
+  "Education & Coaching": { desc: "Top academic coaching centers, specialized professional courses, and local training institutes.", id: "education-coaching" },
+  "Healthcare & Pharmacy": { desc: "Trusted medical clinics, pharmacies, diagnostic centers, and premium home healthcare services.", id: "healthcare-pharmacy" },
+  "Handmade & Crafts": { desc: "Gorgeous handcrafted artisan products, bespoke clay items, woven designs, and traditional arts.", id: "handmade-crafts" },
+  "Hospitality & Hotels": { desc: "Luxurious boutique hotels, homestays, premium resorts, and outstanding local guest experiences.", id: "hospitality-hotels" }
 };
 
 export default async function ServicesDirectoryPage() {
@@ -175,11 +393,13 @@ export default async function ServicesDirectoryPage() {
   const isDemoMode = !profiles || profiles.length === 0;
 
   return (
-    <ServicesDirectoryClient 
-      initialProfiles={activeProfiles}
-      isDemoMode={isDemoMode}
-      categoryMetadata={categoryMetadata}
-    />
+    <React.Suspense fallback={<div className="container" style={{ padding: "80px 0", textAlign: "center", color: "var(--color-text-secondary)", fontSize: "14px" }}>Loading Directory...</div>}>
+      <ServicesDirectoryClient 
+        initialProfiles={activeProfiles}
+        isDemoMode={isDemoMode}
+        categoryMetadata={categoryMetadata}
+      />
+    </React.Suspense>
   );
 }
 

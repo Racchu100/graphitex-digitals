@@ -99,7 +99,16 @@ export default function NavBar() {
         let isProfileIncomplete = false;
         let incompleteFields: string[] = [];
 
-        if (isInfluencerUser) {
+        const hasNoRoles = !roles || roles.length === 0;
+        const isMissingOnboarding = !user?.name?.trim() || !user?.state_id || !user?.city_id;
+
+        if (hasNoRoles || isMissingOnboarding) {
+          isProfileIncomplete = true;
+          if (!user?.name?.trim()) incompleteFields.push("Full Name");
+          if (!user?.state_id) incompleteFields.push("State");
+          if (!user?.city_id) incompleteFields.push("City");
+          if (hasNoRoles) incompleteFields.push("Role");
+        } else if (isInfluencerUser) {
           const { data: infProfile } = await supabase
             .from('influencer_profiles')
             .select('display_name, bio')
@@ -153,7 +162,8 @@ export default function NavBar() {
         }
 
         const isIncompleteDismissed = sessionStorage.getItem("incomplete_profile_alert_dismissed");
-        if (isProfileIncomplete && isIncompleteDismissed !== "true") {
+        const isProfilePage = pathname?.startsWith("/dashboard/profile") || pathname?.startsWith("/onboarding");
+        if (isProfileIncomplete && isIncompleteDismissed !== "true" && !isProfilePage) {
           const incompleteVirtualNotif = {
             id: "virtual-incomplete-profile-alert",
             title: "📝 Complete Your Profile!",
@@ -163,6 +173,20 @@ export default function NavBar() {
             type: "profile_incomplete"
           };
           fetchedNotifs = [incompleteVirtualNotif, ...fetchedNotifs];
+        }
+
+        const isOppSuggestionDismissed = sessionStorage.getItem("opp_suggestion_alert_dismissed");
+        const isOppPage = pathname?.startsWith("/opportunities");
+        if (isInfluencerUser && !isProfileIncomplete && isOppSuggestionDismissed !== "true" && !isOppPage) {
+          const oppVirtualNotif = {
+            id: "virtual-opp-suggestion-alert",
+            title: "📣 View active opportunities posted by business owners!",
+            body: "Find collaboration campaigns that fit your profile, review payouts, and apply directly to work with local brands.",
+            created_at: new Date().toISOString(),
+            is_read: false,
+            type: "opp_suggestion"
+          };
+          fetchedNotifs = [oppVirtualNotif, ...fetchedNotifs];
         }
 
         setNotifications(fetchedNotifs);
@@ -178,7 +202,6 @@ export default function NavBar() {
           n.type === "profile_reactivated" || 
           n.type === "application_accepted" || 
           n.type === "application_rejected" || 
-          n.type === "new_application" || 
           n.type === "opportunity_removed" ||
           n.type === "collab_suggestion" ||
           n.type === "profile_incomplete"
@@ -267,10 +290,16 @@ export default function NavBar() {
         supabase.removeChannel(appChannel);
       }
     };
-  }, [user, roles, isProvider, supabase]);
+  }, [user, roles, isProvider, supabase, pathname]);
 
   useEffect(() => {
     if (!user) {
+      setShowGalleryAlert(false);
+      return;
+    }
+
+    // Do not show the gallery media alert on profile settings or onboarding pages
+    if (pathname.startsWith('/dashboard/profile') || pathname.startsWith('/onboarding')) {
       setShowGalleryAlert(false);
       return;
     }
@@ -305,20 +334,27 @@ export default function NavBar() {
             }
           }
         } else if (isInfluencerUser) {
-          // Fetch influencer profile
+          // Fetch influencer profile (including bio where media showcase list is saved as JSON)
           const { data: profile } = await supabase
             .from('influencer_profiles')
-            .select('id')
+            .select('id, bio')
             .eq('user_id', user!.id)
             .maybeSingle();
 
           if (profile) {
-            const { data: mediaItems } = await supabase
-              .from('influencer_media')
-              .select('id')
-              .eq('influencer_profile_id', profile.id);
+            let hasMedia = false;
+            try {
+              if (profile.bio && profile.bio.trim().startsWith('{')) {
+                const parsed = JSON.parse(profile.bio);
+                if (parsed && Array.isArray(parsed.media) && parsed.media.length > 0) {
+                  hasMedia = true;
+                }
+              }
+            } catch (e) {
+              console.warn("Failed to parse influencer bio media:", e);
+            }
 
-            if (!mediaItems || mediaItems.length === 0) {
+            if (!hasMedia) {
               setShowGalleryAlert(true);
             }
           }
@@ -332,7 +368,7 @@ export default function NavBar() {
     if (!loading && roles && roles.length > 0) {
       checkGalleryMedia();
     }
-  }, [user, roles, loading, supabase]);
+  }, [user, roles, loading, supabase, pathname]);
 
 
 
@@ -353,7 +389,7 @@ export default function NavBar() {
     }
   };
 
-  const handleMarkSingleRead = async (notifId: number | string) => {
+  const handleMarkSingleRead = async (notifId: number | string, skipRedirect: boolean = false) => {
     // Immediately dismiss the toast popup
     setActiveToast(null);
 
@@ -361,7 +397,11 @@ export default function NavBar() {
       sessionStorage.setItem("collab_alert_dismissed", "true");
       setNotifications(prev => prev.filter(n => n.id !== "virtual-collab-alert"));
       setUnreadCount(prev => Math.max(0, prev - 1));
-      router.push("/dashboard/opportunities");
+      setDropdownOpen(false);
+      setIsDrawerOpen(false);
+      if (!skipRedirect) {
+        router.push("/dashboard/opportunities");
+      }
       return;
     }
 
@@ -369,7 +409,24 @@ export default function NavBar() {
       sessionStorage.setItem("incomplete_profile_alert_dismissed", "true");
       setNotifications(prev => prev.filter(n => n.id !== "virtual-incomplete-profile-alert"));
       setUnreadCount(prev => Math.max(0, prev - 1));
-      router.push("/dashboard/profile");
+      setDropdownOpen(false);
+      setIsDrawerOpen(false);
+      if (!skipRedirect) {
+        const targetPath = (!roles || roles.length === 0 || !user?.state_id || !user?.city_id) ? "/onboarding" : "/dashboard/profile";
+        router.push(targetPath);
+      }
+      return;
+    }
+
+    if (notifId === "virtual-opp-suggestion-alert") {
+      sessionStorage.setItem("opp_suggestion_alert_dismissed", "true");
+      setNotifications(prev => prev.filter(n => n.id !== "virtual-opp-suggestion-alert"));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      setDropdownOpen(false);
+      setIsDrawerOpen(false);
+      if (!skipRedirect) {
+        router.push("/opportunities");
+      }
       return;
     }
 
@@ -689,7 +746,7 @@ export default function NavBar() {
               <div className={styles.toastHeaderRow}>
                 <h4 className={styles.toastTextTitle}>{activeToast.title}</h4>
                 <button 
-                  onClick={() => handleMarkSingleRead(activeToast.id)} 
+                  onClick={() => handleMarkSingleRead(activeToast.id, true)} 
                   className={styles.toastCloseBtn}
                   aria-label="Dismiss alert"
                 >
@@ -701,7 +758,7 @@ export default function NavBar() {
                 <div style={{ marginTop: 'var(--space-2)' }}>
                   <Link
                     href="/dashboard/applications"
-                    onClick={() => handleMarkSingleRead(activeToast.id)}
+                    onClick={() => handleMarkSingleRead(activeToast.id, true)}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -728,7 +785,7 @@ export default function NavBar() {
                 <div style={{ marginTop: 'var(--space-2)' }}>
                   <Link
                     href="/dashboard/profile?tab=opportunities"
-                    onClick={() => handleMarkSingleRead(activeToast.id)}
+                    onClick={() => handleMarkSingleRead(activeToast.id, true)}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -754,8 +811,8 @@ export default function NavBar() {
               {activeToast.type === 'profile_incomplete' && (
                 <div style={{ marginTop: 'var(--space-2)' }}>
                   <Link
-                    href="/dashboard/profile"
-                    onClick={() => handleMarkSingleRead(activeToast.id)}
+                    href={(!roles || roles.length === 0 || !user?.state_id || !user?.city_id) ? "/onboarding" : "/dashboard/profile"}
+                    onClick={() => handleMarkSingleRead(activeToast.id, true)}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -780,7 +837,7 @@ export default function NavBar() {
               )}
               <div className={styles.toastActionRow}>
                 <button 
-                  onClick={() => handleMarkSingleRead(activeToast.id)} 
+                  onClick={() => handleMarkSingleRead(activeToast.id, true)} 
                   className={styles.toastDismissBtn}
                 >
                   Got it!
