@@ -5,13 +5,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-folders AGENTS.md are for main agent AI instructions and modular AI agent instructions respectively. Modular AI Agents instructions are optional but highly recommended for better AI agent performance. Keep it concise and well-structured.
 <!-- END:nextjs-agent-rules -->
 
-- **Homepage Mobile Padding Adjustment (June 2026)**:
+- **Homepage & Global Spacing Refinements (June 2026)**:
   - Decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to 8px to tighten up the visual layout, and added slight left/right side padding to the hero title to prevent it from touching screen edges.
   - Filtered the homepage popular search tags to display only 5 core niches (Fashion & Clothing, Jewellery & Accessories, Food & Restaurants, Technology & Gadgets, and Photography & Video) and removed the rest of the secondary niches to improve layout cleaniness.
   - Downscaled the mobile hero title font-size (to 1.25rem on <=768px and 1.05rem on <=480px) and tightened horizontal/vertical margins to present the header content cleanly in a single line without wrapping.
   - Removed the "Baby & Kids" category card from the homepage categories list due to a broken image asset.
   - Added a 12px top margin to the hero quick action cards container on mobile viewports to provide clear visual separation from the wrapping popular search pills.
   - Adjusted the mobile hero carousel height aspect-ratio to 16/10.8 and shifted the bottom dots down to 8px to prevent overlapping with the text contents inside the custom slide images.
+  - Scaled down the global base HTML font-size on desktop viewports (>=1024px) from 20px to 15px (matching mobile base) to reduce all font sizes and paddings proportionally across all pages, and reduced container side padding on desktop to 32px.
 
 - **Redesign & Styling (May 2026)**:
   - Updated `globals.css` to default premium Light Mode matching logo HSL tokens (Deep Violet, Electric Cyan, Golden Orange).
