@@ -20,6 +20,9 @@ export default function DashboardNav() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleLogout = async () => {
+    const confirmLogout = window.confirm("do you want to log out");
+    if (!confirmLogout) return;
+
     try {
       await supabase.auth.signOut();
       window.location.href = "/login";

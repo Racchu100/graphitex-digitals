@@ -388,6 +388,9 @@ export default function NavBar() {
   };
 
   const handleLogout = async () => {
+    const confirmLogout = window.confirm("do you want to log out");
+    if (!confirmLogout) return;
+
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
