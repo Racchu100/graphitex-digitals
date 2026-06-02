@@ -67,7 +67,7 @@
 
 .landscapeCarouselSection {
   z-index: 10;
-  padding-top: var(--space-8);
+  padding-top: 0.3rem;
   padding-bottom: var(--space-4);
   position: relative;
 }
