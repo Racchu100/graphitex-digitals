@@ -67,7 +67,7 @@
 
 .landscapeCarouselSection {
   z-index: 10;
-  padding-top: 0.3rem;
+  padding-top: var(--space-4);
   padding-bottom: var(--space-4);
   position: relative;
 }
@@ -209,6 +209,10 @@
 }
 
 @media (max-width: 768px) {
+  .landscapeCarouselSection {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+  }
   .carouselContainer {
     aspect-ratio: 16 / 9; /* Perfect mobile scale fit to fully display the 16:9 banner without crop overlaps */
     border-radius: var(--radius-xl, 16px);
