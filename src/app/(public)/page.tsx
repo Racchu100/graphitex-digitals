@@ -144,6 +144,37 @@ const popularCategories = [
   "Agriculture & Farming"
 ];
 
+// ── HERO CAROUSEL SLIDES ───────────────────────────────────────────────────────
+const heroCarouselSlides = [
+  {
+    title: "Graphitex Digitals Creative Agency Services",
+    subtitle: "Graphic Design • Website Development • Ad Shoots • Instagram Page Handling • Digital Marketing",
+    desc: "Scale your business organic traffic, creative reach, and conversions with our comprehensive, premium digital solutions.",
+    image: "/hero-agency-services.png",
+    ctaText: "Explore Agency Services 🚀",
+    actionType: "scroll",
+    target: "services-agency"
+  },
+  {
+    title: "Local Business & Services Directory",
+    subtitle: "Hyper-Local Search • Mangalore Focus • Verified Listings",
+    desc: "Search, filter, and discover trusted local agencies, professionals, and freelancers nearby. Connect directly via WhatsApp with zero middlemen.",
+    image: "/hero-business-directory.png",
+    ctaText: "Search Business Directory 🔍",
+    actionType: "link",
+    target: "/services"
+  },
+  {
+    title: "Direct Business & Creator Collaborations",
+    subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
+    desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
+    image: "/hero-influencer-collab.png",
+    ctaText: "Find Creators & Influencers 📣",
+    actionType: "link",
+    target: "/influencers"
+  }
+];
+
 // ── HERO HEADLINE ROTATIONS ────────────────────────────────────────────────────
 const heroHeadlines = [
   "Find Top Creators for Your Brand",
@@ -164,6 +195,17 @@ export default function HomePage() {
   // Hero headline rotation
   const [headlineIndex, setHeadlineIndex] = useState(0);
   const [headlineFading, setHeadlineFading] = useState(false);
+
+  // Landscape carousel state
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // Auto-play the landscape hero carousel
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroCarouselSlides.length);
+    }, 6000);
+    return () => clearInterval(slideTimer);
+  }, []);
 
   // WhatsApp form
   const [userName, setUserName] = useState("");
@@ -222,6 +264,80 @@ export default function HomePage() {
         <div className={styles.ambientOrb2} />
         <div className={styles.ambientOrb3} />
       </div>
+
+      {/* ── LANDSCAPE HERO CAROUSEL (LIMITED HEIGHT) ── */}
+      <section className={styles.landscapeCarouselSection} aria-label="Featured highlights slider">
+        <div className={`container ${styles.carouselInner}`}>
+          <div className={styles.carouselContainer}>
+            {heroCarouselSlides.map((slide, index) => {
+              const isActive = index === activeSlide;
+              return (
+                <div
+                  key={index}
+                  className={`${styles.carouselSlide} ${isActive ? styles.carouselSlideActive : ""}`}
+                  aria-hidden={!isActive}
+                >
+                  <div className={styles.slideContent}>
+                    <span className={styles.slideBadge}>FEATURED HIGHLIGHT</span>
+                    <h2 className={styles.slideTitle}>{slide.title}</h2>
+                    <div className={styles.slideSubtitle}>{slide.subtitle}</div>
+                    <p className={slide.desc ? styles.slideDesc : ""}>{slide.desc}</p>
+                    
+                    <div className={styles.slideCtaRow}>
+                      {slide.actionType === "scroll" ? (
+                        <button
+                          onClick={() => {
+                            document.getElementById(slide.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className={styles.slideCtaBtn}
+                        >
+                          {slide.ctaText}
+                        </button>
+                      ) : (
+                        <Link href={slide.target} className={styles.slideCtaBtn}>
+                          {slide.ctaText}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className={styles.slideImageWrapper}>
+                    <img src={slide.image} alt={slide.title} className={styles.slideImage} />
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => setActiveSlide((prev) => (prev - 1 + heroCarouselSlides.length) % heroCarouselSlides.length)}
+              className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
+              aria-label="Previous slide"
+            >
+              ‹
+            </button>
+            <button
+              onClick={() => setActiveSlide((prev) => (prev + 1) % heroCarouselSlides.length)}
+              className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
+              aria-label="Next slide"
+            >
+              ›
+            </button>
+
+            {/* Dotted Indicators */}
+            <div className={styles.carouselDots}>
+              {heroCarouselSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveSlide(index)}
+                  className={`${styles.carouselDot} ${index === activeSlide ? styles.carouselDotActive : ""}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ══════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — HERO: SEARCH-FIRST                                    */}
