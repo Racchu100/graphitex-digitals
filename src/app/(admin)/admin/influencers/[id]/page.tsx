@@ -192,9 +192,9 @@ export default async function AdminInfluencerDetailPage({ params }: { params: Pr
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
               {profile.profile_picture_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={profile.profile_picture_url} alt="" style={{ width: "48px", height: "48px", borderRadius: "50%", border: "1px solid hsl(220, 18%, 20%)" }} />
+                <img src={profile.profile_picture_url} alt="" style={{ width: "48px", height: "64px", borderRadius: "var(--radius-md)", objectFit: "cover", border: "1px solid hsl(220, 18%, 20%)" }} />
               ) : (
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "hsl(220, 70%, 20%)", color: "hsl(220, 90%, 70%)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "var(--weight-bold)", fontSize: "18px" }}>
+                <div style={{ width: "48px", height: "64px", borderRadius: "var(--radius-md)", background: "hsl(220, 70%, 20%)", color: "hsl(220, 90%, 70%)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "var(--weight-bold)", fontSize: "18px" }}>
                   {profile.display_name?.charAt(0).toUpperCase()}
                 </div>
               )}

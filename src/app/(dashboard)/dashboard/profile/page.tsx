@@ -414,8 +414,8 @@ function ProfileDashboardContent() {
           <div style={{ display: "flex", alignItems: "center", gap: "var(--avatar-gap, var(--space-5))", paddingBottom: "var(--avatar-padding-bottom, var(--space-6))", borderBottom: "1px solid var(--color-border)", marginBottom: "var(--avatar-margin-bottom, var(--space-6))" }}>
             <div style={{
               width: "var(--avatar-size, 72px)",
-              height: "var(--avatar-size, 72px)",
-              borderRadius: "50%",
+              height: "calc(var(--avatar-size, 72px) * 1.33)",
+              borderRadius: "var(--radius-lg)",
               background: user?.avatar_url ? "none" : "linear-gradient(135deg, var(--color-primary), var(--color-secondary))",
               color: "#ffffff",
               display: "flex",

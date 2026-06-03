@@ -561,13 +561,13 @@ export default function InfluencerForm({ initialData }: InfluencerFormProps) {
               <img 
                 src={formData.profile_picture_url} 
                 alt="Avatar" 
-                style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
+                style={{ width: 120, height: 160, borderRadius: 'var(--radius-lg)', objectFit: 'cover', border: '2px solid var(--color-border)' }}
               />
             ) : (
               <div style={{
                 width: 120,
-                height: 120,
-                borderRadius: '50%',
+                height: 160,
+                borderRadius: 'var(--radius-lg)',
                 background: 'linear-gradient(135deg, var(--color-primary, hsl(262, 70%, 45%)), var(--color-secondary, hsl(192, 95%, 48%)))',
                 color: 'white',
                 display: 'flex',

@@ -28,9 +28,9 @@
 }
 
 .avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
+  width: 48px;
+  height: 64px;
+  border-radius: var(--radius-md);
   object-fit: cover;
   background: var(--color-surface-overlay);
   flex-shrink: 0;
