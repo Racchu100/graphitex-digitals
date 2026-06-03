@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import PhoneInput from "@/components/auth/PhoneInput";
 import { createClient } from "@/lib/supabase/client";
 import { AlertTriangle } from "lucide-react";
 import { resolveStaleMobileUser } from "./actions";
@@ -21,6 +22,7 @@ export default function OnboardingPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    mobileNumber: "",
     country_id: "1",
     state_id: "",
     city_id: "",
@@ -28,6 +30,7 @@ export default function OnboardingPage() {
     provider_subtype: ""
   });
 
+  const [hasPhone, setHasPhone] = useState(true);
   const [states, setStates] = useState<{ id: number; name: string }[]>([]);
   const [cities, setCities] = useState<{ id: number; name: string }[]>([]);
   const [statesLoading, setStatesLoading] = useState(false);
@@ -37,10 +40,13 @@ export default function OnboardingPage() {
     async function loadUserData() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        const phoneVal = user.phone || user.user_metadata?.phone || "";
+        setHasPhone(!!phoneVal);
+
         // Fetch existing database user record if any
         const { data: dbUser } = await supabase
           .from("users")
-          .select("name, email, state_id, city_id")
+          .select("name, email, state_id, city_id, mobile_number")
           .eq("id", user.id)
           .maybeSingle();
 
@@ -50,7 +56,12 @@ export default function OnboardingPage() {
           email: prev.email || dbUser?.email || (user.email && !user.email.toLowerCase().endsWith("@graphitex.app") ? user.email : ""),
           state_id: prev.state_id || (dbUser?.state_id ? String(dbUser.state_id) : ""),
           city_id: prev.city_id || (dbUser?.city_id ? String(dbUser.city_id) : ""),
+          mobileNumber: prev.mobileNumber || (dbUser?.mobile_number ? dbUser.mobile_number.replace("+91", "") : ""),
         }));
+
+        if (dbUser?.mobile_number && !dbUser.mobile_number.startsWith("google-")) {
+          setHasPhone(true);
+        }
       }
     }
     loadUserData();
@@ -76,7 +87,13 @@ export default function OnboardingPage() {
   }, [formData.state_id]);
 
   const handleNext = () => {
-    if (step === 1 && !formData.name.trim()) { setError("Please enter your full name."); return; }
+    if (step === 1) {
+      if (!formData.name.trim()) { setError("Please enter your full name."); return; }
+      if (!hasPhone && (!formData.mobileNumber || formData.mobileNumber.length < 10)) {
+        setError("Please enter a valid 10-digit mobile number.");
+        return;
+      }
+    }
     if (step === 2 && !formData.state_id) { setError("Please select a state."); return; }
     if (step === 2 && !formData.city_id) { setError("Please select a city."); return; }
     setError("");
@@ -102,12 +119,24 @@ export default function OnboardingPage() {
       if (!user) throw new Error("No user found. Please login again.");
 
       let extractedPhone = user.phone || user.user_metadata?.phone || "";
+      if (!extractedPhone && formData.mobileNumber) {
+        extractedPhone = `+91${formData.mobileNumber}`;
+      }
+
       if (!extractedPhone && user.email) {
         if (user.email.toLowerCase().endsWith("@graphitex.app")) {
           extractedPhone = user.email.split("@")[0];
         } else {
-          extractedPhone = user.email;
+          if (user.email.length > 20) {
+            extractedPhone = `google-${user.id.slice(0, 13)}`;
+          } else {
+            extractedPhone = user.email;
+          }
         }
+      }
+
+      if (!extractedPhone) {
+        extractedPhone = `google-${user.id.slice(0, 13)}`;
       }
       
       // Ensure the value does not exceed the VARCHAR(20) limit
@@ -201,6 +230,16 @@ export default function OnboardingPage() {
             <Input label="Email (Optional)" type="email" value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
               placeholder="john@example.com" />
+            {!hasPhone && (
+              <div style={{ marginTop: "var(--space-4)" }}>
+                <PhoneInput
+                  label="Mobile Number"
+                  value={formData.mobileNumber}
+                  onChange={(val) => setFormData({ ...formData, mobileNumber: val })}
+                  required
+                />
+              </div>
+            )}
           </div>
 
           {/* Step 2 — State → City */}

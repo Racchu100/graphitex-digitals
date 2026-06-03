@@ -56,3 +56,7 @@ reset-user-passwords.js
 test-db.js
 test-insert-influencer.js
 test-policies.js
+
+# Google OAuth secrets
+client_secret_*.json
+
