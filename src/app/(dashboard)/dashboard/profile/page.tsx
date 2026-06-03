@@ -583,7 +583,7 @@ function ProfileDashboardContent() {
       )}
 
       {activeTab === "influencer" && (
-        <div style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-lg)", padding: "var(--space-6)" }}>
+        <div style={{ padding: "0px" }}>
           {infLoading ? (
             <p style={{ color: "var(--color-text-secondary)" }}>Loading portfolio and niche details...</p>
           ) : (

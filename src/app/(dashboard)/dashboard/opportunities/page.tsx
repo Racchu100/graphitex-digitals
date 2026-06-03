@@ -7,12 +7,30 @@ import { useUser } from "@/hooks/useUser";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { Opportunity } from "@/types/database";
+import { Trash2 } from "lucide-react";
+import { deleteOpportunity } from "./actions";
 
 export default function ProviderOpportunitiesPage() {
   const supabase = createClient();
   const { user, loading: userLoading } = useUser();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this opportunity?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await deleteOpportunity(id);
+      if (res?.success) {
+        setOpportunities(prev => prev.filter(opp => opp.id !== id));
+        alert("Opportunity deleted successfully!");
+      }
+    } catch (err: any) {
+      console.error("Error deleting opportunity:", err);
+      alert(err.message || "Failed to delete opportunity.");
+    }
+  };
 
   useEffect(() => {
     if (userLoading) return;
@@ -124,6 +142,15 @@ export default function ProviderOpportunitiesPage() {
                         </span>
                       )}
                     </Link>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleDelete(opp.id)}
+                      className="opp-card-delete-btn"
+                    >
+                      <Trash2 size={14} style={{ marginRight: '6px' }} />
+                      <span>Delete</span>
+                    </Button>
                   </div>
                 </div>
               </Card>

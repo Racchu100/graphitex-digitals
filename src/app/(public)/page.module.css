@@ -206,6 +206,20 @@
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   /* Inherits 16 / 9 from default for correct laptop/tablet banner scaling */
+  .carouselArrow {
+    width: 36px;
+    height: 36px;
+  }
+  .carouselArrow svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .carouselArrowLeft {
+    left: 12px;
+  }
+  .carouselArrowRight {
+    right: 12px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -230,7 +244,20 @@
     padding: 0;
   }
   .carouselArrow {
-    display: none; /* Hide arrows on touch viewports for cleaner aesthetics */
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    top: 75%;
+  }
+  .carouselArrow svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .carouselArrowLeft {
+    left: 8px;
+  }
+  .carouselArrowRight {
+    right: 8px;
   }
   .heroSection {
     padding: 0px 0 var(--space-3);

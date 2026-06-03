@@ -32,6 +32,8 @@ import {
   Car,
   Gem,
   MessageSquare,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // ── CATEGORY DATA ──────────────────────────────────────────────────────────────
@@ -132,6 +134,15 @@ const popularCategories = [
 // ── HERO CAROUSEL SLIDES ───────────────────────────────────────────────────────
 const heroCarouselSlides = [
   {
+    title: "Direct Business & Creator Collaborations",
+    subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
+    desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
+    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
+    ctaText: "Find Creators & Influencers 📣",
+    actionType: "link",
+    target: "/influencers"
+  },
+  {
     title: "Graphitex Digitals Creative Agency Services",
     subtitle: "Graphic Design • Website Development • Ad Shoots • Instagram Page Handling • Digital Marketing",
     desc: "Scale your business organic traffic, creative reach, and conversions with our comprehensive, premium digital solutions.",
@@ -148,24 +159,15 @@ const heroCarouselSlides = [
     ctaText: "Search Business Directory 🔍",
     actionType: "link",
     target: "/services"
-  },
-  {
-    title: "Direct Business & Creator Collaborations",
-    subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
-    desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
-    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
-    ctaText: "Find Creators & Influencers 📣",
-    actionType: "link",
-    target: "/influencers"
   }
 ];
 
 // ── HERO HEADLINE ROTATIONS ────────────────────────────────────────────────────
 const heroHeadlines = [
+  "Grow Your Business with Us",
   "Find Top Creators for Your Brand",
   "Discover Local Businesses Near You",
   "Connect with Verified Influencers",
-  "Grow Your Business with Us",
 ];
 
 
@@ -287,14 +289,14 @@ export default function HomePage() {
               className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
               aria-label="Previous slide"
             >
-              ‹
+              <ChevronLeft size={20} />
             </button>
             <button
               onClick={() => setActiveSlide((prev) => (prev + 1) % heroCarouselSlides.length)}
               className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
               aria-label="Next slide"
             >
-              ›
+              <ChevronRight size={20} />
             </button>
 
             {/* Dotted Indicators */}

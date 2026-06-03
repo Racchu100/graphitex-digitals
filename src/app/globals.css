@@ -676,4 +676,16 @@ button {
   }
 }
 
+.opp-card-delete-btn {
+  color: var(--color-error) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: transparent !important;
+}
+
+.opp-card-delete-btn:hover {
+  background: var(--color-error-bg) !important;
+  border-color: var(--color-error) !important;
+  color: var(--color-error) !important;
+}
+
 

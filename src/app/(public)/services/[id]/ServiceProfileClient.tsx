@@ -6,6 +6,15 @@ import Link from "next/link";
 import { ArrowLeft, Play, ExternalLink, MessageCircle, Phone, ChevronLeft, ChevronRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 
+const getInstagramUrl = (handle: string) => {
+  if (!handle) return "";
+  const cleaned = handle.trim().replace(/^@/, "");
+  if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) {
+    return cleaned;
+  }
+  return `https://instagram.com/${cleaned}`;
+};
+
 interface ServiceProfileClientProps {
   profile: any;
   media: any[];
@@ -98,6 +107,8 @@ export default function ServiceProfileClient({
     profile.countries?.name
   ].filter(Boolean).join(", ");
 
+  const hasWebsite = !!(profile.website_url && profile.website_url.trim());
+
   return (
     <div className={styles.container}>
       {/* Navigation Breadcrumbs */}
@@ -136,7 +147,7 @@ export default function ServiceProfileClient({
               </span>
             </div>
             {profile.tagline && (
-              <p style={{ margin: '0 0 var(--space-3) 0', color: 'var(--color-text-secondary)', fontSize: 'var(--text-base)', fontStyle: 'italic' }}>
+              <p className={styles.headerTagline}>
                 "{profile.tagline}"
               </p>
             )}
@@ -147,9 +158,65 @@ export default function ServiceProfileClient({
               {profile.cities && (
                 <span className={styles.location}>📍 {profile.cities.name}, {profile.states?.name}</span>
               )}
-              <span style={{ fontSize: "var(--text-sm)", fontWeight: "600", color: "var(--color-text-secondary)", background: "var(--color-surface-elevated)", border: "1px solid var(--color-border)", padding: "2px 8px", borderRadius: "50px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                👁️ {displayViews.toLocaleString("en-US")} Views
-              </span>
+            </div>
+
+            {/* Header Action Buttons: Website, WhatsApp, Instagram */}
+            <div className={styles.headerActions}>
+              {hasWebsite && (
+                <a
+                  href={profile.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.headerActionBtn} ${styles.websiteBtn}`}
+                >
+                  <ExternalLink size={13} />
+                  <span>Website</span>
+                </a>
+              )}
+
+              {profile.whatsapp_number ? (
+                <a
+                  href={`https://wa.me/${profile.whatsapp_number.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.headerActionBtn} ${styles.whatsappBtn}`}
+                >
+                  <MessageCircle size={13} />
+                  <span>WhatsApp</span>
+                </a>
+              ) : profile.contact_type === "whatsapp" && profile.contact_number ? (
+                <a
+                  href={`https://wa.me/${profile.contact_number.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.headerActionBtn} ${styles.whatsappBtn}`}
+                >
+                  <MessageCircle size={13} />
+                  <span>WhatsApp</span>
+                </a>
+              ) : profile.contact_number ? (
+                <a
+                  href={`tel:${profile.contact_number.replace(/\s+/g, "")}`}
+                  className={`${styles.headerActionBtn} ${styles.phoneBtn}`}
+                >
+                  <Phone size={13} />
+                  <span>Call Now</span>
+                </a>
+              ) : null}
+
+              {profile.instagram_handle && profile.instagram_handle.trim() && (
+                <a
+                  href={getInstagramUrl(profile.instagram_handle)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.headerActionBtn} ${styles.instagramBtn}`}
+                >
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                  </svg>
+                  <span>Instagram</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -255,7 +322,17 @@ export default function ServiceProfileClient({
                 Get in touch directly with this service provider.
               </p>
 
-              {profile.contact_type === "whatsapp" && profile.whatsapp_number ? (
+              {hasWebsite ? (
+                <a
+                  href={profile.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.directContactBtn} ${styles.directWebsiteBtn}`}
+                >
+                  <ExternalLink size={20} />
+                  <span>Visit Website</span>
+                </a>
+              ) : profile.contact_type === "whatsapp" && profile.whatsapp_number ? (
                 <a
                   href={`https://wa.me/${profile.whatsapp_number}`}
                   target="_blank"
@@ -347,6 +424,21 @@ export default function ServiceProfileClient({
                     className={styles.webLink}
                   >
                     <span>Visit Website</span>
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
+              )}
+
+              {profile.instagram_handle && (
+                <div>
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', display: 'block', marginBottom: '2px' }}>Instagram</span>
+                  <a
+                    href={getInstagramUrl(profile.instagram_handle)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.webLink}
+                  >
+                    <span>@{profile.instagram_handle.replace(/^@/, "")}</span>
                     <ExternalLink size={12} />
                   </a>
                 </div>

@@ -180,3 +180,16 @@
     border-radius: 4px;
   }
 }
+
+.websiteBtn {
+  background: rgb(23 89 255) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.websiteBtn:hover {
+  background: rgb(16 75 220) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(23, 89, 255, 0.25) !important;
+}
+

@@ -31,7 +31,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  padding: var(--space-5);
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
@@ -55,8 +55,8 @@
 }
 
 .avatarContainer {
-  width: 90px;
-  height: 90px;
+  width: 150px;
+  height: 150px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 3px solid var(--color-surface-elevated);
@@ -85,10 +85,18 @@
 }
 
 .name {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   margin: 0;
+}
+
+.headerTagline {
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: 1.4;
 }
 
 .roleBadge {
@@ -396,7 +404,15 @@
 @media (max-width: 768px) {
   .container {
     padding: var(--space-4) var(--space-3) !important;
-    gap: var(--space-4) !important;
+    gap: var(--space-3) !important;
+  }
+
+  .mainGrid {
+    gap: var(--space-3) !important;
+  }
+
+  .panel {
+    gap: var(--space-3) !important;
   }
 
   .backBtn {
@@ -404,7 +420,7 @@
   }
 
   .headerCard {
-    padding: var(--space-4) !important;
+    padding: 14px 16px !important;
   }
 
   .headerFlex {
@@ -416,12 +432,17 @@
   }
 
   .avatarContainer {
-    width: 70px !important;
-    height: 70px !important;
+    width: 110px !important;
+    height: 110px !important;
   }
 
   .name {
-    font-size: var(--text-xl) !important;
+    font-size: var(--text-lg) !important;
+  }
+
+  .headerTagline {
+    font-size: 11px !important;
+    margin-bottom: var(--space-1) !important;
   }
 
   .sectionCard {
@@ -532,3 +553,142 @@
     right: var(--space-2) !important;
   }
 }
+
+/* ── Header Action Buttons ─────────────────────────────────────────── */
+.headerActions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.headerActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.headerActionBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.headerActionBtn:active {
+  transform: translateY(0);
+}
+
+.whatsappBtn {
+  background: hsl(142, 70%, 45%);
+  color: white;
+  border: 1px solid hsl(142, 70%, 40%);
+}
+
+.whatsappBtn:hover {
+  background: hsl(142, 70%, 43%);
+  filter: brightness(1.05);
+}
+
+.phoneBtn {
+  background: var(--color-primary);
+  color: white;
+  border: 1px solid var(--color-primary);
+}
+
+.phoneBtn:hover {
+  filter: brightness(1.05);
+}
+
+.websiteBtn {
+  background: rgb(23 89 255) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.websiteBtn:hover {
+  background: rgb(16 75 220) !important;
+  box-shadow: 0 4px 12px rgba(23, 89, 255, 0.25) !important;
+  color: white !important;
+}
+
+.directWebsiteBtn {
+  background: rgb(23 89 255) !important;
+  border: none !important;
+}
+
+.directWebsiteBtn:hover {
+  background: rgb(16 75 220) !important;
+  box-shadow: 0 4px 12px rgba(23, 89, 255, 0.25) !important;
+}
+
+.instagramBtn {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
+  color: white !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--space-1) !important;
+}
+
+.instagramBtn:hover {
+  filter: brightness(1.1) !important;
+  box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25) !important;
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .headerActions {
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .headerActionBtn {
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 5px 6px !important;
+    font-size: 10px !important;
+    border-radius: 5px !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerFlex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: var(--space-2) !important;
+  }
+
+  .headerInfo {
+    width: 100% !important;
+  }
+
+  .avatarContainer {
+    width: 130px !important;
+    height: 130px !important;
+    align-self: center !important;
+    margin-bottom: 0 !important;
+  }
+
+  .nameRow {
+    margin-bottom: 4px !important;
+  }
+
+  .metaRow {
+    gap: 6px !important;
+  }
+
+  .headerActions {
+    margin-top: var(--space-2) !important;
+  }
+}
+
+
+

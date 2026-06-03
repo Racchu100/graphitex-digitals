@@ -137,6 +137,7 @@ export interface BusinessProfile {
   whatsapp_number: string | null;
   contact_number: string | null;
   website_url: string | null;
+  instagram_handle: string | null;
   address_line: string | null;
   country_id: number;
   state_id: number;

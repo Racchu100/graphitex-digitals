@@ -39,6 +39,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
     whatsapp_number: initialData?.whatsapp_number || "",
     contact_number: initialData?.contact_number || "",
     website_url: initialData?.website_url || "",
+    instagram_handle: initialData?.instagram_handle || "",
     map_embed_url: initialData?.map_embed_url || "",
     address_line: initialData?.address_line || "",
     country_id: initialData?.country_id || "1", // Hardcoded default for scaffolding
@@ -230,6 +231,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
         whatsapp_number: formData.whatsapp_number || null,
         contact_number: formData.contact_number || null,
         website_url: formData.website_url || null,
+        instagram_handle: formData.instagram_handle || null,
         address_line: formData.provider_type === 'freelancer' ? null : (formData.address_line || null),
         country_id: dbUser?.country_id || parseInt(formData.country_id as string) || 1,
         state_id: dbUser?.state_id || parseInt(formData.state_id as string) || 1,
@@ -451,6 +453,13 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
               value={formData.website_url}
               onChange={handleChange}
               type="url"
+            />
+            <Input
+              label="Instagram Handle or ID (Optional)"
+              name="instagram_handle"
+              value={formData.instagram_handle}
+              onChange={handleChange}
+              placeholder="e.g. yourusername"
             />
             {formData.provider_type !== 'freelancer' && (
               <Input

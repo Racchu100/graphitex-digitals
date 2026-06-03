@@ -46,9 +46,6 @@ export default function BusinessCard({ profile }: BusinessCardProps) {
                       : [profile.cities?.name, profile.states?.name].filter(Boolean).join(", ")}
                  </span>
                )}
-               <span style={{ fontSize: "8px", fontWeight: "600", color: "var(--color-text-secondary)", background: "var(--color-surface-elevated)", border: "1px solid var(--color-border)", padding: "1px 5px", borderRadius: "50px", display: "inline-flex", alignItems: "center", gap: "2px", height: "18px" }}>
-                 👁️ {((profile as any).views_count || 0).toLocaleString("en-US")}
-               </span>
             </div>
         </div>
         
@@ -57,7 +54,16 @@ export default function BusinessCard({ profile }: BusinessCardProps) {
         )}
         
         <div className={styles.actions}>
-           {profile.contact_type === 'whatsapp' && profile.whatsapp_number ? (
+           {profile.website_url && profile.website_url.trim() ? (
+             <a 
+               href={profile.website_url} 
+               target="_blank" 
+               rel="noreferrer"
+               className={`${styles.button} ${styles.websiteBtn}`}
+             >
+               Website
+             </a>
+           ) : profile.contact_type === 'whatsapp' && profile.whatsapp_number ? (
              <a 
                href={`https://wa.me/${profile.whatsapp_number}`} 
                target="_blank" 

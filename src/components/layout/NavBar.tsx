@@ -83,6 +83,7 @@ export default function NavBar() {
         const isProviderUser = roles?.some(r => r?.role === 'provider');
         const isInfluencerUser = roles?.some(r => r?.role === 'influencer');
         let isApproved = false;
+        let hasOpportunities = false;
 
         if (isProviderUser) {
           const { data: profile } = await supabase
@@ -92,6 +93,15 @@ export default function NavBar() {
             .maybeSingle();
           if (profile && profile.status === 'approved') {
             isApproved = true;
+
+            // Check if provider has posted at least one opportunity
+            const { count, error: oppsError } = await supabase
+              .from('opportunities')
+              .select('id', { count: 'exact', head: true })
+              .eq('posted_by_user_id', user!.id);
+            if (!oppsError && count !== null && count > 0) {
+              hasOpportunities = true;
+            }
           }
         }
 
@@ -149,7 +159,7 @@ export default function NavBar() {
         }
 
         const isDismissed = sessionStorage.getItem("collab_alert_dismissed");
-        if (isApproved && isDismissed !== "true") {
+        if (isApproved && !hasOpportunities && isDismissed !== "true") {
           const collabVirtualNotif = {
             id: "virtual-collab-alert",
             title: "🚀 Find Creative Creators!",
@@ -734,7 +744,24 @@ export default function NavBar() {
       {/* Floating Critical Toast Alert Modal Card */}
       {activeToast && (
         <div className={styles.toastContainer}>
-          <div className={`${styles.toastCard} ${(activeToast.type.includes('reject') || activeToast.type === 'opportunity_removed' || activeToast.type === 'profile_suspended') ? styles.toastReject : styles.toastApprove}`}>
+          <div 
+            className={`${styles.toastCard} ${(activeToast.type.includes('reject') || activeToast.type === 'opportunity_removed' || activeToast.type === 'profile_suspended') ? styles.toastReject : styles.toastApprove}`}
+            onClick={(e) => {
+              if (activeToast.type === 'collab_suggestion') {
+                const target = e.target as HTMLElement;
+                if (
+                  target.closest(`.${styles.toastCloseBtn}`) || 
+                  target.closest(`.${styles.toastDismissBtn}`) ||
+                  target.closest('a')
+                ) {
+                  return;
+                }
+                handleMarkSingleRead(activeToast.id, true);
+                router.push("/dashboard/opportunities");
+              }
+            }}
+            style={activeToast.type === 'collab_suggestion' ? { cursor: 'pointer' } : undefined}
+          >
             <div className={styles.toastIconSection}>
               {activeToast.type.includes('reject') || activeToast.type === 'opportunity_removed' || activeToast.type === 'profile_suspended' ? (
                 <XCircle size={24} className={styles.toastAlertIcon} />
@@ -784,7 +811,7 @@ export default function NavBar() {
               {activeToast.type === 'collab_suggestion' && (
                 <div style={{ marginTop: 'var(--space-2)' }}>
                   <Link
-                    href="/dashboard/profile?tab=opportunities"
+                    href="/dashboard/opportunities"
                     onClick={() => handleMarkSingleRead(activeToast.id, true)}
                     style={{
                       display: 'inline-flex',
