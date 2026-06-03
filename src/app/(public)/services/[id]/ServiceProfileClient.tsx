@@ -50,6 +50,11 @@ export default function ServiceProfileClient({
       .catch((e) => console.warn("Failed to increment views on DB:", e));
   }, [profile.id]);
 
+  // Scroll to top on mount to prevent layout shift scroll offset bugs
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const sortedMedia = [...media].sort((a, b) => a.sort_order - b.sort_order);
   const images = sortedMedia.filter(m => m.media_type === "image");
   const videos = sortedMedia.filter(m => m.media_type === "video").slice(0, 2);

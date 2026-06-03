@@ -201,6 +201,11 @@ export default function InfluencerProfileClient({
       .catch((e) => console.warn("Failed to increment views on DB:", e));
   }, [profile.id]);
 
+  // Scroll to top on mount to prevent layout shift scroll offset bugs
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const images = mediaList.filter(m => m.type === "image").slice(0, 3);
   const videos = mediaList.filter(m => m.type === "video").slice(0, 2);
   const displayedMedia = [...videos, ...images];
