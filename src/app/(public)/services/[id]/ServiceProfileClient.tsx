@@ -410,7 +410,6 @@ export default function ServiceProfileClient({
                         width="100%"
                         height="200"
                         style={{ border: 0 }}
-                        loading="lazy"
                         allowFullScreen
                         src={mapSrc}
                       />
