@@ -6,7 +6,9 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
 <!-- END:nextjs-agent-rules -->
 
 - **Homepage & Global Spacing Refinements (June 2026)**:
+  - Resolved a git push rejection issue by removing hardcoded Google OAuth Client ID and Client Secret from `supabase/config.toml` and replacing them with environment variable references (`env(...)`). Untracked and ignored the downloaded `client_secret_*.json` file, and added it to the `.gitignore`. Setup local environment variables inside `.env.local` and `supabase/.env.local` to allow proper local execution of Google OAuth without leaking secrets.
   - Decreased the top padding of the hero section on mobile viewports (<=768px and <=480px) to 8px to tighten up the visual layout, and added slight left/right side padding to the hero title to prevent it from touching screen edges.
+
   - Filtered the homepage popular search tags to display only 5 core niches (Fashion & Clothing, Jewellery & Accessories, Food & Restaurants, Technology & Gadgets, and Photography & Video) and removed the rest of the secondary niches to improve layout cleaniness.
   - Downscaled the mobile hero title font-size (to 1.25rem on <=768px and 1.05rem on <=480px) and tightened horizontal/vertical margins to present the header content cleanly in a single line without wrapping.
   - Removed the "Baby & Kids" category card from the homepage categories list due to a broken image asset.
