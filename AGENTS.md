@@ -6,6 +6,7 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
 <!-- END:nextjs-agent-rules -->
 
 - **Dynamic Imports & SEO Enhancements & Contact Updates (June 2026)**:
+  - Regenerated all website favicon files (`favicon.ico`, `icon.png`, `icon.webp` under `src/app` and `public` directories) in `.webp` and `.ico` formats from the high-resolution square brand logo icon.
   - Unified and deduplicated the inline Share Modal components from layout and profile views, importing them dynamically via Next.js client-side dynamic code-splitting (`dynamic(..., { ssr: false })`) to reduce code duplication and improve initial page load speed.
   - Configured global SEO metadata options (default titles, title templates, keywords list, openGraph / Twitter card previews, and robots indexes) and JSON-LD structured searchbox website schema scripts inside [layout.tsx](file:///d:/Rakshith/Graphitex%20Digitals/my%20account/graphitex%20website/graphitex_digitals/src/app/layout.tsx).
   - Added static SEO descriptions to the directories: [services/page.tsx](file:///d:/Rakshith/Graphitex%20Digitals/my%20account/graphitex%20website/graphitex_digitals/src/app/(public)/services/page.tsx), [influencers/page.tsx](file:///d:/Rakshith/Graphitex%20Digitals/my%20account/graphitex%20website/graphitex_digitals/src/app/(public)/influencers/page.tsx), and [opportunities/page.tsx](file:///d:/Rakshith/Graphitex%20Digitals/my%20account/graphitex%20website/graphitex_digitals/src/app/(public)/opportunities/page.tsx).
