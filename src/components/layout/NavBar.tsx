@@ -207,16 +207,18 @@ export default function NavBar() {
   };
 
   const handleCopyLink = () => {
-    if (typeof navigator !== "undefined" && currentUrl) {
-      navigator.clipboard.writeText(currentUrl);
+    const urlToCopy = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
+    if (typeof navigator !== "undefined" && urlToCopy) {
+      navigator.clipboard.writeText(urlToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const handleInstagramShare = () => {
-    if (typeof navigator !== "undefined" && currentUrl) {
-      navigator.clipboard.writeText(currentUrl);
+    const urlToCopy = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
+    if (typeof navigator !== "undefined" && urlToCopy) {
+      navigator.clipboard.writeText(urlToCopy);
       setCopied(true);
       setInstaHelperActive(true);
       setTimeout(() => setCopied(false), 2000);
@@ -225,14 +227,15 @@ export default function NavBar() {
   };
 
   const handleNativeShare = async () => {
-    if (typeof navigator !== "undefined" && (navigator as any).share && currentUrl) {
+    const urlToShare = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
+    if (typeof navigator !== "undefined" && (navigator as any).share && urlToShare) {
       try {
         await (navigator as any).share({
           title: `${profileData?.name || "Graphitex"}`,
           text: profileData?.name === "Graphitex Digitals"
-            ? `🚀 Grow Your Business with Graphitex Digitals!\n\n✔ Find local businesses through our business directory\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything your business needs to build a strong online presence and reach more customers—all in one place.\n\nCheck out Graphitex Digitals today!`
+            ? `🚀 Grow with Graphitex Digitals!\n\nFor Customers:\n✔ Find trusted local businesses through our business directory based on your needs.\n\nFor Business Owners:\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything you need to grow your business, increase visibility, attract more customers, and build a strong online presence—all in one place.\n\nCheck out Graphitex Digitals today!`
             : `Check out ${profileData?.name || "this link"} on Graphitex Digitals!`,
-          url: currentUrl,
+          url: urlToShare,
         });
       } catch (err) {
         console.warn("Error native sharing:", err);
@@ -242,18 +245,22 @@ export default function NavBar() {
 
   const shareText = profileData 
     ? (profileData.name === "Graphitex Digitals"
-        ? `🚀 Grow Your Business with Graphitex Digitals!\n\n✔ Find local businesses through our business directory\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything your business needs to build a strong online presence and reach more customers—all in one place.\n\nCheck out Graphitex Digitals today!\n${currentUrl}`
+        ? `🚀 Grow with Graphitex Digitals!\n\nFor Customers:\n✔ Find trusted local businesses through our business directory based on your needs.\n\nFor Business Owners:\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything you need to grow your business, increase visibility, attract more customers, and build a strong online presence—all in one place.\n\nCheck out Graphitex Digitals today!\nhttps://www.graphitexdigitals.com/`
         : `Check out ${profileData.name} on Graphitex Digitals!`)
     : "Check out my profile on Graphitex Digitals!";
 
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     profileData?.name === "Graphitex Digitals" ? shareText : `${shareText} ${currentUrl}`
   )}`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl
+  )}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     profileData?.name === "Graphitex Digitals" ? shareText : shareText
   )}${profileData?.name === "Graphitex Digitals" ? "" : `&url=${encodeURIComponent(currentUrl)}`}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+    profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl
+  )}`;
 
 
 
@@ -1458,7 +1465,7 @@ export default function NavBar() {
               <input
                 type="text"
                 readOnly
-                value={currentUrl}
+                value={profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl}
                 className={styles.shareLinkInput}
                 onClick={(e) => (e.target as HTMLInputElement).select()}
               />
