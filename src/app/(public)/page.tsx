@@ -136,7 +136,7 @@ const heroCarouselSlides = [
     title: "Graphitex Digitals Creative Agency Services",
     subtitle: "Graphic Design • Website Development • Ad Shoots • Instagram Page Handling • Digital Marketing",
     desc: "Scale your business organic traffic, creative reach, and conversions with our comprehensive, premium digital solutions.",
-    image: "/agency_services_banner.png",
+    image: "/agency_services_banner.jpg",
     ctaText: "Explore Agency Services 🚀",
     actionType: "scroll",
     target: "services-agency"
@@ -154,7 +154,7 @@ const heroCarouselSlides = [
     title: "Direct Business & Creator Collaborations",
     subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
     desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
-    image: "/Gemini_Generated_Image_wtvm7pwtvm7pwtvm (1).png",
+    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
     ctaText: "Find Creators & Influencers 📣",
     actionType: "link",
     target: "/influencers"
