@@ -152,13 +152,14 @@ const heroCarouselSlides = [
     target: "services-agency"
   },
   {
-    title: "Local Business & Services Directory",
-    subtitle: "Hyper-Local Search • Mangalore Focus • Verified Listings",
-    desc: "Search, filter, and discover trusted local agencies, professionals, and freelancers nearby. Connect directly via WhatsApp with zero middlemen.",
-    image: "/Gemini_Generated_Image_vo48vxvo48vxvo48.png",
-    ctaText: "Search Business Directory 🔍",
+    title: "🔍 Search → ✅ Select → 🤝 Collaborate",
+    subtitle: "Influencer Campaigns",
+    desc: "Connect your business with the right influencers and grow your reach.",
+    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
+    ctaText: "Collaborate with Influencers 🤝",
     actionType: "link",
-    target: "/services"
+    target: "/influencers",
+    showOverlay: true
   }
 ];
 
@@ -273,10 +274,28 @@ export default function HomePage() {
                       aria-label={slide.title}
                     >
                       <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                      {/* @ts-ignore */}
+                      {slide.showOverlay && (
+                        <div className={styles.slideContentOverlay}>
+                          {slide.subtitle && <p className={styles.slideSubtitle}>{slide.subtitle}</p>}
+                          {slide.title && <h3 className={styles.slideTitle}>{slide.title}</h3>}
+                          {slide.desc && <p className={styles.slideDescription}>{slide.desc}</p>}
+                          {slide.ctaText && <span className={styles.slideCtaBadge}>{slide.ctaText}</span>}
+                        </div>
+                      )}
                     </button>
                   ) : (
                     <Link href={slide.target} className={styles.slideBannerLink} aria-label={slide.title}>
                       <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                      {/* @ts-ignore */}
+                      {slide.showOverlay && (
+                        <div className={styles.slideContentOverlay}>
+                          {slide.subtitle && <p className={styles.slideSubtitle}>{slide.subtitle}</p>}
+                          {slide.title && <h3 className={styles.slideTitle}>{slide.title}</h3>}
+                          {slide.desc && <p className={styles.slideDescription}>{slide.desc}</p>}
+                          {slide.ctaText && <span className={styles.slideCtaBadge}>{slide.ctaText}</span>}
+                        </div>
+                      )}
                     </Link>
                   )}
                 </div>
