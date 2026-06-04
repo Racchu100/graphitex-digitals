@@ -131,17 +131,7 @@ const popularCategories = [
   "Photography & Video"
 ];
 
-// ── HERO CAROUSEL SLIDES ───────────────────────────────────────────────────────
 const heroCarouselSlides = [
-  {
-    title: "Direct Business & Creator Collaborations",
-    subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
-    desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
-    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
-    ctaText: "Find Creators & Influencers 📣",
-    actionType: "link",
-    target: "/influencers"
-  },
   {
     title: "Graphitex Digitals Creative Agency Services",
     subtitle: "Graphic Design • Website Development • Ad Shoots • Instagram Page Handling • Digital Marketing",
@@ -152,14 +142,22 @@ const heroCarouselSlides = [
     target: "services-agency"
   },
   {
-    title: "🔍 Search → ✅ Select → 🤝 Collaborate",
-    subtitle: "Influencer Campaigns",
-    desc: "Connect your business with the right influencers and grow your reach.",
-    image: "/Gemini_Generated_Image_67adkb67adkb67ad.png",
-    ctaText: "Collaborate with Influencers 🤝",
+    title: "Local Business & Services Directory",
+    subtitle: "Hyper-Local Search • Mangalore Focus • Verified Listings",
+    desc: "Search, filter, and discover trusted local agencies, professionals, and freelancers nearby. Connect directly via WhatsApp with zero middlemen.",
+    image: "/Gemini_Generated_Image_vo48vxvo48vxvo48.png",
+    ctaText: "Search Business Directory 🔍",
     actionType: "link",
-    target: "/influencers",
-    showOverlay: true
+    target: "/services"
+  },
+  {
+    title: "Direct Business & Creator Collaborations",
+    subtitle: "Influencer Campaigns • Budget Matching • Verified Creator Base",
+    desc: "Brand owners can search and directly pitch to creators or accept applications matching their campaign budgets with total pricing transparency.",
+    image: "/Gemini_Generated_Image_wtvm7pwtvm7pwtvm (1).png",
+    ctaText: "Find Creators & Influencers 📣",
+    actionType: "link",
+    target: "/influencers"
   }
 ];
 
