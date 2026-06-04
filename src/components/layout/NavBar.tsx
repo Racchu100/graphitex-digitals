@@ -229,7 +229,9 @@ export default function NavBar() {
       try {
         await (navigator as any).share({
           title: `${profileData?.name || "Graphitex"}`,
-          text: `Check out ${profileData?.name || "this link"} on Graphitex Digitals!`,
+          text: profileData?.name === "Graphitex Digitals"
+            ? `🚀 Grow Your Business with Graphitex Digitals!\n\n✔ Find local businesses through our business directory\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything your business needs to build a strong online presence and reach more customers—all in one place.\n\nCheck out Graphitex Digitals today!`
+            : `Check out ${profileData?.name || "this link"} on Graphitex Digitals!`,
           url: currentUrl,
         });
       } catch (err) {
@@ -238,10 +240,19 @@ export default function NavBar() {
     }
   };
 
-  const shareText = profileData ? `Check out ${profileData.name} on Graphitex Digitals!` : "Check out my profile on Graphitex Digitals!";
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + currentUrl)}`;
+  const shareText = profileData 
+    ? (profileData.name === "Graphitex Digitals"
+        ? `🚀 Grow Your Business with Graphitex Digitals!\n\n✔ Find local businesses through our business directory\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything your business needs to build a strong online presence and reach more customers—all in one place.\n\nCheck out Graphitex Digitals today!\n${currentUrl}`
+        : `Check out ${profileData.name} on Graphitex Digitals!`)
+    : "Check out my profile on Graphitex Digitals!";
+
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+    profileData?.name === "Graphitex Digitals" ? shareText : `${shareText} ${currentUrl}`
+  )}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    profileData?.name === "Graphitex Digitals" ? shareText : shareText
+  )}${profileData?.name === "Graphitex Digitals" ? "" : `&url=${encodeURIComponent(currentUrl)}`}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`;
 
 
