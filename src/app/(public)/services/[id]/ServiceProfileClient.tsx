@@ -43,9 +43,7 @@ export default function ServiceProfileClient({
     }
   }, []);
 
-  const roleLabel = profile.provider_type === "business_owner" ? "Business Owner" : 
-                    profile.provider_type === "freelancer" ? "Freelancer" : "Local Business";
-  const shareText = `Check out ${profile.business_name} (${roleLabel}) on Graphitex Digitals! Discover their services and connect:`;
+  const shareText = `Check out ${profile.business_name} on Graphitex Digitals!`;
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + currentUrl)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
@@ -592,11 +590,7 @@ export default function ServiceProfileClient({
               <div className={styles.shareProfileMiniInfo}>
                 <h4 className={styles.shareProfileMiniName}>{profile.business_name}</h4>
                 <div className={styles.shareProfileMiniMeta}>
-                  <span style={{ fontWeight: 'var(--weight-bold)', color: 'var(--color-primary)' }}>
-                    {profile.provider_type === "business_owner" ? "Business Owner" : 
-                     profile.provider_type === "freelancer" ? "Freelancer" : "Local Business"}
-                  </span>
-                  <span>• 📍 {profile.cities?.name || "Mangalore"}</span>
+                  <span>📍 {profile.cities?.name || "Mangalore"}</span>
                   {profile.categories && <span>• {profile.categories.name}</span>}
                 </div>
               </div>

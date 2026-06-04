@@ -229,7 +229,7 @@ export default function NavBar() {
       try {
         await (navigator as any).share({
           title: `${profileData?.name || "Graphitex"}`,
-          text: shareText,
+          text: `Check out ${profileData?.name || "this link"} on Graphitex Digitals!`,
           url: currentUrl,
         });
       } catch (err) {
@@ -238,11 +238,7 @@ export default function NavBar() {
     }
   };
 
-  const shareText = profileData
-    ? (profileData.name === "Graphitex Digitals"
-        ? "Explore Graphitex Digitals — India's Creative Marketplace for Businesses & Creators!"
-        : `Check out ${profileData.name} (${profileData.roleLabel}) on Graphitex Digitals! Discover their work and connect:`)
-    : "Check out my profile on Graphitex Digitals!";
+  const shareText = profileData ? `Check out ${profileData.name} on Graphitex Digitals!` : "Check out my profile on Graphitex Digitals!";
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + currentUrl)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
