@@ -194,7 +194,7 @@ export default function InfluencerProfileClient({
     }
   }, []);
 
-  const shareText = `Check out ${profile.display_name} on Graphitex Digitals!`;
+  const shareText = `Check out ${profile.display_name} (Influencer) on Graphitex Digitals! Discover their work and connect:`;
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + currentUrl)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
@@ -730,7 +730,8 @@ export default function InfluencerProfileClient({
               <div className={styles.shareProfileMiniInfo}>
                 <h4 className={styles.shareProfileMiniName}>{profile.display_name}</h4>
                 <div className={styles.shareProfileMiniMeta}>
-                  <span>👥 {formatStatNumber(totalFollowers)} Followers</span>
+                  <span style={{ fontWeight: 'var(--weight-bold)', color: 'var(--color-primary)' }}>Influencer</span>
+                  <span>• 👥 {formatStatNumber(totalFollowers)} Followers</span>
                   {profile.cities && <span>• 📍 {profile.cities.name}</span>}
                 </div>
               </div>

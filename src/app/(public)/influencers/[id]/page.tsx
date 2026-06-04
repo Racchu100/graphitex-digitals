@@ -1,4 +1,4 @@
-import React from "react";
+import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import InfluencerProfileClient from "./InfluencerProfileClient";
@@ -6,6 +6,86 @@ import { getInfluencerSlug } from "@/lib/utils/slug";
 
 interface InfluencerDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: InfluencerDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  let profile = null;
+
+  if (isUUID) {
+    const { data } = await supabase
+      .from("influencer_profiles")
+      .select("id, display_name, profile_picture_url, niche_category_id, categories:niche_category_id(name)")
+      .eq("id", id)
+      .maybeSingle();
+    profile = data;
+  } else {
+    const searchName = id.replace(/-/g, " ");
+    const { data } = await supabase
+      .from("influencer_profiles")
+      .select("id, display_name, profile_picture_url, niche_category_id, categories:niche_category_id(name)")
+      .ilike("display_name", searchName)
+      .maybeSingle();
+    profile = data;
+
+    if (!profile) {
+      const { data: allProfiles } = await supabase
+        .from("influencer_profiles")
+        .select("id, display_name, profile_picture_url, niche_category_id, categories:niche_category_id(name)")
+        .eq("status", "published");
+
+      const matching = allProfiles?.find(
+        (p: any) => getInfluencerSlug(p.display_name) === id
+      );
+
+      if (matching) {
+        profile = matching;
+      }
+    }
+  }
+
+  if (!profile) {
+    return {
+      title: "Influencer Profile | Graphitex Digitals",
+    };
+  }
+
+  const name = profile.display_name;
+  const title = `${name} | Influencer Profile`;
+  const category = (profile.categories as any)?.name || "Influencer";
+  const description = `Check out ${name} (${category}) on Graphitex Digitals! Browse portfolio, social metrics, and collaborate.`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL 
+    ? process.env.NEXT_PUBLIC_APP_URL 
+    : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+  const ogImageUrl = `${baseUrl}/api/og/profile?id=${profile.id}&type=influencer`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${name} - Influencer`,
+        }
+      ],
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+    }
+  };
 }
 
 export default async function InfluencerDetailPage({ params }: InfluencerDetailPageProps) {
@@ -72,7 +152,7 @@ export default async function InfluencerDetailPage({ params }: InfluencerDetailP
         .eq("status", "published");
 
       const matching = allProfiles?.find(
-        (p) => getInfluencerSlug(p.display_name) === id
+        (p: any) => getInfluencerSlug(p.display_name) === id
       );
 
       if (matching) {
@@ -112,7 +192,7 @@ export default async function InfluencerDetailPage({ params }: InfluencerDetailP
   let nicheNames: string[] = [];
   if (profile.niche_category_ids && profile.niche_category_ids.length > 0) {
     nicheNames = profile.niche_category_ids
-      .map((catId: number) => allCategories?.find((c) => c.id === catId)?.name)
+      .map((catId: number) => allCategories?.find((c: any) => c.id === catId)?.name)
       .filter(Boolean) as string[];
   }
 
