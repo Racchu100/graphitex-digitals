@@ -3,9 +3,61 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import ServiceProfileClient from "./ServiceProfileClient";
 import { getInfluencerSlug } from "@/lib/utils/slug";
+import type { Metadata } from "next";
 
 interface ServiceDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  let profile = null;
+
+  if (isUUID) {
+    const { data } = await supabase
+      .from("business_profiles")
+      .select("business_name, tagline, categories(name), cities(name)")
+      .eq("id", id)
+      .maybeSingle();
+    profile = data;
+  } else {
+    const { data: allProfiles } = await supabase
+      .from("business_profiles")
+      .select("business_name, tagline, categories(name), cities(name)")
+      .eq("status", "approved")
+      .eq("is_public", true);
+
+    const matching = allProfiles?.find(
+      (p) => getInfluencerSlug(p.business_name) === id
+    );
+    if (matching) {
+      profile = matching;
+    }
+  }
+
+  if (!profile) {
+    return {
+      title: "Service Profile Details",
+    };
+  }
+
+  const categoryName = (Array.isArray(profile.categories) ? profile.categories[0]?.name : (profile.categories as any)?.name) || "Services";
+  const cityName = (Array.isArray(profile.cities) ? profile.cities[0]?.name : (profile.cities as any)?.name) || "Mangalore";
+  const title = `${profile.business_name} - ${categoryName} in ${cityName}`;
+  const description = profile.tagline || `Discover ${profile.business_name}, offering premium ${categoryName} services in ${cityName} on Graphitex Digitals.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+  };
 }
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {

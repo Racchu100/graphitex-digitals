@@ -8,8 +8,13 @@ import Button from "@/components/ui/Button";
 import { useUser } from "@/hooks/useUser";
 import Logo from "@/components/layout/Logo";
 import { createClient } from "@/lib/supabase/client";
-import { Mail, Phone, MapPin, LogOut, LayoutDashboard, ChevronRight, CheckCircle2, XCircle, PlusCircle, Menu, X, User, LogIn, Share2, Copy, Check } from "lucide-react";
+import { Mail, Phone, MapPin, LogOut, LayoutDashboard, ChevronRight, CheckCircle2, XCircle, PlusCircle, Menu, X, User, LogIn, Share2 } from "lucide-react";
 import { getInfluencerSlug } from "@/lib/utils/slug";
+import dynamic from "next/dynamic";
+
+const ShareModal = dynamic(() => import("@/components/ui/ShareModal"), {
+  ssr: false,
+});
 
 interface SocialIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -100,18 +105,7 @@ export default function NavBar() {
   const [profileShareData, setProfileShareData] = useState<any>(null);
   const [profileData, setProfileData] = useState<any>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [instaHelperActive, setInstaHelperActive] = useState(false);
-  const [isMobileShareSupported, setIsMobileShareSupported] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (typeof navigator !== "undefined" && (navigator as any).share) {
-        setIsMobileShareSupported(true);
-      }
-    }
-  }, []);
+  const [shareUrl, setShareUrl] = useState("");
 
   useEffect(() => {
     if (!user || !roles || roles.length === 0) {
@@ -184,7 +178,7 @@ export default function NavBar() {
     setIsDrawerOpen(false);
     setDropdownOpen(false);
     if (typeof window !== "undefined" && profileUrlPath && profileShareData) {
-      setCurrentUrl(window.location.origin + profileUrlPath);
+      setShareUrl(window.location.origin + profileUrlPath);
       setProfileData(profileShareData);
       setShowShareModal(true);
     }
@@ -195,7 +189,7 @@ export default function NavBar() {
     setIsDrawerOpen(false);
     setDropdownOpen(false);
     if (typeof window !== "undefined") {
-      setCurrentUrl(window.location.origin);
+      setShareUrl("https://www.graphitexdigitals.com/");
       setProfileData({
         name: "Graphitex Digitals",
         avatar_url: "/logo.png",
@@ -205,62 +199,6 @@ export default function NavBar() {
       setShowShareModal(true);
     }
   };
-
-  const handleCopyLink = () => {
-    const urlToCopy = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
-    if (typeof navigator !== "undefined" && urlToCopy) {
-      navigator.clipboard.writeText(urlToCopy);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const handleInstagramShare = () => {
-    const urlToCopy = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
-    if (typeof navigator !== "undefined" && urlToCopy) {
-      navigator.clipboard.writeText(urlToCopy);
-      setCopied(true);
-      setInstaHelperActive(true);
-      setTimeout(() => setCopied(false), 2000);
-      setTimeout(() => setInstaHelperActive(false), 5000);
-    }
-  };
-
-  const handleNativeShare = async () => {
-    const urlToShare = profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl;
-    if (typeof navigator !== "undefined" && (navigator as any).share && urlToShare) {
-      try {
-        await (navigator as any).share({
-          title: `${profileData?.name || "Graphitex"}`,
-          text: profileData?.name === "Graphitex Digitals"
-            ? `🚀 Grow with Graphitex Digitals!\n\nFor Customers:\n✔ Find trusted local businesses through our business directory based on your needs.\n\nFor Business Owners:\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything you need to grow your business, increase visibility, attract more customers, and build a strong online presence—all in one place.\n\nCheck out Graphitex Digitals today!`
-            : `Check out ${profileData?.name || "this link"} on Graphitex Digitals!`,
-          url: urlToShare,
-        });
-      } catch (err) {
-        console.warn("Error native sharing:", err);
-      }
-    }
-  };
-
-  const shareText = profileData 
-    ? (profileData.name === "Graphitex Digitals"
-        ? `🚀 Grow with Graphitex Digitals!\n\nFor Customers:\n✔ Find trusted local businesses through our business directory based on your needs.\n\nFor Business Owners:\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything you need to grow your business, increase visibility, attract more customers, and build a strong online presence—all in one place.\n\nCheck out Graphitex Digitals today!\nhttps://www.graphitexdigitals.com/`
-        : `Check out ${profileData.name} on Graphitex Digitals!`)
-    : "Check out my profile on Graphitex Digitals!";
-
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-    profileData?.name === "Graphitex Digitals" ? shareText : `${shareText} ${currentUrl}`
-  )}`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl
-  )}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    profileData?.name === "Graphitex Digitals" ? shareText : shareText
-  )}${profileData?.name === "Graphitex Digitals" ? "" : `&url=${encodeURIComponent(currentUrl)}`}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-    profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl
-  )}`;
 
 
 
@@ -713,7 +651,7 @@ export default function NavBar() {
           <div className={styles.topBarLeft}>
             <div className={styles.topBarItem}>
               <Phone size={11} />
-              <span>+91 99999 99999</span>
+              <span>+91 91873 36058</span>
             </div>
             <div className={styles.topBarDivider} />
             <div className={styles.topBarItem}>
@@ -1380,118 +1318,19 @@ export default function NavBar() {
       </div>
     </div>
       {/* Share Profile Modal */}
-      {showShareModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowShareModal(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>Share Profile</h3>
-              <button className={styles.modalClose} onClick={() => setShowShareModal(false)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Mini Profile Card */}
-            {profileData && (
-              <div className={styles.shareProfileMiniCard}>
-                <div className={styles.shareProfileMiniAvatarContainer}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={profileData.avatar_url}
-                    alt={profileData.name}
-                    className={styles.shareProfileMiniAvatar}
-                  />
-                </div>
-                <div className={styles.shareProfileMiniInfo}>
-                  <h4 className={styles.shareProfileMiniName}>{profileData.name}</h4>
-                  <div className={styles.shareProfileMiniMeta}>
-                    <span>{profileData.roleLabel}</span>
-                    {profileData.metaText && <span>• {profileData.metaText}</span>}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Share Grid */}
-            <div className={styles.shareOptionsGrid}>
-              {/* WhatsApp */}
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.shareOptionItem}>
-                <div className={`${styles.shareIconCircle} ${styles.shareIconWhatsapp}`}>
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.968C16.63 1.97 14.155.945 11.533.945c-5.445 0-9.87 4.373-9.874 9.802-.002 2.03.535 4.022 1.558 5.769l-.99 3.613 3.738-.975zM17.476 14.39c-.326-.162-1.93-.941-2.228-1.05-.297-.108-.513-.162-.73.162-.216.324-.838 1.05-1.027 1.267-.19.216-.379.243-.705.082-.326-.162-1.378-.504-2.625-1.608-.971-.859-1.626-1.92-1.816-2.244-.19-.324-.02-.5-.18-.661-.147-.145-.326-.379-.489-.569-.163-.19-.217-.324-.326-.541-.108-.216-.054-.405-.027-.568.027-.162.216-.513.326-.757.108-.243.162-.405.243-.567.081-.162.04-.324-.013-.486-.054-.162-.513-1.217-.703-1.67-.185-.443-.37-.383-.513-.39-.13-.006-.282-.008-.431-.008-.149 0-.39.054-.595.27-.205.216-.784.757-.784 1.84 0 1.08.795 2.124.903 2.27.108.147 1.564 2.358 3.79 3.298.53.223.943.356 1.265.457.532.167 1.017.143 1.399.088.427-.062 1.93-.778 2.2-1.49.27-.711.27-1.32.19-1.446-.081-.127-.297-.205-.623-.368z"/>
-                  </svg>
-                </div>
-                <span className={styles.shareOptionText}>WhatsApp</span>
-              </a>
-
-              {/* Instagram Story / Reels */}
-              <div onClick={handleInstagramShare} className={styles.shareOptionItem}>
-                <div className={`${styles.shareIconCircle} ${styles.shareIconInstagram}`}>
-                  <InstagramIcon size={20} />
-                </div>
-                <span className={styles.shareOptionText}>Insta / Reels</span>
-              </div>
-
-              {/* Facebook */}
-              <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className={styles.shareOptionItem}>
-                <div className={`${styles.shareIconCircle} ${styles.shareIconFacebook}`}>
-                  <FacebookIcon size={20} />
-                </div>
-                <span className={styles.shareOptionText}>Facebook</span>
-              </a>
-
-              {/* Twitter / X */}
-              <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className={styles.shareOptionItem}>
-                <div className={`${styles.shareIconCircle} ${styles.shareIconTwitter}`}>
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                </div>
-                <span className={styles.shareOptionText}>Twitter / X</span>
-              </a>
-
-              {/* LinkedIn */}
-              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className={styles.shareOptionItem}>
-                <div className={`${styles.shareIconCircle} ${styles.shareIconLinkedIn}`}>
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                  </svg>
-                </div>
-                <span className={styles.shareOptionText}>LinkedIn</span>
-              </a>
-            </div>
-
-            {/* Link Copy Box */}
-            <div className={styles.shareLinkBox}>
-              <input
-                type="text"
-                readOnly
-                value={profileData?.name === "Graphitex Digitals" ? "https://www.graphitexdigitals.com/" : currentUrl}
-                className={styles.shareLinkInput}
-                onClick={(e) => (e.target as HTMLInputElement).select()}
-              />
-              <button className={styles.shareLinkCopyBtn} onClick={handleCopyLink}>
-                {copied ? <Check size={16} className={styles.copyCheckIcon} /> : <Copy size={16} />}
-                <span>{copied ? "Copied!" : "Copy"}</span>
-              </button>
-            </div>
-
-            {/* Custom Helper Message */}
-            {instaHelperActive && (
-              <div className={styles.shareToast}>
-                ✓ Link copied! You can now paste it into your Instagram stories, bio, feed posts, or reels descriptions.
-              </div>
-            )}
-
-            {/* Mobile Native Share Trigger */}
-            {isMobileShareSupported && (
-              <button className={styles.nativeShareBtn} onClick={handleNativeShare}>
-                <Share2 size={16} />
-                <span>More Share Options</span>
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        title={profileData?.name || ""}
+        avatarUrl={profileData?.avatar_url || ""}
+        metaText={profileData ? (profileData.roleLabel + (profileData.metaText ? ` • ${profileData.metaText}` : "")) : ""}
+        shareUrl={shareUrl}
+        customText={
+          profileData?.name === "Graphitex Digitals"
+            ? `🚀 Grow with Graphitex Digitals!\n\nFor Customers:\n✔ Find trusted local businesses through our business directory based on your needs.\n\nFor Business Owners:\n✔ Connect and collaborate with influencers\n✔ Website Development\n✔ Graphic Design\n✔ Instagram Page Management\n✔ Digital Marketing\n✔ Ad & Promotional Shoots\n\nEverything you need to grow your business, increase visibility, attract more customers, and build a strong online presence—all in one place.\n\nCheck out Graphitex Digitals today!`
+            : undefined
+        }
+      />
 
       {showGalleryAlert && (
 

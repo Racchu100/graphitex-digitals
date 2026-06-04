@@ -76,6 +76,7 @@ export default async function ApplicationsPage({ params }: ApplicationsPageProps
                     src={influencer?.profile_picture_url || "/placeholder-avatar.svg"}
                     alt={influencer?.display_name}
                     className={styles.avatar}
+                    loading="lazy"
                   />
                   <div>
                     <h3 className={styles.name}>{influencer?.display_name}</h3>

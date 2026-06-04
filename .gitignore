@@ -60,3 +60,5 @@ test-policies.js
 # Google OAuth secrets
 client_secret_*.json
 
+# OS/System shortcuts
+graphitex_digitals.lnk

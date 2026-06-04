@@ -8,9 +8,24 @@ import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { ArrowLeft, Plus, Edit3, Eye, EyeOff, Trash2 } from "lucide-react";
-import InfluencerForm from "@/components/forms/InfluencerForm";
-import ServiceForm from "@/components/forms/ServiceForm";
+import dynamic from "next/dynamic";
 import { BusinessProfile } from "@/types/database";
+
+const InfluencerForm = dynamic(() => import("@/components/forms/InfluencerForm"), {
+  loading: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: "var(--space-12)" }}>
+      <p style={{ color: "var(--color-text-secondary)" }}>Loading influencer form...</p>
+    </div>
+  )
+});
+
+const ServiceForm = dynamic(() => import("@/components/forms/ServiceForm"), {
+  loading: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: "var(--space-12)" }}>
+      <p style={{ color: "var(--color-text-secondary)" }}>Loading services form...</p>
+    </div>
+  )
+});
 
 function ProfileDashboardContent() {
   const supabase = createClient();
@@ -706,7 +721,7 @@ function ProfileDashboardContent() {
                               const primaryImage = (service as any).business_media?.find((m: any) => m.media_type === "image")?.url || "/placeholder-service.jpg";
                               return (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={primaryImage} alt="" className="service-card-img" />
+                                <img src={primaryImage} alt="" className="service-card-img" loading="lazy" />
                               );
                             })()}
                           </div>

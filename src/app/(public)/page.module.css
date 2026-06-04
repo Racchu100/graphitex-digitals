@@ -2047,6 +2047,8 @@
   .testimonialDots {
     margin-top: calc(340px + var(--space-6));
   }
+}
+
 /* Slide Content Overlay */
 .slideContentOverlay {
   position: absolute;

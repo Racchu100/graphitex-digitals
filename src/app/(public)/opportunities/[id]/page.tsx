@@ -4,9 +4,51 @@ import { notFound } from "next/navigation";
 import styles from "./page.module.css";
 import Link from "next/link";
 import ApplySection from "./ApplySection";
+import type { Metadata } from "next";
 
 interface OpportunityDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: OpportunityDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const { data: opp } = await supabase
+    .from('opportunities')
+    .select(`
+      title, purpose,
+      business_profiles (
+        business_name,
+        categories (name),
+        cities (name)
+      )
+    `)
+    .eq('id', id)
+    .maybeSingle();
+
+  if (!opp) {
+    return {
+      title: "Campaign Opportunity Details",
+    };
+  }
+
+  const business = opp.business_profiles as any;
+  const categoryName = business?.categories?.name || "Collaboration";
+  const brandName = business?.business_name || "Partner Brand";
+  const cityName = business?.cities?.name || "India";
+  const title = `${opp.title} by ${brandName}`;
+  const description = opp.purpose || `Apply for ${opp.title} campaign opportunity by ${brandName} in ${cityName} on Graphitex Digitals. Open for ${categoryName} creators.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+  };
 }
 
 export default async function OpportunityDetailPage({ params }: OpportunityDetailPageProps) {

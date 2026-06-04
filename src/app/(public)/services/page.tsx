@@ -1,6 +1,12 @@
 import React from "react";
 import ServicesDirectoryClient from "@/components/directory/ServicesDirectoryClient";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Local Business & Freelance Services Directory",
+  description: "Find and connect with trusted local businesses, freelancers, and professional service providers. From photography and video to tech, spa, and beauty - explore Graphitex Digitals directory.",
+};
 
 // Fallback dummy data mapped directly to standard seeded categories for visual aesthetics
 const dummyServices = [
@@ -10,8 +16,8 @@ const dummyServices = [
     business_name: "Aura Creative Studio",
     tagline: "Premium commercial product photography & performance video production.",
     contact_type: "whatsapp",
-    whatsapp_number: "919999999999",
-    contact_number: "+91 99999 99999",
+    whatsapp_number: "919187336058",
+    contact_number: "+91 91873 36058",
     categories: { name: "Photography & Video" },
     cities: { name: "Bengaluru" },
     business_media: [

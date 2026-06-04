@@ -2,6 +2,12 @@ import React from "react";
 import OpportunitiesDirectoryClient from "@/components/directory/OpportunitiesDirectoryClient";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Campaign Opportunities & Creator Gigs",
+  description: "Find active marketing campaigns, sponsorship opportunities, and creator gigs. Partner with top brands and apply for paid opportunities on Graphitex Digitals.",
+};
 
 // Fallback dummy data for visual aesthetics until at least 1 actual record is created in the database
 const dummyOpps = [

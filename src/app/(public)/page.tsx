@@ -238,7 +238,7 @@ export default function HomePage() {
     const cleanMessage = customMessage.trim() || `I need a service in ${selectedService}.`;
     const formattedText = `Hi Graphitex!\n\n*Name:* ${finalName}\n*Service Requested:* ${selectedService}\n*Message:* ${cleanMessage}`;
     const encodedText = encodeURIComponent(formattedText);
-    window.open(`https://wa.me/919999999999?text=${encodedText}`, "_blank");
+    window.open(`https://wa.me/919187336058?text=${encodedText}`, "_blank");
   };
 
 
@@ -271,7 +271,12 @@ export default function HomePage() {
                       className={styles.slideBannerLink}
                       aria-label={slide.title}
                     >
-                      <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                      <img
+                        src={slide.image}
+                        alt={slide.title}
+                        className={styles.slideBannerImage}
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
                       {/* @ts-ignore */}
                       {slide.showOverlay && (
                         <div className={styles.slideContentOverlay}>
@@ -284,7 +289,12 @@ export default function HomePage() {
                     </button>
                   ) : (
                     <Link href={slide.target} className={styles.slideBannerLink} aria-label={slide.title}>
-                      <img src={slide.image} alt={slide.title} className={styles.slideBannerImage} />
+                      <img
+                        src={slide.image}
+                        alt={slide.title}
+                        className={styles.slideBannerImage}
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
                       {/* @ts-ignore */}
                       {slide.showOverlay && (
                         <div className={styles.slideContentOverlay}>
@@ -468,7 +478,12 @@ export default function HomePage() {
                 id={`category-${cat.slug.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={styles.categoryImageWrap}>
-                  <img src={cat.image} alt={cat.label} className={styles.categoryImage} />
+                  <img
+                    src={cat.image}
+                    alt={cat.label}
+                    className={styles.categoryImage}
+                    loading="lazy"
+                  />
                 </div>
                 <div className={styles.categoryLabelWrap}>
                   <div className={styles.categoryLabel}>{cat.label}</div>
@@ -744,7 +759,7 @@ export default function HomePage() {
             {/* WhatsApp contact pill */}
             <div className={styles.enquiryContactPill}>
               <Phone size={15} />
-              <span>+91 99999 99999</span>
+              <span>+91 91873 36058</span>
             </div>
           </div>
 

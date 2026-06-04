@@ -3,9 +3,89 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import InfluencerProfileClient from "./InfluencerProfileClient";
 import { getInfluencerSlug } from "@/lib/utils/slug";
+import type { Metadata } from "next";
 
 interface InfluencerDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: InfluencerDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  let profile = null;
+
+  if (isUUID) {
+    const { data } = await supabase
+      .from("influencer_profiles")
+      .select("display_name, bio, categories:niche_category_id(name), cities(name)")
+      .eq("id", id)
+      .maybeSingle();
+    profile = data;
+  } else {
+    const searchName = id.replace(/-/g, " ");
+    const { data } = await supabase
+      .from("influencer_profiles")
+      .select("id, display_name, bio, categories:niche_category_id(name), cities(name)")
+      .ilike("display_name", searchName)
+      .maybeSingle();
+
+    profile = data;
+
+    if (!profile) {
+      const { data: allProfiles } = await supabase
+        .from("influencer_profiles")
+        .select("id, display_name");
+
+      const matching = allProfiles?.find(
+        (p) => getInfluencerSlug(p.display_name) === id
+      );
+
+      if (matching) {
+        const { data: fullProfile } = await supabase
+          .from("influencer_profiles")
+          .select("display_name, bio, categories:niche_category_id(name), cities(name)")
+          .eq("id", matching.id)
+          .maybeSingle();
+        profile = fullProfile;
+      }
+    }
+  }
+
+  if (!profile) {
+    return {
+      title: "Influencer Profile Details",
+    };
+  }
+
+  const categoryName = (Array.isArray(profile.categories) ? profile.categories[0]?.name : (profile.categories as any)?.name) || "Creator";
+  const cityName = (Array.isArray(profile.cities) ? profile.cities[0]?.name : (profile.cities as any)?.name) || "Mangalore";
+  const title = `${profile.display_name} - ${categoryName} Influencer in ${cityName}`;
+  
+  let bioText = "";
+  try {
+    if (profile.bio && profile.bio.trim().startsWith("{")) {
+      const parsed = JSON.parse(profile.bio);
+      bioText = parsed.bio || "";
+    } else {
+      bioText = profile.bio || "";
+    }
+  } catch (e) {
+    bioText = profile.bio || "";
+  }
+  
+  const description = bioText.slice(0, 150) || `Connect with ${profile.display_name}, verified ${categoryName} content creator based in ${cityName} on Graphitex Digitals.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+    },
+  };
 }
 
 export default async function InfluencerDetailPage({ params }: InfluencerDetailPageProps) {

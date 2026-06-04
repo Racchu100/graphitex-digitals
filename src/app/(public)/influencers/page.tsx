@@ -1,6 +1,12 @@
 import React from "react";
 import InfluencersDirectoryClient from "@/components/directory/InfluencersDirectoryClient";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Influencer Directory & Creator Partnerships",
+  description: "Connect and collaborate with verified influencers and creators. Filter by niche, platform, and audience reach to launch high-impact campaigns on Graphitex Digitals.",
+};
 
 // Fallback dummy data for visual aesthetics until at least 1 actual record is created in the database
 const dummyInfluencers = [

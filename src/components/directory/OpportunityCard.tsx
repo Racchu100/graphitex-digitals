@@ -35,7 +35,7 @@ export default function OpportunityCard({ opportunity, isProvider, hasApplied = 
       <div className={styles.header}>
         <div className={styles.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoUrl} alt="Brand logo" className={styles.logo} />
+          <img src={logoUrl} alt="Brand logo" className={styles.logo} loading="lazy" />
           <div className={styles.brandInfo}>
              <span className={styles.brandName}>{business?.business_name || 'Unknown Business'}</span>
              <h3 className={styles.title}>{opportunity.title}</h3>

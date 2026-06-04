@@ -388,7 +388,7 @@ export default function InfluencersDirectoryClient({
                     <div className={styles.reelAuthorRow}>
                       <div className={styles.reelAuthorLeft}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={reel.avatarUrl} alt={reel.displayName} className={styles.reelAvatar} />
+                        <img src={reel.avatarUrl} alt={reel.displayName} className={styles.reelAvatar} loading="lazy" />
                         <div>
                           <div className={styles.reelName}>{reel.displayName}</div>
                           <div className={styles.reelMeta}>

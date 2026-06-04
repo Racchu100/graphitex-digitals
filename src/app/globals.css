@@ -290,6 +290,7 @@ button {
   --avatar-gap: var(--space-5);
   --avatar-padding-bottom: var(--space-6);
   --avatar-margin-bottom: var(--space-6);
+  --dashboard-content-padding: var(--space-8);
 }
 
 @media (max-width: 768px) {
@@ -308,6 +309,7 @@ button {
     --avatar-gap: var(--space-3);
     --avatar-padding-bottom: var(--space-3);
     --avatar-margin-bottom: var(--space-3);
+    --dashboard-content-padding: var(--space-2);
   }
 
   [class*="sidebar"] .logo-container {
