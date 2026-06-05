@@ -896,14 +896,15 @@ export default function NavBar() {
             )}
           </button>
 
-          {/* If not logged in, show signin/login icon next to hamburger */}
+          {/* If not logged in, show login button next to hamburger */}
           {!loading && !user && (
             <Link 
               href="/login" 
-              className={styles.mobileActionCircle} 
+              className={styles.mobileLoginBtn} 
               aria-label="Login"
             >
-              <LogIn size={16} />
+              <LogIn size={12} />
+              <span>Login</span>
             </Link>
           )}
         </div>
