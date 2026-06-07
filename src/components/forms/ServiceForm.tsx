@@ -31,7 +31,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
 
   const [formData, setFormData] = useState({
     business_name: initialData?.business_name || "",
-    provider_type: initialData?.provider_type || "business_owner",
+    provider_type: initialData?.provider_type || "local_service",
     tagline: initialData?.tagline || "",
     description: initialData?.description || "",
     category_id: initialData?.category_id || "",
@@ -402,7 +402,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
              <div className={styles.field}>
                 <label className={styles.label}>Provider Type *</label>
                 <select name="provider_type" value={formData.provider_type} onChange={handleChange} className={styles.select} required>
-                   <option value="freelancer">Freelancer</option>
+                   <option value="freelancer" disabled>Freelancer (Currently Unavailable)</option>
                    <option value="local_service">Local Business</option>
                 </select>
              </div>

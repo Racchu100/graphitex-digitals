@@ -5,6 +5,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-folders AGENTS.md are for main agent AI instructions and modular AI agent instructions respectively. Modular AI Agents instructions are optional but highly recommended for better AI agent performance. Keep it concise and well-structured.
 <!-- END:nextjs-agent-rules -->
 
+- **Onboarding & Service Form Freelancer Option Restrictions (June 2026)**:
+  - Added the `admin` role mapping in `user_roles` for the actual admin user ID (`9d75eaaa-0aac-4b76-823c-6bfddc1ec9bc`), correcting the mismatch that previously sent the admin login to the onboarding flow.
+  - Integrated a database role-check guard inside the `resolveStaleMobileUser` server action to block deletions of active users who possess registered roles (e.g., `admin`, `provider`, or `influencer`), returning a clean, user-friendly error instead.
+  - Disabled the "Freelancer" select option in the `ServiceForm` provider type dropdown, labeling it `"Freelancer (Currently Unavailable)"` to enforce the same tier availability restrictions as the onboarding page.
+  - Updated the fallback default value for `provider_type` in the `ServiceForm` state initialization to `"local_service"` to prevent referencing the obsolete `"business_owner"` type.
+  - Configured the campaign opportunities directory page ([opportunities/page.tsx](file:///d:/Rakshith/Graphitex%20Digitals/my%20account/graphitex%20website/graphitex_digitals/src/app/(public)/opportunities/page.tsx)) to render the `ComingSoon` view for non-admin visitors (just like the services and influencers pages), letting influencers manage their applications and providers manage their campaigns from the CTA actions.
+
 - **Dynamic Imports & SEO Enhancements & Contact Updates (June 2026)**:
   - Regenerated all website favicon files (`favicon.ico`, `icon.png`, `icon.webp` under `src/app` and `public` directories) in `.webp` and `.ico` formats from the high-resolution square brand logo icon.
   - Unified and deduplicated the inline Share Modal components from layout and profile views, importing them dynamically via Next.js client-side dynamic code-splitting (`dynamic(..., { ssr: false })`) to reduce code duplication and improve initial page load speed.

@@ -1,5 +1,6 @@
 import React from "react";
 import InfluencersDirectoryClient from "@/components/directory/InfluencersDirectoryClient";
+import ComingSoon from "@/components/ui/ComingSoon";
 import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 
@@ -58,46 +59,71 @@ const dummyInfluencers = [
 export default async function InfluencersDirectoryPage() {
   const supabase = await createClient();
 
-  // Check if current user is a provider
+  // Check current user auth & role
   const { data: { user } } = await supabase.auth.getUser();
-  let isProvider = false;
-  
+
+  let isAdmin = false;
+  let isInfluencer = false;
+  let ownProfilePath: string | undefined;
+  let ownProfileName: string | undefined;
+
   if (user) {
     const { data: roles } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'provider');
-      
-    if (roles && roles.length > 0) {
-      isProvider = true;
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id);
+
+    const roleNames = (roles ?? []).map((r: { role: string }) => r.role);
+    isAdmin = roleNames.includes("admin");
+    isInfluencer = roleNames.includes("influencer");
+
+    // Fetch own influencer profile for the profile link
+    if (isInfluencer && !isAdmin) {
+      const { data: ownProfile } = await supabase
+        .from("influencer_profiles")
+        .select("id, slug, display_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (ownProfile) {
+        ownProfilePath = `/influencers/${ownProfile.slug || ownProfile.id}`;
+        ownProfileName = ownProfile.display_name;
+      }
     }
   }
 
-  // Fetch published influencer profiles from the actual DB
+  // ── Non-admin → Coming Soon ─────────────────────────────────────────────────
+  if (!isAdmin) {
+    return (
+      <ComingSoon
+        type="influencers"
+        hasOwnProfile={isInfluencer && !!ownProfilePath}
+        ownProfilePath={ownProfilePath}
+        ownProfileName={ownProfileName}
+      />
+    );
+  }
+
+  // ── Admin → Full directory ──────────────────────────────────────────────────
   const { data: profiles, error } = await supabase
-    .from('influencer_profiles')
+    .from("influencer_profiles")
     .select(`
       *,
       categories(name),
       cities(name),
       influencer_social_accounts(id, platform, follower_count)
     `)
-    .eq('status', 'published')
-    .eq('is_public', true)
-    .order('created_at', { ascending: false });
+    .eq("status", "published")
+    .eq("is_public", true)
+    .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching influencers:", error);
-  }
+  if (error) console.error("Error fetching influencers:", error);
 
-  // Fetch all active categories to programmatically map niche_category_ids array
   const { data: allCategories } = await supabase
-    .from('categories')
-    .select('id, name')
-    .eq('is_active', true);
+    .from("categories")
+    .select("id, name")
+    .eq("is_active", true);
 
-  // Map real database profile rows to resolve niche_category_names from niche_category_ids
   let mappedProfiles = null;
   if (profiles && profiles.length > 0) {
     mappedProfiles = profiles.map(profile => {
@@ -107,16 +133,10 @@ export default async function InfluencersDirectoryPage() {
           .map((id: number) => allCategories?.find(c => c.id === id)?.name)
           .filter(Boolean) as string[];
       }
-      
-      // Fallback if array is empty or null, but single categories join contains a value
       if (nicheNames.length === 0 && profile.categories?.name) {
         nicheNames = [profile.categories.name];
       }
-
-      return {
-        ...profile,
-        niche_category_names: nicheNames
-      };
+      return { ...profile, niche_category_names: nicheNames };
     });
   }
 
@@ -124,11 +144,10 @@ export default async function InfluencersDirectoryPage() {
   const isDemoMode = !profiles || profiles.length === 0;
 
   return (
-    <InfluencersDirectoryClient 
+    <InfluencersDirectoryClient
       initialProfiles={activeProfiles}
       isDemoMode={isDemoMode}
-      isProvider={isProvider}
+      isProvider={false}
     />
   );
 }
-

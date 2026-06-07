@@ -40,6 +40,17 @@ export default function OnboardingPage() {
     async function loadUserData() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        // Redirect admin users away from onboarding
+        const { data: rolesData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id);
+        const roleNames = (rolesData ?? []).map((r: { role: string }) => r.role);
+        if (roleNames.includes("admin")) {
+          router.replace("/admin");
+          return;
+        }
+
         const phoneVal = user.phone || user.user_metadata?.phone || "";
         setHasPhone(!!phoneVal);
 
@@ -65,7 +76,7 @@ export default function OnboardingPage() {
       }
     }
     loadUserData();
-  }, [supabase]);
+  }, [supabase, router]);
 
   useEffect(() => {
     setStatesLoading(true);

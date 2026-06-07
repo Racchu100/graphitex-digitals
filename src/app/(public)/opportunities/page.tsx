@@ -3,6 +3,7 @@ import OpportunitiesDirectoryClient from "@/components/directory/OpportunitiesDi
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import ComingSoon from "@/components/ui/ComingSoon";
 
 export const metadata: Metadata = {
   title: "Campaign Opportunities & Creator Gigs",
@@ -88,10 +89,36 @@ export default async function OpportunitiesDirectoryPage() {
     .select("role")
     .eq("user_id", user.id);
 
-  const hasValidRole = roles?.some(r => r.role === "influencer" || r.role === "provider");
+  const roleNames = (roles ?? []).map((r: { role: string }) => r.role);
+  const isAdmin = roleNames.includes("admin");
+  const isProvider = roleNames.includes("provider");
+  const isInfluencer = roleNames.includes("influencer");
+
+  const hasValidRole = isAdmin || isProvider || isInfluencer;
 
   if (!hasValidRole) {
     redirect("/onboarding");
+  }
+
+  // 3. Non-admin -> Coming Soon
+  if (!isAdmin) {
+    let secondaryBtnPath = "/dashboard/profile";
+    let secondaryBtnText = "Manage Profile";
+    if (isProvider) {
+      secondaryBtnPath = "/dashboard/opportunities";
+      secondaryBtnText = "Manage My Campaigns";
+    } else if (isInfluencer) {
+      secondaryBtnPath = "/dashboard/applications";
+      secondaryBtnText = "My Applications";
+    }
+
+    return (
+      <ComingSoon
+        type="opportunities"
+        secondaryBtnPath={secondaryBtnPath}
+        secondaryBtnText={secondaryBtnText}
+      />
+    );
   }
 
   // Fetch opportunities from the actual DB
