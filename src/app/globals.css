@@ -166,14 +166,17 @@ p {
   color: var(--color-text-secondary);
 }
 
-@media (max-width: 768px) {
-  p {
-    font-size: 1.08em;
-  }
-}
-
 span {
   font-size: 1.05em;
+}
+
+@media (max-width: 768px) {
+  p {
+    font-size: 1.15em;
+  }
+  span {
+    font-size: 1.12em;
+  }
 }
 
 a {

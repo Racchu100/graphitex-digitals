@@ -59,6 +59,7 @@
   - Configured the incomplete gallery media warning popup toast in `NavBar.tsx` to redirect providers directly to the `"My Services"` tab (`/dashboard/profile?tab=services`) instead of `"Account Settings"`, and influencers directly to the `"Influencer Profile"` tab (`/dashboard/profile?tab=influencer`).
   - Replaced the camera emoji title icon in the incomplete media warning toast with a Lucide `AlertCircle` warning icon styled with bright red coloring (#ef4444) and a thick stroke.
   - Set the left border of the popup warning alert card (`.galleryAlertCard` in `NavBar.module.css`) to warning red (`#ef4444`) to provide high-visibility visual guidance.
+  - Slightly increased font size for `<p>` and `<span>` elements on mobile viewports (width <= 768px) inside `globals.css` to improve readability.
 
 
 

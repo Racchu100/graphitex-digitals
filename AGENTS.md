@@ -9,6 +9,7 @@ Always update AGENTS.md after any changes. The root AGENTS.md and modular sub-fo
   - Configured the incomplete gallery media warning popup toast in `NavBar.tsx` to redirect providers directly to the `"My Services"` tab (`/dashboard/profile?tab=services`) instead of `"Account Settings"`, and influencers directly to the `"Influencer Profile"` tab (`/dashboard/profile?tab=influencer`).
   - Replaced the camera emoji title icon in the incomplete media warning toast with a Lucide `AlertCircle` warning icon styled with bright red coloring (`#ef4444`) and a thick stroke.
   - Set the left border of the popup warning alert card (`.galleryAlertCard` in `NavBar.module.css`) to warning red (`#ef4444`) to provide high-visibility visual guidance.
+  - Slightly increased font size for `<p>` and `<span>` elements on mobile viewports (width <= 768px) inside `globals.css` to improve readability.
 
 - **Onboarding & Service Form Freelancer Option Restrictions (June 2026)**:
   - Added the `admin` role mapping in `user_roles` for the actual admin user ID (`9d75eaaa-0aac-4b76-823c-6bfddc1ec9bc`), correcting the mismatch that previously sent the admin login to the onboarding flow.
