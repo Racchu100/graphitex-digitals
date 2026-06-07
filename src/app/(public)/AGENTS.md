@@ -55,12 +55,10 @@
 - **Campaign Application Notification Popups Bypass (June 2026)**: Configured the notification display mechanics inside `NavBar.tsx` to automatically bypass screening new campaign application submissions (`new_application`) as visual Toast alerts. New applications remain fully counted on user notification badges, headers, and drawer trays for business owners, but will never trigger disruptive onscreen slide-in Toast cards, satisfying clean, quiet user flows.
 - **Influencer & Service Profile Share Button & Modal (June 2026)**: Integrated a premium "Share" button at the top-right corner of both public influencer and service/business details page cards. Clicking the button opens a stateful, glassmorphic modal offering direct link dispatching to WhatsApp, Facebook, Twitter, LinkedIn, and a custom copy-to-clipboard assistant for Instagram Feed & Reels, along with native browser `navigator.share` fallback triggers on mobile viewports.
 
-
-
-
-
-
-
+- **Profile Setting Redirection & Warning Icon Update (June 2026)**:
+  - Configured the incomplete gallery media warning popup toast in `NavBar.tsx` to redirect providers directly to the `"My Services"` tab (`/dashboard/profile?tab=services`) instead of `"Account Settings"`, and influencers directly to the `"Influencer Profile"` tab (`/dashboard/profile?tab=influencer`).
+  - Replaced the camera emoji title icon in the incomplete media warning toast with a Lucide `AlertCircle` warning icon styled with bright red coloring (#ef4444) and a thick stroke.
+  - Set the left border of the popup warning alert card (`.galleryAlertCard` in `NavBar.module.css`) to warning red (`#ef4444`) to provide high-visibility visual guidance.
 
 
 

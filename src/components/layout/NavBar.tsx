@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import { useUser } from "@/hooks/useUser";
 import Logo from "@/components/layout/Logo";
 import { createClient } from "@/lib/supabase/client";
-import { Mail, Phone, MapPin, LogOut, LayoutDashboard, ChevronRight, CheckCircle2, XCircle, PlusCircle, Menu, X, User, LogIn, Share2 } from "lucide-react";
+import { Mail, Phone, MapPin, LogOut, LayoutDashboard, ChevronRight, CheckCircle2, XCircle, PlusCircle, Menu, X, User, LogIn, Share2, AlertCircle } from "lucide-react";
 import { getInfluencerSlug } from "@/lib/utils/slug";
 import dynamic from "next/dynamic";
 
@@ -203,6 +203,7 @@ export default function NavBar() {
 
 
   const isProvider = Array.isArray(roles) && roles.some(r => r?.role === 'provider');
+  const isInfluencer = Array.isArray(roles) && roles.some(r => r?.role === 'influencer');
   const displayCount = isProvider ? (unreadCount + pendingApplicationsCount) : unreadCount;
 
   useEffect(() => {
@@ -1348,13 +1349,14 @@ export default function NavBar() {
               ✕
             </button>
             <h4 className={styles.galleryAlertTitle}>
-              📸 Add Gallery Media
+              <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0, strokeWidth: 2.5 }} />
+              Add Gallery Media
             </h4>
             <p className={styles.galleryAlertBody}>
               Your profile is active, but you haven&apos;t uploaded any showcase photos or videos to your media gallery yet. Add some media to attract more customers!
             </p>
             <Link 
-              href="/dashboard/profile"
+              href={isProvider ? "/dashboard/profile?tab=services" : isInfluencer ? "/dashboard/profile?tab=influencer" : "/dashboard/profile"}
               onClick={() => {
                 sessionStorage.setItem("gallery_alert_dismissed", "true");
                 setShowGalleryAlert(false);
