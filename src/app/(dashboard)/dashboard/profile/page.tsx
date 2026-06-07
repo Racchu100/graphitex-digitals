@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { ArrowLeft, Plus, Edit3, Eye, EyeOff, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { BusinessProfile } from "@/types/database";
+import MediaUploader from "@/components/forms/MediaUploader";
 
 const InfluencerForm = dynamic(() => import("@/components/forms/InfluencerForm"), {
   loading: () => (
@@ -712,7 +713,7 @@ function ProfileDashboardContent() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                   {services.map(service => (
-                    <Card key={service.id} className="service-card">
+                    <Card key={service.id} className="service-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
                       <div className="service-card-container">
                         {/* Column 1: Info (Image + Details) */}
                         <div className="service-card-col-info">
@@ -800,6 +801,15 @@ function ProfileDashboardContent() {
                             Delete
                           </Button>
                         </div>
+                      </div>
+
+                      {/* Media Gallery Section inside the card */}
+                      <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "var(--space-4)", marginTop: "var(--space-2)" }}>
+                        <h4 style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", marginBottom: "4px" }}>Media Gallery</h4>
+                        <p style={{ color: "var(--color-text-secondary)", fontSize: "11px", marginBottom: "var(--space-3)" }}>
+                          Upload images and videos for your service. Drag to reorder.
+                        </p>
+                        <MediaUploader profileId={service.id} businessName={service.business_name} />
                       </div>
                     </Card>
                   ))}

@@ -472,13 +472,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
             )}
         </div>
 
-        {isEdit && initialData?.id && (
-          <div className={styles.section}>
-            <h3>Media Gallery</h3>
-            <p className={styles.label}>Upload images and videos for your service. Drag to reorder.</p>
-            <MediaUploader profileId={initialData.id} businessName={initialData.business_name} />
-          </div>
-        )}
+
 
         {error && <div className={styles.errorMobile}>{error}</div>}
 
