@@ -175,6 +175,12 @@ span {
   span {
     font-size: 1.18em;
   }
+  h3 {
+    font-size: 1.4rem;
+  }
+  button, label, textarea {
+    font-size: 1.08em;
+  }
 }
 
 a {
