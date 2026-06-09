@@ -337,13 +337,7 @@
 
 /* Gradient accent on title */
 .heroTitle::after {
-  content: '';
-  display: block;
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-  border-radius: var(--radius-pill);
-  margin: var(--space-4) auto 0;
+  display: none;
 }
 
 .heroSubtitle {
