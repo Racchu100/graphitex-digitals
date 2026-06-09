@@ -142,13 +142,13 @@ const heroCarouselSlides = [
     target: "services-agency"
   },
   {
-    title: "Local Business & Services Directory",
+    title: "Local Business Directory",
     subtitle: "Hyper-Local Search • Mangalore Focus • Verified Listings",
     desc: "Search, filter, and discover trusted local agencies, professionals, and freelancers nearby. Connect directly via WhatsApp with zero middlemen.",
     image: "/business_directory_banner.webp",
     ctaText: "Search Business Directory 🔍",
     actionType: "link",
-    target: "/services"
+    target: "/directory"
   },
   {
     title: "Direct Business & Creator Collaborations",
@@ -218,7 +218,7 @@ export default function HomePage() {
     const params = new URLSearchParams();
     if (searchKeyword) params.set("q", searchKeyword);
     if (searchLocation && searchLocation !== "Mangalore") params.set("location", searchLocation);
-    router.push(`/services?${params.toString()}`);
+    router.push(`/directory?${params.toString()}`);
   };
 
   // Service change
@@ -421,7 +421,7 @@ export default function HomePage() {
                 key={cat}
                 className={styles.popularPill}
                 onClick={() => {
-                  router.push(`/services?category=${encodeURIComponent(cat)}`);
+                  router.push(`/directory?category=${encodeURIComponent(cat)}`);
                 }}
               >
                 {cat}
@@ -431,7 +431,7 @@ export default function HomePage() {
 
           {/* Quick Action Cards */}
           <div className={styles.heroActions}>
-            <Link href="/services" className={styles.heroActionCard} id="hero-action-businesses">
+            <Link href="/directory" className={styles.heroActionCard} id="hero-action-businesses">
               <div className={styles.heroActionIcon} style={{ background: "hsl(268, 85%, 52%)" }}>
                 <Shield size={24} color="white" />
               </div>
@@ -473,7 +473,7 @@ export default function HomePage() {
             return (
               <Link
                 key={cat.slug}
-                href={`/services?category=${encodeURIComponent(cat.slug)}`}
+                href={`/directory?category=${encodeURIComponent(cat.slug)}`}
                 className={styles.categoryCard}
                 id={`category-${cat.slug.toLowerCase().replace(/\s+/g, "-")}`}
               >
@@ -494,7 +494,7 @@ export default function HomePage() {
         </div>
 
         <div className={styles.sectionCta}>
-          <Link href="/services">
+          <Link href="/directory">
             <Button variant="outline" size="sm" icon={<ArrowRight size={15} />}>
               View All Categories
             </Button>

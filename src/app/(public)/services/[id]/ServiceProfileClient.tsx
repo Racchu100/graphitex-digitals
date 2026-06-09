@@ -129,8 +129,8 @@ export default function ServiceProfileClient({
           <span>Home</span>
         </Link>
         <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>/</span>
-        <Link href="/services" className={styles.backBtn}>
-          <span>Services Directory</span>
+        <Link href="/directory" className={styles.backBtn}>
+          <span>Business Directory</span>
         </Link>
         <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>/</span>
         <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-semibold)' }}>

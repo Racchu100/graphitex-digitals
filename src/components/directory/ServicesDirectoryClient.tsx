@@ -272,7 +272,7 @@ export default function ServicesDirectoryClient({
   return (
     <div className={`container ${styles.page}`}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Services Directory</h1>
+        <h1 className={styles.title}>Business Directory</h1>
         <p className={styles.subtitle}>
           Discover trusted creative businesses and service providers. 
           {isDemoMode && <span style={{ color: "var(--color-primary)", fontWeight: "bold", marginLeft: "8px" }}>(Vetted Demo Listings)</span>}

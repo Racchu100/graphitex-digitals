@@ -39,7 +39,7 @@ export default function Footer() {
           <h4 className={styles.colTitle}>Explore</h4>
           <ul className={styles.linksList}>
             <li>
-              <Link href="/services">Services Directory</Link>
+              <Link href="/directory">Business Directory</Link>
             </li>
             <li>
               <Link href="/influencers">Influencers Directory</Link>

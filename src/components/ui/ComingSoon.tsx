@@ -40,7 +40,7 @@ export default function ComingSoon({
         {/* Badge */}
         <div className={styles.badge}>
           <span className={styles.badgeDot} />
-          {isServices && "Services Directory"}
+          {isServices && "Business Directory"}
           {isInfluencers && "Influencer Directory"}
           {isOpportunities && "Opportunities Directory"}
         </div>

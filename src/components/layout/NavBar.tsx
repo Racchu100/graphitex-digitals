@@ -131,7 +131,7 @@ export default function NavBar() {
 
           if (profile) {
             const slug = getInfluencerSlug(profile.business_name) || profile.id;
-            setProfileUrlPath(`/services/${slug}`);
+            setProfileUrlPath(`/directory/${slug}`);
             setProfileShareData({
               name: profile.business_name,
               avatar_url: profile.profile_picture_url || userAvatarUrl || "/placeholder-service.jpg",
@@ -676,10 +676,10 @@ export default function NavBar() {
           
           <div className={styles.links}>
             <Link 
-              href="/services" 
-              className={`${styles.link} ${pathname.startsWith("/services") ? styles.active : ""}`}
+              href="/directory" 
+              className={`${styles.link} ${pathname.startsWith("/directory") ? styles.active : ""}`}
             >
-              Services
+              Directory
             </Link>
             {user && (
               <Link 
@@ -1057,10 +1057,10 @@ export default function NavBar() {
         </Link>
         <div className={styles.subDivider} />
         <Link 
-          href="/services" 
-          className={`${styles.subLink} ${pathname.startsWith("/services") ? styles.subLinkActive : ""}`}
+          href="/directory" 
+          className={`${styles.subLink} ${pathname.startsWith("/directory") ? styles.subLinkActive : ""}`}
         >
-          Services
+          Directory
         </Link>
         <div className={styles.subDivider} />
         {user && (
@@ -1130,11 +1130,11 @@ export default function NavBar() {
         {/* Drawer Links */}
         <div className={styles.drawerLinks}>
           <Link 
-            href="/services" 
-            className={`${styles.drawerLink} ${pathname.startsWith("/services") ? styles.drawerLinkActive : ""}`}
+            href="/directory" 
+            className={`${styles.drawerLink} ${pathname.startsWith("/directory") ? styles.drawerLinkActive : ""}`}
             onClick={() => setIsDrawerOpen(false)}
           >
-            Services
+            Directory
           </Link>
           {user && (
             <Link 

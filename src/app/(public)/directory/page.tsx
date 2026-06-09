@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Local Business & Freelance Business Directory",
+  title: "Business Directory | Local Services & Freelancers",
   description: "Find and connect with trusted local businesses, freelancers, and professional service providers. From photography and video to tech, spa, and beauty - explore Graphitex Digitals directory.",
 };
 
@@ -66,7 +66,7 @@ const categoryMetadata: Record<string, { desc: string; id: string }> = {
   "Hospitality & Hotels": { desc: "Luxurious boutique hotels, homestays, premium resorts, and outstanding local guest experiences.", id: "hospitality-hotels" },
 };
 
-export default async function ServicesDirectoryPage() {
+export default async function DirectoryPage() {
   const supabase = await createClient();
 
   // Check current user auth & role
@@ -128,7 +128,7 @@ export default async function ServicesDirectoryPage() {
     .eq("is_public", true)
     .order("created_at", { ascending: false });
 
-  if (error) console.error("Error fetching services:", error);
+  if (error) console.error("Error fetching directory:", error);
 
   const activeProfiles = profiles && profiles.length > 0 ? profiles : dummyServices;
   const isDemoMode = !profiles || profiles.length === 0;

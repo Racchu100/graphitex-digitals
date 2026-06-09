@@ -22,7 +22,7 @@ export default function BusinessCard({ profile }: BusinessCardProps) {
   
   return (
     <div className={styles.card}>
-      <Link href={`/services/${businessSlug}`} className={styles.imageLink}>
+      <Link href={`/directory/${businessSlug}`} className={styles.imageLink}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
           src={primaryImage} 
@@ -34,7 +34,7 @@ export default function BusinessCard({ profile }: BusinessCardProps) {
       
       <div className={styles.content}>
         <div className={styles.header}>
-           <Link href={`/services/${businessSlug}`} className={styles.titleLink}>
+           <Link href={`/directory/${businessSlug}`} className={styles.titleLink}>
               <h3 className={styles.title}>{profile.business_name}</h3>
            </Link>
             <div className={styles.meta}>
@@ -80,7 +80,7 @@ export default function BusinessCard({ profile }: BusinessCardProps) {
                Call Now
              </a>
            )}
-           <Link href={`/services/${businessSlug}`} className={`${styles.button} ${styles.secondary}`}>
+           <Link href={`/directory/${businessSlug}`} className={`${styles.button} ${styles.secondary}`}>
              View
            </Link>
         </div>

@@ -3,7 +3,20 @@ import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: "/services",
+        destination: "/directory",
+        permanent: true,
+      },
+      {
+        source: "/services/:id",
+        destination: "/directory/:id",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withBundleAnalyzer({
