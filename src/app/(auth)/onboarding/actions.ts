@@ -74,7 +74,8 @@ export async function resolveStaleMobileUser(userId: string, phone: string): Pro
     } else {
       console.log(`Stale user ${staleId} successfully removed.`);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error("Unexpected error resolving stale mobile user:", err);
+    throw new Error(err.message || "This mobile number is already registered to another active account. Please use a different mobile number.");
   }
 }
