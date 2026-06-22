@@ -213,13 +213,6 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
       const user = session?.user;
       if (!user) throw new Error("Authentication required. Please log in again.");
 
-      // Fetch user's actual location values from users table to guarantee alignment
-      const { data: dbUser } = await supabase
-        .from('users')
-        .select('country_id, state_id, city_id')
-        .eq('id', user.id)
-        .maybeSingle();
-
       const payload: any = {
         user_id: user.id,
         business_name: formData.business_name,
@@ -233,9 +226,9 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
         website_url: formData.website_url || null,
         instagram_handle: formData.instagram_handle || null,
         address_line: formData.provider_type === 'freelancer' ? null : (formData.address_line || null),
-        country_id: dbUser?.country_id || parseInt(formData.country_id as string) || 1,
-        state_id: dbUser?.state_id || parseInt(formData.state_id as string) || 1,
-        city_id: dbUser?.city_id || parseInt(formData.city_id as string) || 1,
+        country_id: parseInt(formData.country_id as string) || 1,
+        state_id: parseInt(formData.state_id as string) || 1,
+        city_id: parseInt(formData.city_id as string) || 1,
         status: initialData?.status === 'approved' ? 'approved' : submitAction,
         is_public: initialData?.status === 'approved' ? (initialData.is_public ?? true) : false,
         map_embed_url: (formData.provider_type !== 'freelancer' && formData.map_embed_url?.trim()) ? formData.map_embed_url.trim() : null,
@@ -243,12 +236,47 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
 
       let profileId = initialData?.id;
 
+      // Helper function to handle media upsert
+      const upsertMedia = async (targetProfileId: string) => {
+        if (!thumbnailUrl) return;
+        const { data: existingMedia } = await supabase
+          .from('business_media')
+          .select('id')
+          .eq('business_profile_id', targetProfileId)
+          .eq('media_type', 'image')
+          .order('sort_order', { ascending: true })
+          .limit(1);
+
+        if (existingMedia && existingMedia.length > 0) {
+          const { error: mediaUpdateErr } = await supabase
+            .from('business_media')
+            .update({ url: thumbnailUrl })
+            .eq('id', existingMedia[0].id);
+          if (mediaUpdateErr) throw mediaUpdateErr;
+        } else {
+          const { error: mediaInsertErr } = await supabase
+            .from('business_media')
+            .insert({
+              business_profile_id: targetProfileId,
+              media_type: 'image',
+              url: thumbnailUrl,
+              sort_order: 0,
+            });
+          if (mediaInsertErr) throw mediaInsertErr;
+        }
+      };
+
       if (profileId) {
-        const { error: updateError } = await supabase
+        // Run profile update and media upsert concurrently
+        const updatePromise = supabase
           .from('business_profiles')
           .update(payload)
-          .eq('id', profileId);
-        if (updateError) throw updateError;
+          .eq('id', profileId)
+          .then(({ error }: { error: any }) => { if (error) throw error; });
+        
+        const mediaPromise = upsertMedia(profileId);
+        
+        await Promise.all([updatePromise, mediaPromise]);
       } else {
         const { data: inserted, error: insertError } = await supabase
           .from('business_profiles')
@@ -257,32 +285,9 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
           .single();
         if (insertError) throw insertError;
         profileId = inserted.id;
-      }
 
-      // Save or update primary thumbnail in business_media
-      if (profileId && thumbnailUrl) {
-        const { data: existingMedia } = await supabase
-          .from('business_media')
-          .select('id')
-          .eq('business_profile_id', profileId)
-          .eq('media_type', 'image')
-          .order('sort_order', { ascending: true })
-          .limit(1);
-
-        if (existingMedia && existingMedia.length > 0) {
-          await supabase
-            .from('business_media')
-            .update({ url: thumbnailUrl })
-            .eq('id', existingMedia[0].id);
-        } else {
-          await supabase
-            .from('business_media')
-            .insert({
-              business_profile_id: profileId,
-              media_type: 'image',
-              url: thumbnailUrl,
-              sort_order: 0,
-            });
+        if (thumbnailUrl && profileId) {
+          await upsertMedia(profileId);
         }
       }
 
