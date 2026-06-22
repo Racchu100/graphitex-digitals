@@ -41,7 +41,8 @@ const newBusinessCategories = [
   { name: 'Plumbing & Sanitary', slug: 'plumbing-sanitary' },
   { name: 'Cleaning & Pest Control', slug: 'cleaning-pest-control' },
   { name: 'Packers & Movers', slug: 'packers-movers' },
-  { name: 'Electronics & Appliance Repair', slug: 'electronics-appliance-repair' }
+  { name: 'Electronics & Appliance Repair', slug: 'electronics-appliance-repair' },
+  { name: 'Marketing & Digital Marketing', slug: 'marketing-digital-marketing' }
 ];
 
 async function seed() {

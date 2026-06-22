@@ -215,7 +215,8 @@ INSERT INTO categories (name, slug, is_active) VALUES
 ('Pet Care',                'pet-care',                true),
 ('Agriculture & Farming',   'agriculture-farming',     true),
 ('Handmade & Crafts',       'handmade-crafts',         true),
-('Hospitality & Hotels',    'hospitality-hotels',      true)
+('Hospitality & Hotels',    'hospitality-hotels',      true),
+('Marketing & Digital Marketing', 'marketing-digital-marketing', true)
 ON CONFLICT (slug) DO NOTHING;
 
 -- 5. Platform Config defaults
