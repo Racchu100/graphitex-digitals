@@ -128,8 +128,8 @@ export default function LocationPickerMap({
   };
 
   // Search Address using Nominatim
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async (e?: React.FormEvent | React.KeyboardEvent) => {
+    if (e) e.preventDefault();
     if (!searchQuery.trim()) return;
 
     setSearching(true);
@@ -183,20 +183,26 @@ export default function LocationPickerMap({
       </div>
 
       {/* Address Search Form */}
-      <form onSubmit={handleSearch} className={styles.searchForm}>
+      <div className={styles.searchForm}>
         <div style={{ flex: 1 }}>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSearch(e);
+              }
+            }}
             placeholder="Search address, landmark, area, pincode..."
             className={styles.searchInput}
           />
         </div>
-        <Button type="submit" loading={searching} className={styles.searchBtn}>
+        <Button type="button" onClick={() => handleSearch()} loading={searching} className={styles.searchBtn}>
           Search
         </Button>
-      </form>
+      </div>
 
       {/* Search Results Dropdown List */}
       {searchResults.length > 0 && (
