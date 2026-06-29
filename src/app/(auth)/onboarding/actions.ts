@@ -7,8 +7,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * Bypasses RLS using createAdminClient to ensure the unique constraint is freed.
  * Handles FK references in user_roles, profile_approvals, admin_audit_log before deleting.
  */
-export async function resolveStaleMobileUser(userId: string, phone: string): Promise<void> {
-  if (!userId || !phone) return;
+export async function resolveStaleMobileUser(userId: string, phone: string): Promise<{ success: boolean; error?: string }> {
+  if (!userId || !phone) return { success: true };
 
   try {
     const adminSupabase = createAdminClient();
@@ -21,10 +21,10 @@ export async function resolveStaleMobileUser(userId: string, phone: string): Pro
 
     if (selectError) {
       console.error("Error checking duplicate mobile number:", selectError);
-      return;
+      return { success: false, error: "Database error checking mobile number duplication." };
     }
 
-    if (!duplicateUser) return;
+    if (!duplicateUser) return { success: true };
 
     const staleId = duplicateUser.id;
 
@@ -37,7 +37,7 @@ export async function resolveStaleMobileUser(userId: string, phone: string): Pro
     if (duplicateRoles && duplicateRoles.length > 0) {
       const rolesList = duplicateRoles.map((r: { role: string }) => r.role);
       console.log(`Cannot delete conflicting user ${staleId} because they have roles: ${rolesList.join(", ")}`);
-      throw new Error("This mobile number is already registered to another active account. Please use a different mobile number.");
+      return { success: false, error: "This mobile number is already registered to another active account. Please use a different mobile number." };
     }
 
     console.log(`Resolving stale user ${staleId} conflicting with mobile number ${phone}`);
@@ -71,11 +71,13 @@ export async function resolveStaleMobileUser(userId: string, phone: string): Pro
 
     if (deleteError) {
       console.error("Failed to delete conflicting stale user:", deleteError.message);
+      return { success: false, error: "Failed to resolve conflicting user account." };
     } else {
       console.log(`Stale user ${staleId} successfully removed.`);
+      return { success: true };
     }
   } catch (err: any) {
     console.error("Unexpected error resolving stale mobile user:", err);
-    throw new Error(err.message || "This mobile number is already registered to another active account. Please use a different mobile number.");
+    return { success: false, error: err.message || "This mobile number is already registered to another active account. Please use a different mobile number." };
   }
 }

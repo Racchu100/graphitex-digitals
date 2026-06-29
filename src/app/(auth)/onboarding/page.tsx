@@ -155,7 +155,10 @@ export default function OnboardingPage() {
 
       // Ensure any conflicting stale/orphaned user record is resolved first
       if (cleanPhone) {
-        await resolveStaleMobileUser(user.id, cleanPhone);
+        const res = await resolveStaleMobileUser(user.id, cleanPhone);
+        if (res && !res.success) {
+          throw new Error(res.error || "This mobile number is already registered to another active account.");
+        }
       }
 
       const { error: userError } = await supabase

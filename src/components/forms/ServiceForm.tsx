@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import styles from "./ServiceForm.module.css";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -9,9 +10,14 @@ import Card from "@/components/ui/Card";
 import { createClient } from "@/lib/supabase/client";
 import { BusinessProfile, ProviderSubtype } from "@/types/database";
 import MediaUploader from "./MediaUploader";
-import { Upload } from "lucide-react";
+import { Upload, MapPin, AlertCircle } from "lucide-react";
 import { getInfluencerSlug } from "@/lib/utils/slug";
 import { compressImageToWebP } from "@/lib/utils/imageCompressor";
+
+const LocationPickerMap = dynamic(() => import("./LocationPickerMap"), {
+  ssr: false,
+  loading: () => <p style={{ padding: "var(--space-4)", color: "var(--color-text-secondary)" }}>Loading interactive map picker...</p>
+});
 
 interface ServiceFormProps {
   initialData?: Partial<BusinessProfile>;
@@ -29,6 +35,12 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
+  // Map Picker States
+  const [showMap, setShowMap] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const [locationError, setLocationError] = useState("");
+
   const [formData, setFormData] = useState({
     business_name: initialData?.business_name || "",
     provider_type: initialData?.provider_type || "local_service",
@@ -45,6 +57,8 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
     country_id: initialData?.country_id || "1", // Hardcoded default for scaffolding
     state_id: initialData?.state_id || "1",
     city_id: initialData?.city_id || "1",
+    latitude: initialData?.latitude ? String(initialData.latitude) : "",
+    longitude: initialData?.longitude ? String(initialData.longitude) : "",
   });
 
   const freelanceSlugs = [
@@ -180,6 +194,68 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
     }
   };
 
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setDetectingLocation(true);
+    setLocationMessage("");
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          latitude: String(latitude.toFixed(6)),
+          longitude: String(longitude.toFixed(6))
+        }));
+
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.display_name) {
+              setFormData(prev => ({
+                ...prev,
+                address_line: data.display_name
+              }));
+              setLocationMessage("Current location detected and address resolved successfully.");
+            } else {
+              setLocationMessage(`Current location coordinates (${latitude.toFixed(4)}, ${longitude.toFixed(4)}) detected successfully.`);
+            }
+          }
+        } catch (err) {
+          setLocationMessage(`Current location coordinates (${latitude.toFixed(4)}, ${longitude.toFixed(4)}) detected, but address could not be resolved.`);
+        } finally {
+          setDetectingLocation(false);
+        }
+      },
+      (error) => {
+        setDetectingLocation(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setLocationError("Location permission denied. Please allow location access in your browser.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setLocationError("Location information is unavailable. Please choose on map instead.");
+            break;
+          case error.TIMEOUT:
+            setLocationError("Location request timed out. Please try again or choose on map.");
+            break;
+          default:
+            setLocationError("An unknown error occurred while retrieving location.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent, submitAction: 'draft' | 'pending_approval' | 'approved') => {
     e.preventDefault();
     if (loading) return; // Prevent double submissions
@@ -232,6 +308,8 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
         status: initialData?.status === 'approved' ? 'approved' : submitAction,
         is_public: initialData?.status === 'approved' ? (initialData.is_public ?? true) : false,
         map_embed_url: (formData.provider_type !== 'freelancer' && formData.map_embed_url?.trim()) ? formData.map_embed_url.trim() : null,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : null,
       };
 
       let profileId = initialData?.id;
@@ -393,14 +471,124 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
           </div>
 
           {formData.provider_type !== 'freelancer' && (
-            <Input
-              label="Shop Location (Exact Address) *"
-              name="address_line"
-              value={formData.address_line}
-              onChange={handleChange}
-              placeholder="Enter the exact shop address (e.g. Shop No. 12, MG Road)"
-              required
-            />
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", border: "1px dashed var(--color-border)", padding: "var(--space-4)", borderRadius: "var(--radius-md)", background: "rgba(99, 102, 241, 0.02)", width: "100%" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className={styles.label} style={{ fontWeight: "var(--weight-bold)" }}>Business Location Selection</span>
+              </div>
+              
+              <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap" }}>
+                <Button 
+                  type="button" 
+                  onClick={handleUseCurrentLocation} 
+                  loading={detectingLocation}
+                  style={{ background: "hsl(263, 60%, 45%)", color: "white" }}
+                >
+                  📍 Use Current Location
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowMap(true);
+                    setLocationMessage("");
+                    setLocationError("");
+                  }}
+                  style={{ borderColor: "hsl(263, 60%, 45%)", color: "hsl(263, 60%, 45%)" }}
+                >
+                  🗺️ Choose on Map
+                </Button>
+              </div>
+
+              {locationMessage && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#10b981", fontSize: "var(--text-sm)", background: "rgba(16, 185, 129, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <span>✓</span>
+                  <span>{locationMessage}</span>
+                </div>
+              )}
+
+              {locationError && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "rgb(239, 68, 68)", fontSize: "var(--text-sm)", background: "rgba(239, 68, 68, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <AlertCircle size={16} />
+                  <span>{locationError}</span>
+                </div>
+              )}
+
+              <Input
+                label="Shop Location (Exact Address) *"
+                name="address_line"
+                value={formData.address_line}
+                onChange={handleChange}
+                placeholder="Enter exact address or use selector above..."
+                required
+              />
+
+              <div className={styles.row}>
+                <Input
+                  label="Latitude"
+                  name="latitude"
+                  value={formData.latitude}
+                  onChange={handleChange}
+                  placeholder="Auto-filled latitude"
+                  disabled
+                  style={{ opacity: 0.8, cursor: "not-allowed" }}
+                />
+                <Input
+                  label="Longitude"
+                  name="longitude"
+                  value={formData.longitude}
+                  onChange={handleChange}
+                  placeholder="Auto-filled longitude"
+                  disabled
+                  style={{ opacity: 0.8, cursor: "not-allowed" }}
+                />
+              </div>
+
+              {/* Glassmorphic Map Overlay Modal */}
+              {showMap && (
+                <div style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: "rgba(0, 0, 0, 0.5)",
+                  backdropFilter: "blur(4px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 9999,
+                  padding: "var(--space-4)"
+                }}>
+                  <div style={{
+                    background: "var(--color-surface, #ffffff)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-lg)",
+                    padding: "var(--space-5)",
+                    maxWidth: "600px",
+                    width: "100%",
+                    boxShadow: "var(--shadow-xl)",
+                    maxHeight: "90vh",
+                    overflowY: "auto"
+                  }}>
+                    <LocationPickerMap
+                      initialLat={formData.latitude ? parseFloat(formData.latitude) : null}
+                      initialLng={formData.longitude ? parseFloat(formData.longitude) : null}
+                      onConfirm={(lat, lng, address) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          latitude: String(lat),
+                          longitude: String(lng),
+                          address_line: address
+                        }));
+                        setLocationMessage("Location selected on map successfully.");
+                        setShowMap(false);
+                      }}
+                      onCancel={() => setShowMap(false)}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           <div className={styles.row}>
