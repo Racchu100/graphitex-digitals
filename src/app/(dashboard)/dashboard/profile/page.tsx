@@ -719,6 +719,7 @@ function ProfileDashboardContent() {
                   type="button" 
                   onClick={handleUseCurrentLocation} 
                   loading={detectingLocation}
+                  className="locBtn"
                   style={{ background: "hsl(263, 60%, 45%)", color: "white" }}
                 >
                   📍 Use Current Location
@@ -731,6 +732,7 @@ function ProfileDashboardContent() {
                     setLocationMessage("");
                     setLocationError("");
                   }}
+                  className="locBtn"
                   style={{ borderColor: "hsl(263, 60%, 45%)", color: "hsl(263, 60%, 45%)" }}
                 >
                   🗺️ Choose on Map

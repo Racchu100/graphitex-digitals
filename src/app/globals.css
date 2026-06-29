@@ -694,4 +694,20 @@ button {
   color: var(--color-error) !important;
 }
 
+/* Geolocation buttons mobile optimization */
+@media (max-width: 768px) {
+  .locBtn {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    min-height: auto !important;
+  }
+}
+@media (max-width: 480px) {
+  .locBtn {
+    padding: 5px 8px !important;
+    font-size: 10.5px !important;
+  }
+}
+
 

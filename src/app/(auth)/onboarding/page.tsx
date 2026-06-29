@@ -361,6 +361,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={handleUseCurrentLocation}
                 loading={detectingLocation}
+                className="locBtn"
                 style={{ width: "100%", background: "hsl(263, 60%, 45%)", color: "white" }}
               >
                 📍 Use Current Location
