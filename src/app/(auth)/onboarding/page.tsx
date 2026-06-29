@@ -26,7 +26,7 @@ export default function OnboardingPage() {
     country_id: "1",
     state_id: "",
     city_id: "",
-    roles: { influencer: false, provider: false },
+    roles: { influencer: false, provider: false, customer: false },
     provider_subtype: ""
   });
 
@@ -114,7 +114,7 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.roles.influencer && !formData.roles.provider) {
+    if (!formData.roles.influencer && !formData.roles.provider && !formData.roles.customer) {
       setError("Please select at least one role.");
       return;
     }
@@ -186,6 +186,9 @@ export default function OnboardingPage() {
           role: 'provider', 
           provider_subtype: formData.provider_subtype || null 
         });
+      }
+      if (formData.roles.customer) {
+        await supabase.from('user_roles').insert({ user_id: user.id, role: 'customer' });
       }
 
       if (typeof window !== "undefined") {
@@ -291,7 +294,7 @@ export default function OnboardingPage() {
                 <input type="radio" name="role" checked={formData.roles.influencer}
                   onChange={() => setFormData({
                     ...formData,
-                    roles: { influencer: true, provider: false },
+                    roles: { influencer: true, provider: false, customer: false },
                     provider_subtype: ""
                   })} />
                 <div className={styles.roleInfo}>
@@ -304,11 +307,24 @@ export default function OnboardingPage() {
                 <input type="radio" name="role" checked={formData.roles.provider}
                   onChange={() => setFormData({
                     ...formData,
-                    roles: { influencer: false, provider: true }
+                    roles: { influencer: false, provider: true, customer: false }
                   })} />
                 <div className={styles.roleInfo}>
                   <div className={styles.roleTitle}>Service Provider</div>
                   <div className={styles.roleDesc}>I want to list my business and find influencers.</div>
+                </div>
+             </label>
+
+             <label className={styles.roleCard}>
+                <input type="radio" name="role" checked={formData.roles.customer}
+                  onChange={() => setFormData({
+                    ...formData,
+                    roles: { influencer: false, provider: false, customer: true },
+                    provider_subtype: ""
+                  })} />
+                <div className={styles.roleInfo}>
+                  <div className={styles.roleTitle}>Customer</div>
+                  <div className={styles.roleDesc}>I want to view the services.</div>
                 </div>
              </label>
 
