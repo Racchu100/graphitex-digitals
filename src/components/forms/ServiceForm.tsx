@@ -486,6 +486,9 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--color-border)", paddingTop: "var(--space-3)" }}>
                 <span className={styles.label} style={{ fontWeight: "var(--weight-bold)" }}>Business Location Selection</span>
               </div>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.4 }}>
+                ℹ️ Select the tracking location near to your shop, so you can get customers nearby your location who search for products or services.
+              </p>
               
               <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap" }}>
                 <Button 
