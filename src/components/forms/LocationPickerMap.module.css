@@ -86,7 +86,7 @@
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  height: 350px;
+  height: 260px;
   width: 100%;
   position: relative;
 }
@@ -180,7 +180,7 @@
   }
   
   .mapWrapper {
-    height: 250px;
+    height: 180px;
   }
 }
 
