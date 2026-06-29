@@ -27,8 +27,16 @@ export default function OnboardingPage() {
     state_id: "",
     city_id: "",
     roles: { influencer: false, provider: false, customer: false },
-    provider_subtype: ""
+    provider_subtype: "",
+    address_line: "",
+    latitude: "",
+    longitude: ""
   });
+
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [targetCityName, setTargetCityName] = useState("");
 
   const [hasPhone, setHasPhone] = useState(true);
   const [states, setStates] = useState<{ id: number; name: string }[]>([]);
@@ -96,6 +104,90 @@ export default function OnboardingPage() {
       .catch(() => {})
       .finally(() => setCitiesLoading(false));
   }, [formData.state_id]);
+
+  // Match target city when cities list loads
+  useEffect(() => {
+    if (targetCityName && cities.length > 0) {
+      const matchedCity = cities.find(
+        c => c.name.toLowerCase().includes(targetCityName.toLowerCase()) || 
+             targetCityName.toLowerCase().includes(c.name.toLowerCase())
+      );
+      if (matchedCity) {
+        setFormData(prev => ({ ...prev, city_id: String(matchedCity.id) }));
+        setTargetCityName("");
+      }
+    }
+  }, [cities, targetCityName]);
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
+    setDetectingLocation(true);
+    setLocationMessage("Detecting location...");
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          latitude: String(latitude.toFixed(6)),
+          longitude: String(longitude.toFixed(6))
+        }));
+
+        try {
+          const res = await fetch(`/api/locations/reverse?lat=${latitude}&lon=${longitude}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.display_name) {
+              setFormData(prev => ({
+                ...prev,
+                address_line: data.display_name
+              }));
+
+              const addr = data.address || {};
+              const stateName = addr.state || "";
+              const cityName = addr.city || addr.town || addr.village || addr.suburb || "";
+
+              // Resolve State ID
+              if (stateName) {
+                const matchedState = states.find(s => 
+                  s.name.toLowerCase().includes(stateName.toLowerCase()) || 
+                  stateName.toLowerCase().includes(s.name.toLowerCase())
+                );
+                if (matchedState) {
+                  setFormData(prev => ({ ...prev, state_id: String(matchedState.id), city_id: "" }));
+                  if (cityName) {
+                    setTargetCityName(cityName);
+                  }
+                  setLocationMessage("Current location detected and state/city resolved successfully.");
+                } else {
+                  setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+                }
+              } else {
+                setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+              }
+            } else {
+              setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+            }
+          } else {
+            setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+          }
+        } catch (err) {
+          setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+        } finally {
+          setDetectingLocation(false);
+        }
+      },
+      (err) => {
+        setDetectingLocation(false);
+        setLocationError("Unable to retrieve your location. Please check browser permissions.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   const handleNext = () => {
     if (step === 1) {
@@ -172,7 +264,10 @@ export default function OnboardingPage() {
           country_id: parseInt(formData.country_id),
           state_id: parseInt(formData.state_id),
           city_id: parseInt(formData.city_id),
-          status: 'active'
+          status: 'active',
+          address_line: formData.address_line || null,
+          latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+          longitude: formData.longitude ? parseFloat(formData.longitude) : null
         }, { onConflict: 'id' });
 
       if (userError) throw userError;
@@ -261,6 +356,29 @@ export default function OnboardingPage() {
 
           {/* Step 2 — State → City */}
           <div className={`${styles.stepContent} ${step === 2 ? styles.active : ''}`}>
+            <div style={{ marginBottom: "var(--space-4)" }}>
+              <Button
+                type="button"
+                onClick={handleUseCurrentLocation}
+                loading={detectingLocation}
+                style={{ width: "100%", background: "hsl(263, 60%, 45%)", color: "white" }}
+              >
+                📍 Use Current Location
+              </Button>
+              {locationMessage && (
+                <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "8px", color: "#10b981", fontSize: "var(--text-sm)", background: "rgba(16, 185, 129, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <span>✓</span>
+                  <span>{locationMessage}</span>
+                </div>
+              )}
+              {locationError && (
+                <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "8px", color: "rgb(239, 68, 68)", fontSize: "var(--text-sm)", background: "rgba(239, 68, 68, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <AlertTriangle size={16} />
+                  <span>{locationError}</span>
+                </div>
+              )}
+            </div>
+
             <div>
               <label style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-medium)", color: "var(--color-text-secondary)" }}>
                 State *

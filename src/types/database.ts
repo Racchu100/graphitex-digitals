@@ -49,6 +49,9 @@ export interface User {
   city_id: number;
   avatar_url: string | null;
   status: UserStatus;
+  address_line?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   created_at: string;
   updated_at: string;
 }
