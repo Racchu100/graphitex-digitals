@@ -96,6 +96,56 @@ export default function LocationPickerMap({
     };
   }, []);
 
+  // Debounced search suggestion fetcher (live autocomplete as you type)
+  useEffect(() => {
+    const query = searchQuery.trim();
+    if (query.length < 3) {
+      setSearchResults([]);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(async () => {
+      setError("");
+      setInfo("");
+      try {
+        let res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            query
+          )}&limit=5&addressdetails=1`,
+          { headers: { "Accept-Language": "en" } }
+        );
+        if (res.ok) {
+          let data = await res.json();
+
+          // Fallback: If no results and query has no spaces and length > 5, try prefix/nearest matching
+          if (data.length === 0 && !query.includes(" ") && query.length > 5) {
+            const prefixLen = query.length > 8 ? 6 : 5;
+            const fallbackQuery = query.substring(0, prefixLen);
+            const fallbackRes = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                fallbackQuery
+              )}&limit=5&addressdetails=1`,
+              { headers: { "Accept-Language": "en" } }
+            );
+            if (fallbackRes.ok) {
+              const fallbackData = await fallbackRes.json();
+              if (fallbackData.length > 0) {
+                data = fallbackData;
+                setInfo(`No exact match. Showing closest results for "${fallbackQuery}"...`);
+              }
+            }
+          }
+
+          setSearchResults(data);
+        }
+      } catch (err) {
+        console.error("Debounced search failed:", err);
+      }
+    }, 600); // 600ms debounce to prevent hitting Nominatim limits
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
   // Sync state and geocode address
   const handleLocationChange = (lat: number, lng: number) => {
     setSelectedLat(parseFloat(lat.toFixed(6)));
