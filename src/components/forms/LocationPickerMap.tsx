@@ -42,6 +42,7 @@ export default function LocationPickerMap({
   const [selectedAddress, setSelectedAddress] = useState("");
   const [reverseGeocoding, setReverseGeocoding] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
 
   // Initialize Map
   useEffect(() => {
@@ -134,10 +135,11 @@ export default function LocationPickerMap({
 
     setSearching(true);
     setError("");
+    setInfo("");
     setSearchResults([]);
 
     try {
-      const res = await fetch(
+      let res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
           searchQuery
         )}&limit=5&addressdetails=1`,
@@ -145,10 +147,30 @@ export default function LocationPickerMap({
       );
       if (!res.ok) throw new Error("Search request failed.");
 
-      const data = await res.json();
+      let data = await res.json();
+
+      // Fallback: If no results and query has no spaces and length > 5, try prefix/nearest matching
+      if (data.length === 0 && !searchQuery.trim().includes(" ") && searchQuery.trim().length > 5) {
+        const prefixLen = searchQuery.trim().length > 8 ? 6 : 5;
+        const fallbackQuery = searchQuery.trim().substring(0, prefixLen);
+        const fallbackRes = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            fallbackQuery
+          )}&limit=5&addressdetails=1`,
+          { headers: { "Accept-Language": "en" } }
+        );
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          if (fallbackData.length > 0) {
+            data = fallbackData;
+            setInfo(`No exact match. Showing closest results for "${fallbackQuery}"...`);
+          }
+        }
+      }
+
       setSearchResults(data);
       if (data.length === 0) {
-        setError("No locations found matching your search.");
+        setError("No locations found matching your search. Try using spaces (e.g. 'gujjar kere').");
       }
     } catch (err: any) {
       setError("Failed to fetch search results. Please try again.");
@@ -221,6 +243,7 @@ export default function LocationPickerMap({
       )}
 
       {error && <div className={styles.error}>{error}</div>}
+      {info && <div className={styles.infoBanner}>{info}</div>}
 
       {/* Map Container */}
       <div className={styles.mapWrapper}>

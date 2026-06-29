@@ -202,3 +202,12 @@
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
+
+.infoBanner {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--color-primary, rgb(99, 102, 241));
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  border-left: 3px solid var(--color-primary);
+}
