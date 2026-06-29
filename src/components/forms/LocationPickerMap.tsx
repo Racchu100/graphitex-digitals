@@ -204,43 +204,45 @@ export default function LocationPickerMap({
         <p>Search, click on the map, or drag the marker to your business location.</p>
       </div>
 
-      {/* Address Search Form */}
-      <div className={styles.searchForm}>
-        <div style={{ flex: 1 }}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSearch(e);
-              }
-            }}
-            placeholder="Search address, landmark, area, pincode..."
-            className={styles.searchInput}
-          />
+      {/* Address Search Wrapper for Absolute Dropdown Positioning */}
+      <div style={{ position: "relative", width: "100%" }}>
+        <div className={styles.searchForm}>
+          <div style={{ flex: 1 }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch(e);
+                }
+              }}
+              placeholder="Search address, landmark, area, pincode..."
+              className={styles.searchInput}
+            />
+          </div>
+          <Button type="button" onClick={() => handleSearch()} loading={searching} className={styles.searchBtn}>
+            Search
+          </Button>
         </div>
-        <Button type="button" onClick={() => handleSearch()} loading={searching} className={styles.searchBtn}>
-          Search
-        </Button>
-      </div>
 
-      {/* Search Results Dropdown List */}
-      {searchResults.length > 0 && (
-        <div className={styles.searchResults}>
-          {searchResults.map((result, idx) => (
-            <div
-              key={idx}
-              className={styles.searchResultItem}
-              onClick={() => handleSelectResult(result)}
-            >
-              <span className={styles.resultIcon}>📍</span>
-              <span className={styles.resultText}>{result.display_name}</span>
-            </div>
-          ))}
-        </div>
-      )}
+        {/* Search Results Dropdown List */}
+        {searchResults.length > 0 && (
+          <div className={styles.searchResults}>
+            {searchResults.map((result, idx) => (
+              <div
+                key={idx}
+                className={styles.searchResultItem}
+                onClick={() => handleSelectResult(result)}
+              >
+                <span className={styles.resultIcon}>📍</span>
+                <span className={styles.resultText}>{result.display_name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {error && <div className={styles.error}>{error}</div>}
       {info && <div className={styles.infoBanner}>{info}</div>}
