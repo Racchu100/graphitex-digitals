@@ -205,7 +205,7 @@ export default function LocationPickerMap({
       </div>
 
       {/* Address Search Wrapper for Absolute Dropdown Positioning */}
-      <div style={{ position: "relative", width: "100%" }}>
+      <div style={{ position: "relative", width: "100%", zIndex: 10 }}>
         <div className={styles.searchForm}>
           <div style={{ flex: 1 }}>
             <input
