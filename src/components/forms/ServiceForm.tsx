@@ -474,7 +474,16 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
 
           {formData.provider_type !== 'freelancer' && (
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", border: "1px dashed var(--color-border)", padding: "var(--space-4)", borderRadius: "var(--radius-md)", background: "rgba(99, 102, 241, 0.02)", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Input
+                label="Shop Location (Exact Address) *"
+                name="address_line"
+                value={formData.address_line}
+                onChange={handleChange}
+                placeholder="Enter exact address or use geocoding below..."
+                required
+              />
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--color-border)", paddingTop: "var(--space-3)" }}>
                 <span className={styles.label} style={{ fontWeight: "var(--weight-bold)" }}>Business Location Selection</span>
               </div>
               
@@ -514,15 +523,6 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
                   <span>{locationError}</span>
                 </div>
               )}
-
-              <Input
-                label="Shop Location (Exact Address) *"
-                name="address_line"
-                value={formData.address_line}
-                onChange={handleChange}
-                placeholder="Enter exact address or use selector above..."
-                required
-              />
 
               <div className={styles.row}>
                 <Input
