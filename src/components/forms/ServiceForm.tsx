@@ -40,6 +40,11 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
   const [detectingLocation, setDetectingLocation] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
   const [locationError, setLocationError] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [formData, setFormData] = useState({
     business_name: initialData?.business_name || "",
@@ -544,7 +549,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
               </div>
 
               {/* Glassmorphic Map Overlay Modal */}
-              {showMap && (
+              {mounted && showMap && (
                 <div style={{
                   position: "fixed",
                   top: 0,
