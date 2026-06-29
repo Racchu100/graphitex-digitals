@@ -7,10 +7,15 @@ import { useUser } from "@/hooks/useUser";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { ArrowLeft, Plus, Edit3, Eye, EyeOff, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Edit3, Eye, EyeOff, Trash2, AlertCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 import { BusinessProfile } from "@/types/database";
 import MediaUploader from "@/components/forms/MediaUploader";
+
+const LocationPickerMap = dynamic(() => import("@/components/forms/LocationPickerMap"), {
+  ssr: false,
+  loading: () => <p style={{ padding: "var(--space-4)", color: "var(--color-text-secondary)" }}>Loading interactive map picker...</p>
+});
 
 const InfluencerForm = dynamic(() => import("@/components/forms/InfluencerForm"), {
   loading: () => (
@@ -45,7 +50,16 @@ function ProfileDashboardContent() {
     mobile_number: "",
     state_id: "",
     city_id: "",
+    address_line: "",
+    latitude: "",
+    longitude: "",
   });
+
+  const [mounted, setMounted] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const [locationError, setLocationError] = useState("");
 
   const [states, setStates] = useState<{ id: number; name: string }[]>([]);
   const [cities, setCities] = useState<{ id: number; name: string }[]>([]);
@@ -110,6 +124,7 @@ function ProfileDashboardContent() {
 
   // 1. Fetch States on mount
   useEffect(() => {
+    setMounted(true);
     setStatesLoading(true);
     fetch("/api/locations/states?country_id=1")
       .then((r) => r.json())
@@ -142,6 +157,9 @@ function ProfileDashboardContent() {
           mobile_number: user.mobile_number || "",
           state_id: user.state_id ? String(user.state_id) : "",
           city_id: user.city_id ? String(user.city_id) : "",
+          address_line: user.address_line || "",
+          latitude: user.latitude ? String(user.latitude) : "",
+          longitude: user.longitude ? String(user.longitude) : "",
         });
       }
       setLoading(false);
@@ -221,6 +239,92 @@ function ProfileDashboardContent() {
     }
   };
 
+  const [targetCityName, setTargetCityName] = useState("");
+
+  // Match target city when cities list loads
+  useEffect(() => {
+    if (targetCityName && cities.length > 0) {
+      const matchedCity = cities.find(
+        c => c.name.toLowerCase().includes(targetCityName.toLowerCase()) || 
+             targetCityName.toLowerCase().includes(c.name.toLowerCase())
+      );
+      if (matchedCity) {
+        setFormData(prev => ({ ...prev, city_id: String(matchedCity.id) }));
+        setTargetCityName("");
+      }
+    }
+  }, [cities, targetCityName]);
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
+    setDetectingLocation(true);
+    setLocationMessage("Detecting location...");
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          latitude: String(latitude.toFixed(6)),
+          longitude: String(longitude.toFixed(6))
+        }));
+
+        try {
+          const res = await fetch(`/api/locations/reverse?lat=${latitude}&lon=${longitude}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.display_name) {
+              setFormData(prev => ({
+                ...prev,
+                address_line: data.display_name
+              }));
+
+              const addr = data.address || {};
+              const stateName = addr.state || "";
+              const cityName = addr.city || addr.town || addr.village || addr.suburb || "";
+
+              // Resolve State ID
+              if (stateName) {
+                const matchedState = states.find(s => 
+                  s.name.toLowerCase().includes(stateName.toLowerCase()) || 
+                  stateName.toLowerCase().includes(s.name.toLowerCase())
+                );
+                if (matchedState) {
+                  setFormData(prev => ({ ...prev, state_id: String(matchedState.id), city_id: "" }));
+                  if (cityName) {
+                    setTargetCityName(cityName);
+                  }
+                  setLocationMessage("Current location detected and state/city resolved successfully.");
+                } else {
+                  setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+                }
+              } else {
+                setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+              }
+            } else {
+              setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+            }
+          } else {
+            setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+          }
+        } catch (err) {
+          setLocationMessage(`Coordinates detected: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+        } finally {
+          setDetectingLocation(false);
+        }
+      },
+      (err) => {
+        setDetectingLocation(false);
+        setLocationError("Unable to retrieve your location. Please check browser permissions.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -237,6 +341,9 @@ function ProfileDashboardContent() {
           email: formData.email || null,
           state_id: parseInt(formData.state_id),
           city_id: parseInt(formData.city_id),
+          address_line: formData.address_line || null,
+          latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+          longitude: formData.longitude ? parseFloat(formData.longitude) : null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
@@ -588,6 +695,128 @@ function ProfileDashboardContent() {
                 </select>
               </div>
             </div>
+
+            {/* Geocoding & Map Selection for basic profile location */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", border: "1px dashed var(--color-border)", padding: "var(--space-4)", borderRadius: "var(--radius-md)", background: "rgba(99, 102, 241, 0.02)", width: "100%", marginTop: "var(--space-4)" }}>
+              <Input
+                label="Exact Address *"
+                name="address_line"
+                value={formData.address_line}
+                onChange={(e) => setFormData({ ...formData, address_line: e.target.value })}
+                placeholder="Enter exact address or use geocoding below..."
+                required
+              />
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--color-border)", paddingTop: "var(--space-3)" }}>
+                <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-bold)", color: "var(--color-text-primary)" }}>Profile Location Selection</span>
+              </div>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.4 }}>
+                ℹ️ Select the tracking location near to your shop, so you can get customers nearby your location who search for products or services.
+              </p>
+              
+              <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap" }}>
+                <Button 
+                  type="button" 
+                  onClick={handleUseCurrentLocation} 
+                  loading={detectingLocation}
+                  style={{ background: "hsl(263, 60%, 45%)", color: "white" }}
+                >
+                  📍 Use Current Location
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowMap(true);
+                    setLocationMessage("");
+                    setLocationError("");
+                  }}
+                  style={{ borderColor: "hsl(263, 60%, 45%)", color: "hsl(263, 60%, 45%)" }}
+                >
+                  🗺️ Choose on Map
+                </Button>
+              </div>
+
+              {locationMessage && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#10b981", fontSize: "var(--text-sm)", background: "rgba(16, 185, 129, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <span>✓</span>
+                  <span>{locationMessage}</span>
+                </div>
+              )}
+
+              {locationError && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "rgb(239, 68, 68)", fontSize: "var(--text-sm)", background: "rgba(239, 68, 68, 0.08)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-md)" }}>
+                  <AlertCircle size={16} />
+                  <span>{locationError}</span>
+                </div>
+              )}
+
+              <div style={{ display: "grid", gridTemplateColumns: "var(--grid-columns, 1fr 1fr)", gap: "var(--space-4)" }}>
+                <Input
+                  label="Latitude"
+                  name="latitude"
+                  value={formData.latitude}
+                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                  placeholder="Auto-filled latitude"
+                  disabled
+                  style={{ opacity: 0.8, cursor: "not-allowed" }}
+                />
+                <Input
+                  label="Longitude"
+                  name="longitude"
+                  value={formData.longitude}
+                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                  placeholder="Auto-filled longitude"
+                  disabled
+                  style={{ opacity: 0.8, cursor: "not-allowed" }}
+                />
+              </div>
+            </div>
+
+            {/* Glassmorphic Map Overlay Modal */}
+            {mounted && showMap && (
+              <div style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(4px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 9999,
+                padding: "var(--space-4)"
+              }}>
+                <div style={{
+                  background: "var(--color-surface, #ffffff)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-lg)",
+                  padding: "var(--space-5)",
+                  maxWidth: "600px",
+                  width: "100%",
+                  boxShadow: "var(--shadow-xl)",
+                  maxHeight: "90vh",
+                  overflowY: "auto"
+                }}>
+                  <LocationPickerMap
+                    initialLat={formData.latitude ? parseFloat(formData.latitude) : null}
+                    initialLng={formData.longitude ? parseFloat(formData.longitude) : null}
+                    onConfirm={(lat, lng) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        latitude: String(lat),
+                        longitude: String(lng)
+                      }));
+                      setLocationMessage("Location coordinates pinned on map successfully.");
+                      setShowMap(false);
+                    }}
+                    onCancel={() => setShowMap(false)}
+                  />
+                </div>
+              </div>
+            )}
 
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "var(--space-4)" }}>
               <Button type="submit" loading={saving}>
