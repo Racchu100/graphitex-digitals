@@ -108,12 +108,7 @@ export default function LocationPickerMap({
       setError("");
       setInfo("");
       try {
-        let res = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-            query
-          )}&limit=5&addressdetails=1`,
-          { headers: { "Accept-Language": "en" } }
-        );
+        let res = await fetch(`/api/locations/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           let data = await res.json();
 
@@ -121,12 +116,7 @@ export default function LocationPickerMap({
           if (data.length === 0 && !query.includes(" ") && query.length > 5) {
             const prefixLen = query.length > 8 ? 6 : 5;
             const fallbackQuery = query.substring(0, prefixLen);
-            const fallbackRes = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-                fallbackQuery
-              )}&limit=5&addressdetails=1`,
-              { headers: { "Accept-Language": "en" } }
-            );
+            const fallbackRes = await fetch(`/api/locations/search?q=${encodeURIComponent(fallbackQuery)}`);
             if (fallbackRes.ok) {
               const fallbackData = await fallbackRes.json();
               if (fallbackData.length > 0) {
@@ -158,10 +148,7 @@ export default function LocationPickerMap({
     setReverseGeocoding(true);
     setError("");
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-        { headers: { "Accept-Language": "en" } }
-      );
+      const res = await fetch(`/api/locations/reverse?lat=${lat}&lon=${lng}`);
       if (!res.ok) throw new Error("Reverse geocoding request failed.");
       
       const data = await res.json();
@@ -189,12 +176,7 @@ export default function LocationPickerMap({
     setSearchResults([]);
 
     try {
-      let res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchQuery
-        )}&limit=5&addressdetails=1`,
-        { headers: { "Accept-Language": "en" } }
-      );
+      let res = await fetch(`/api/locations/search?q=${encodeURIComponent(searchQuery)}`);
       if (!res.ok) throw new Error("Search request failed.");
 
       let data = await res.json();
@@ -203,12 +185,7 @@ export default function LocationPickerMap({
       if (data.length === 0 && !searchQuery.trim().includes(" ") && searchQuery.trim().length > 5) {
         const prefixLen = searchQuery.trim().length > 8 ? 6 : 5;
         const fallbackQuery = searchQuery.trim().substring(0, prefixLen);
-        const fallbackRes = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-            fallbackQuery
-          )}&limit=5&addressdetails=1`,
-          { headers: { "Accept-Language": "en" } }
-        );
+        const fallbackRes = await fetch(`/api/locations/search?q=${encodeURIComponent(fallbackQuery)}`);
         if (fallbackRes.ok) {
           const fallbackData = await fallbackRes.json();
           if (fallbackData.length > 0) {

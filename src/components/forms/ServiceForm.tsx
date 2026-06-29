@@ -219,10 +219,7 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
         }));
 
         try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
-            { headers: { "Accept-Language": "en" } }
-          );
+          const res = await fetch(`/api/locations/reverse?lat=${latitude}&lon=${longitude}`);
           if (res.ok) {
             const data = await res.json();
             if (data && data.display_name) {
