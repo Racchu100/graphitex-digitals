@@ -575,14 +575,13 @@ export default function ServiceForm({ initialData, isEdit, onSuccess }: ServiceF
                     <LocationPickerMap
                       initialLat={formData.latitude ? parseFloat(formData.latitude) : null}
                       initialLng={formData.longitude ? parseFloat(formData.longitude) : null}
-                      onConfirm={(lat, lng, address) => {
+                      onConfirm={(lat, lng) => {
                         setFormData(prev => ({
                           ...prev,
                           latitude: String(lat),
-                          longitude: String(lng),
-                          address_line: address
+                          longitude: String(lng)
                         }));
-                        setLocationMessage("Location selected on map successfully.");
+                        setLocationMessage("Location coordinates pinned on map successfully.");
                         setShowMap(false);
                       }}
                       onCancel={() => setShowMap(false)}
